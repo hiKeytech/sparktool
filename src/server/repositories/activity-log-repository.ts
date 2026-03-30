@@ -1,0 +1,83 @@
+import { randomUUID } from "node:crypto";
+import type { Collection, Filter, Sort } from "mongodb";
+
+import type {
+  ActivityLog,
+  ListActivityLogVariables,
+} from "@/schemas/activity-log";
+import { getMongoDb } from "@/server/db/mongo";
+
+type ActivityLogDocument = ActivityLog & { _id: string };
+export type StoredActivityLog = ActivityLog & { id: string };
+
+function parseStoredActivityLog(
+  document: ActivityLogDocument | null,
+): null | StoredActivityLog {
+  if (!document) {
+    return null;
+  }
+
+  return {
+    ...document,
+    id: document._id,
+  };
+}
+
+async function getActivityLogCollection(): Promise<
+  Collection<ActivityLogDocument>
+> {
+  const db = await getMongoDb();
+  return db.collection<ActivityLogDocument>("activityLogs");
+}
+
+export const activityLogRepository = {
+  async create(
+    logData: Omit<ActivityLog, "timestamp" | "userAgent"> & {
+      userAgent?: null | string;
+    },
+  ) {
+    const activityLogs = await getActivityLogCollection();
+    const logId = randomUUID();
+    const document: ActivityLogDocument = {
+      ...logData,
+      _id: logId,
+      timestamp: Date.now(),
+      userAgent: logData.userAgent ?? null,
+    } as ActivityLogDocument;
+
+    await activityLogs.insertOne(document);
+
+    return parseStoredActivityLog(document);
+  },
+
+  async list(variables: ListActivityLogVariables & { tenantId?: string }) {
+    const activityLogs = await getActivityLogCollection();
+    const { queryFilter = [], queryOrder = [], tenantId, userId } = variables;
+    const query: Filter<ActivityLogDocument> = {};
+
+    if (userId) {
+      query.userId = userId;
+    }
+
+    if (tenantId) {
+      query.tenantId = tenantId;
+    }
+
+    for (const filter of queryFilter) {
+      query[filter.field as keyof ActivityLogDocument] = {
+        [filter.operator]: filter.value,
+      } as never;
+    }
+
+    const sort: Sort = queryOrder.length
+      ? queryOrder.reduce<Sort>((acc, order) => {
+          acc[order.field] = order.value === "asc" ? 1 : -1;
+          return acc;
+        }, {})
+      : { timestamp: -1 };
+
+    return (await activityLogs.find(query).sort(sort).toArray())
+      .map((document) => parseStoredActivityLog(document))
+      .filter((log): log is StoredActivityLog => log !== null);
+  },
+};

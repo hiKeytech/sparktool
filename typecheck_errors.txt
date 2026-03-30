@@ -1,0 +1,358 @@
+
+> nigerian-correctional-service@0.0.0 typecheck
+> tsc --noEmit
+
+src/actions/authentication.ts(31,22): error TS2322: Type '"/dashboard"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/actions/authentication.ts(39,106): error TS6133: 'userId' is declared but its value is never read.
+src/components/certificates/certificate-generator.tsx(83,9): error TS2353: Object literal may only specify known properties, and 'courseId' does not exist in type 'CreateCertificateVariables'.
+src/components/certificates/certificate-generator.tsx(142,13): error TS2322: Type '{ label: string; value: string | null; }[]' is not assignable to type 'ComboboxData | undefined'.
+  Type '{ label: string; value: string | null; }[]' is not assignable to type '(string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>)[]'.
+    Type '{ label: string; value: string | null; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+      Type '{ label: string; value: string | null; }' is not assignable to type 'ComboboxItem'.
+        Types of property 'value' are incompatible.
+          Type 'string | null' is not assignable to type 'string'.
+            Type 'null' is not assignable to type 'string'.
+src/components/certificates/certificate-generator.tsx(156,13): error TS2322: Type '{ label: string | null; value: string; }[]' is not assignable to type 'ComboboxData | undefined'.
+  Type '{ label: string | null; value: string; }[]' is not assignable to type '(string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>)[]'.
+    Type '{ label: string | null; value: string; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+      Type '{ label: string | null; value: string; }' is not assignable to type 'ComboboxItem'.
+        Types of property 'label' are incompatible.
+          Type 'string | null' is not assignable to type 'string'.
+            Type 'null' is not assignable to type 'string'.
+src/components/certificates/certificate-preview.tsx(54,31): error TS2339: Property 'id' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'.
+src/components/certificates/certificate-template.tsx(5,1): error TS6133: 'forwardRef' is declared but its value is never read.
+src/components/certificates/certificate-template.tsx(189,25): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'number | Date | Timestamp | null | undefined'.
+  Type 'string' is not assignable to type 'number | Date | Timestamp | null | undefined'.
+src/components/certificates/certificate-template.tsx(207,26): error TS2339: Property 'id' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'.
+src/components/certificates/certificate-template.tsx(357,48): error TS2339: Property 'id' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'.
+src/components/certificates/student-certificates.tsx(46,9): error TS6133: 'handleDownload' is declared but its value is never read.
+src/components/certificates/student-certificates.tsx(46,27): error TS6133: 'certificate' is declared but its value is never read.
+src/components/certificates/student-certificates.tsx(90,30): error TS2339: Property 'id' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'.
+src/components/certificates/student-certificates.tsx(114,39): error TS2551: Property 'issueDate' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'. Did you mean 'issued'?
+src/components/certificates/student-certificates.tsx(120,42): error TS2339: Property 'id' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'.
+src/components/guards/admin-route-guard.tsx(13,39): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/components/guards/student-route-guard.tsx(13,39): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/components/guards/super-admin-route-guard.tsx(14,39): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/components/layouts/admin-layout.tsx(52,45): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/components/layouts/admin-layout.tsx(53,18): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/components/layouts/admin-layout.tsx(106,32): error TS2820: Type '"/admin/courses/new"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'. Did you mean '"/admin/courses"'?
+src/components/layouts/admin-layout.tsx(112,32): error TS2820: Type '"/admin/users/new"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'. Did you mean '"/admin/users"'?
+src/components/layouts/admin-layout.tsx(118,32): error TS2820: Type '"/admin/analytics/reports"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'. Did you mean '"/admin/analytics"'?
+src/components/layouts/admin-layout.tsx(243,47): error TS2322: Type '"/admin/profile"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/components/layouts/admin-layout.tsx(250,47): error TS2322: Type '"/admin/security"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/components/layouts/admin-layout.tsx(291,26): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/components/layouts/public-layout.tsx(33,16): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/components/layouts/student-layout.tsx(42,32): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/components/layouts/student-layout.tsx(131,23): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/components/layouts/student-layout.tsx(205,17): error TS2322: Type 'string | null | undefined' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/components/modals/create-course-modal.tsx(61,11): error TS2740: Type 'Record<string, unknown>' is missing the following properties from type 'Pick<Nullish<{ averageRating: number; category: string; completionCount: number; completionRate: number; createdAt: number; createdBy: string; createdByMeta: { name: string; photoUrl: string; }; description: string; ... 23 more ...; updatedAt: number; }, never>, "title" | ... 14 more ... | "thumbnailUrl">': title, category, description, difficulty, and 12 more.
+src/components/modals/create-course-modal.tsx(62,11): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/modals/create-course-modal.tsx(148,18): error TS18046: 'form.values.instructors' is of type 'unknown'.
+src/components/modals/create-course-modal.tsx(156,26): error TS18046: 'form.values.instructors' is of type 'unknown'.
+src/components/modals/create-live-session-modal.tsx(98,11): error TS2322: Type '{ label: string | null; value: string; }[]' is not assignable to type 'ComboboxData | undefined'.
+  Type '{ label: string | null; value: string; }[]' is not assignable to type '(string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>)[]'.
+    Type '{ label: string | null; value: string; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+      Type '{ label: string | null; value: string; }' is not assignable to type 'ComboboxItem'.
+        Types of property 'label' are incompatible.
+          Type 'string | null' is not assignable to type 'string'.
+            Type 'null' is not assignable to type 'string'.
+src/components/modals/create-quiz-modal.tsx(67,9): error TS2322: Type 'FieldValue' is not assignable to type 'number'.
+src/components/modals/create-quiz-modal.tsx(70,9): error TS2322: Type 'FieldValue' is not assignable to type 'number'.
+src/components/modals/delete-course-modal.tsx(24,7): error TS2345: Argument of type '{ courseId: string; }' is not assignable to parameter of type 'void'.
+src/components/modals/duplicate-course-modal.tsx(43,26): error TS2339: Property 'duration' does not exist on type 'CourseWithId'.
+src/components/modals/duplicate-course-modal.tsx(52,26): error TS2339: Property 'videoUrl' does not exist on type 'CourseWithId'.
+src/components/modals/duplicate-course-modal.tsx(57,11): error TS2739: Type '{ category: string | null; description: string | null; difficulty: "beginner" | "intermediate" | "advanced" | null; duration: any; instructors: Nullish<{ biography: string; email: string; name: string; title: string; }, never>[]; ... 7 more ...; videoUrl: any; }' is missing the following properties from type 'Pick<Nullish<{ averageRating: number; category: string; completionCount: number; completionRate: number; createdAt: number; createdBy: string; createdByMeta: { name: string; photoUrl: string; }; description: string; ... 23 more ...; updatedAt: number; }, never>, "title" | ... 14 more ... | "thumbnailUrl">': featured, language, level, previewVideoUrl, price
+src/components/modals/duplicate-course-modal.tsx(58,11): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/modals/edit-course-modal.tsx(47,24): error TS2339: Property 'duration' does not exist on type 'CourseWithId'.
+src/components/modals/edit-course-modal.tsx(58,24): error TS2339: Property 'videoUrl' does not exist on type 'CourseWithId'.
+src/components/modals/edit-course-modal.tsx(149,18): error TS18046: 'form.values.instructors' is of type 'unknown'.
+src/components/modals/edit-course-modal.tsx(157,26): error TS18046: 'form.values.instructors' is of type 'unknown'.
+src/components/modals/edit-live-session-modal.tsx(101,11): error TS2322: Type '{ label: string | null; value: string; }[]' is not assignable to type 'ComboboxData | undefined'.
+  Type '{ label: string | null; value: string; }[]' is not assignable to type '(string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>)[]'.
+    Type '{ label: string | null; value: string; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+      Type '{ label: string | null; value: string; }' is not assignable to type 'ComboboxItem'.
+        Types of property 'label' are incompatible.
+          Type 'string | null' is not assignable to type 'string'.
+            Type 'null' is not assignable to type 'string'.
+src/components/modals/edit-quiz-modal.tsx(58,11): error TS2322: Type 'FieldValue' is not assignable to type 'number'.
+src/components/modals/edit-student-modal.tsx(49,9): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/modals/send-message-modal.tsx(45,9): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/components/modals/send-message-modal.tsx(50,9): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/navigation/course-breadcrumbs.tsx(22,9): error TS6133: 'navigate' is declared but its value is never read.
+src/components/navigation/course-breadcrumbs.tsx(32,14): error TS2304: Cannot find name 'IconBookOpen'.
+src/components/navigation/course-breadcrumbs.tsx(40,14): error TS2304: Cannot find name 'IconBookOpen'.
+src/components/navigation/course-breadcrumbs.tsx(41,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/navigation/course-breadcrumbs.tsx(47,62): error TS2339: Property 'id' does not exist on type 'CourseSection'.
+src/components/navigation/course-breadcrumbs.tsx(49,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(45,3): error TS6133: 'sectionProgress' is declared but its value is never read.
+src/components/navigation/course-structure-sidebar.tsx(48,26): error TS2552: Cannot find name 'useSearchParams'. Did you mean 'searchParams'?
+src/components/navigation/course-structure-sidebar.tsx(50,55): error TS2339: Property 'id' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(71,16): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/components/navigation/course-structure-sidebar.tsx(76,18): error TS2339: Property 'lessons' does not exist on type 'CourseSection'.
+src/components/navigation/course-structure-sidebar.tsx(76,37): error TS2339: Property 'lessons' does not exist on type 'CourseSection'.
+src/components/navigation/course-structure-sidebar.tsx(77,40): error TS2339: Property 'lessons' does not exist on type 'CourseSection'.
+src/components/navigation/course-structure-sidebar.tsx(80,42): error TS2339: Property 'lessons' does not exist on type 'CourseSection'.
+src/components/navigation/course-structure-sidebar.tsx(86,42): error TS2339: Property 'lessons' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(96,36): error TS2339: Property 'lessons' does not exist on type 'CourseSection'.
+src/components/navigation/course-structure-sidebar.tsx(114,31): error TS2339: Property 'lessons' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(115,32): error TS2339: Property 'estimatedDuration' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(116,15): error TS2339: Property 'lessons' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(116,33): error TS6133: 'lesson' is declared but its value is never read.
+src/components/navigation/course-structure-sidebar.tsx(183,63): error TS2339: Property 'id' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(184,69): error TS2345: Argument of type 'string' is not assignable to parameter of type 'CourseSection'.
+src/components/navigation/course-structure-sidebar.tsx(185,48): error TS2339: Property 'lessons' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(190,35): error TS2339: Property 'id' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(194,58): error TS2339: Property 'id' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(224,56): error TS2339: Property 'title' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(236,36): error TS2339: Property 'lessons' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(238,34): error TS2339: Property 'estimatedDuration' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(240,40): error TS2339: Property 'estimatedDuration' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(265,32): error TS2339: Property 'lessons' does not exist on type 'string'.
+src/components/navigation/course-structure-sidebar.tsx(268,65): error TS2345: Argument of type 'string' is not assignable to parameter of type 'CourseSection'.
+src/components/navigation/course-structure-sidebar.tsx(302,34): error TS2552: Cannot find name 'IconPlay'. Did you mean 'onplay'?
+src/components/navigation/lesson-navigation.tsx(35,26): error TS2552: Cannot find name 'useSearchParams'. Did you mean 'searchParams'?
+src/components/navigation/lesson-navigation.tsx(41,13): error TS2339: Property 'lessons' does not exist on type 'string'.
+src/components/navigation/lesson-navigation.tsx(49,9): error TS2322: Type 'string' is not assignable to type 'CourseSection'.
+src/components/navigation/lesson-navigation.tsx(57,14): error TS18047: 'a.section.order' is possibly 'null'.
+src/components/navigation/lesson-navigation.tsx(57,32): error TS18047: 'b.section.order' is possibly 'null'.
+src/components/navigation/lesson-navigation.tsx(77,14): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/components/notifications/notifications-drawer.tsx(198,47): error TS2339: Property 'seconds' does not exist on type 'number'.
+src/components/quiz/question-builder.tsx(7,3): error TS1484: 'DropResult' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/quiz/question-builder.tsx(119,7): error TS2322: Type '"essay" | "multiple-choice" | "true-false" | "short-answer"' is not assignable to type '"essay" | "multiple-choice" | "true-false"'.
+  Type '"short-answer"' is not assignable to type '"essay" | "multiple-choice" | "true-false"'.
+src/components/quiz/question-builder.tsx(177,18): error TS2365: Operator '>' cannot be applied to types 'string | number' and 'number'.
+src/components/quiz/quiz-manager.tsx(150,11): error TS2322: Type '{ courseId: string; createdBy: string; description: string; isRequired: boolean; lessonId: string | undefined; maxAttempts: number | null; order: number; passingScore: number; placement: "lesson" | ... 1 more ... | "course"; ... 4 more ...; unlockConditions: { ...; }; }' is not assignable to type 'Partial<Omit<CourseQuiz, "id">>'.
+  Types of property 'maxAttempts' are incompatible.
+    Type 'number | null' is not assignable to type 'number | undefined'.
+      Type 'null' is not assignable to type 'number | undefined'.
+src/components/quiz/quiz-manager.tsx(154,46): error TS2345: Argument of type '{ courseId: string; createdBy: string; description: string; isRequired: boolean; lessonId: string | undefined; maxAttempts: number | null; order: number; passingScore: number; placement: "lesson" | ... 1 more ... | "course"; ... 4 more ...; unlockConditions: { ...; }; }' is not assignable to parameter of type 'Omit<CourseQuiz, "id">'.
+  Type '{ courseId: string; createdBy: string; description: string; isRequired: boolean; lessonId: string | undefined; maxAttempts: number | null; order: number; passingScore: number; placement: "lesson" | ... 1 more ... | "course"; ... 4 more ...; unlockConditions: { ...; }; }' is missing the following properties from type 'Omit<CourseQuiz, "id">': createdAt, updatedAt
+src/components/shared/data-table/admin-dashboard-table-config.tsx(28,33): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/shared/data-table/certificates-table-config.tsx(99,65): error TS2339: Property 'id' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'.
+src/components/shared/data-table/certificates-table-config.tsx(127,65): error TS2339: Property 'id' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'.
+src/components/shared/data-table/course-table-config.tsx(154,13): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/components/shared/data-table/course-table-config.tsx(159,14): error TS18047: 'course.title' is possibly 'null'.
+src/components/shared/data-table/progress-monitoring-table-config.tsx(46,56): error TS2339: Property 'progress' does not exist on type 'StudentProgress'.
+src/components/shared/data-table/progress-monitoring-table-config.tsx(97,50): error TS2339: Property 'timeSpent' does not exist on type 'StudentProgress'.
+src/components/shared/data-table/user-table-config.tsx(58,16): error TS18047: 'user.displayName' is possibly 'null'.
+src/components/shared/data-table/user-table-config.tsx(208,33): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/shared/data-table/user-table-config.tsx(235,45): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/shared/data-table/user-table-config.tsx(242,45): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/video/universal-video-player.tsx(142,9): error TS6133: 'handleVolumeChange' is declared but its value is never read.
+src/lib/analytics/engagement.ts(43,24): error TS2339: Property 'targetId' does not exist on type 'ActivityLog'.
+src/lib/certificates/certificate-utils.ts(1,15): error TS2724: '"@/services/types"' has no exported member named 'CourseDocumentReference'. Did you mean 'CourseQuizDocumentReference'?
+src/lib/certificates/certificate-utils.ts(10,3): error TS6133: 'courseId' is declared but its value is never read.
+src/lib/certificates/certificate-utils.ts(11,3): error TS6133: 'studentId' is declared but its value is never read.
+src/lib/certificates/certificate-utils.ts(15,9): error TS6198: All destructured elements are unused.
+src/lib/certificates/certificate-utils.ts(16,9): error TS6133: 'studentName' is declared but its value is never read.
+src/lib/metrics/dates.ts(21,17): error TS2345: Argument of type '{ end: Date; label: string; start: Date; }' is not assignable to parameter of type 'never'.
+src/pages/admin/certificates.tsx(44,7): error TS18047: 'cert.studentName' is possibly 'null'.
+src/pages/admin/certificates.tsx(45,7): error TS18047: 'cert.courseName' is possibly 'null'.
+src/pages/admin/certificates.tsx(90,7): error TS2741: Property 'status' is missing in type '{ downloadCount: number; }' but required in type 'Pick<{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }, "downloadCount" | "status">'.
+src/pages/admin/certificates.tsx(115,11): error TS2741: Property 'downloadCount' is missing in type '{ status: "revoked"; }' but required in type 'Pick<{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }, "downloadCount" | "status">'.
+src/pages/admin/certificates.tsx(234,23): error TS2322: Type '{ label: string | null; value: string; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+  Type '{ label: string | null; value: string; }' is not assignable to type 'ComboboxItem'.
+    Types of property 'label' are incompatible.
+      Type 'string | null' is not assignable to type 'string'.
+        Type 'null' is not assignable to type 'string'.
+src/pages/admin/course-builder.tsx(96,69): error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+src/pages/admin/course-builder.tsx(97,54): error TS2322: Type 'number' is not assignable to type 'string'.
+src/pages/admin/course-builder.tsx(135,31): error TS2552: Cannot find name 'CreateSection'. Did you mean 'CDATASection'?
+src/pages/admin/course-builder.tsx(149,7): error TS2322: Type 'number' is not assignable to type 'string'.
+src/pages/admin/course-builder.tsx(196,31): error TS2339: Property 'id' does not exist on type 'CourseSection'.
+src/pages/admin/course-builder.tsx(203,13): error TS2322: Type 'number' is not assignable to type 'string'.
+src/pages/admin/course-builder.tsx(226,40): error TS2552: Cannot find name 'CreateSection'. Did you mean 'CDATASection'?
+src/pages/admin/course-builder.tsx(234,37): error TS2339: Property 'id' does not exist on type 'CourseSection'.
+src/pages/admin/course-builder.tsx(243,11): error TS2353: Object literal may only specify known properties, and 'sectionData' does not exist in type 'CreateCourseSectionVariables'.
+src/pages/admin/course-builder.tsx(285,13): error TS2322: Type 'Timestamp' is not assignable to type 'number'.
+src/pages/admin/course-builder.tsx(320,21): error TS2345: Argument of type 'number' is not assignable to parameter of type 'SetStateAction<string>'.
+src/pages/admin/course-builder.tsx(328,21): error TS2345: Argument of type 'number' is not assignable to parameter of type 'SetStateAction<string>'.
+src/pages/admin/course-builder.tsx(336,21): error TS2345: Argument of type 'number' is not assignable to parameter of type 'SetStateAction<string>'.
+src/pages/admin/course-builder.tsx(502,47): error TS2345: Argument of type '(values: CreateLesson) => void' is not assignable to parameter of type '(values: Values, event: FormEvent<HTMLFormElement> | undefined) => void | Promise<any>'.
+  Types of parameters 'values' and 'values' are incompatible.
+    Type 'Values' is not assignable to type 'CreateLesson'.
+      Type 'Record<string, any>' is missing the following properties from type 'CreateLesson': type, courseId, title, content, and 6 more.
+src/pages/admin/course-builder.tsx(602,15): error TS2322: Type 'number' is not assignable to type 'string'.
+src/pages/admin/course-builder.tsx(677,33): error TS2339: Property 'id' does not exist on type 'CourseSection & { lessons: CourseLesson[]; }'.
+src/pages/admin/course-builder.tsx(741,37): error TS2339: Property 'estimatedDuration' does not exist on type 'CourseSection & { lessons: CourseLesson[]; }'.
+src/pages/admin/course-builder.tsx(755,48): error TS2339: Property 'id' does not exist on type 'CourseSection & { lessons: CourseLesson[]; }'.
+src/pages/admin/course-builder.tsx(777,63): error TS2339: Property 'id' does not exist on type 'CourseSection & { lessons: CourseLesson[]; }'.
+src/pages/admin/course-builder.tsx(784,56): error TS2339: Property 'id' does not exist on type 'CourseSection & { lessons: CourseLesson[]; }'.
+src/pages/admin/course-builder.tsx(833,73): error TS2339: Property 'id' does not exist on type 'CourseSection & { lessons: CourseLesson[]; }'.
+src/pages/admin/course-builder.tsx(841,77): error TS2339: Property 'id' does not exist on type 'CourseSection & { lessons: CourseLesson[]; }'.
+src/pages/admin/course-builder.tsx(874,54): error TS2339: Property 'id' does not exist on type 'CourseSection & { lessons: CourseLesson[]; }'.
+src/pages/admin/course-management.tsx(90,37): error TS2345: Argument of type '(string | null)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | null' is not assignable to type 'string'.
+    Type 'null' is not assignable to type 'string'.
+src/pages/admin/course-management.tsx(94,16): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/pages/admin/course-management.tsx(139,54): error TS2345: Argument of type '(string | null)[]' is not assignable to parameter of type 'string[]'.
+  Type 'string | null' is not assignable to type 'string'.
+    Type 'null' is not assignable to type 'string'.
+src/pages/admin/course-management.tsx(193,35): error TS18047: 'enrollmentCount' is possibly 'null'.
+src/pages/admin/course-management.tsx(218,39): error TS18047: 'averageRating' is possibly 'null'.
+src/pages/admin/course-management.tsx(222,58): error TS18047: 'averageRating' is possibly 'null'.
+src/pages/admin/quiz-management.tsx(64,16): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/pages/admin/quiz-management.tsx(67,16): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/pages/admin/student-details.tsx(57,25): error TS2554: Expected 1 arguments, but got 0.
+src/pages/admin/student-details.tsx(149,49): error TS2559: Type '-1' has no properties in common with type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+src/pages/admin/student-details.tsx(451,49): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/admin/student-details.tsx(453,32): error TS18047: 'activity.action' is possibly 'null'.
+src/pages/admin/student-details.tsx(483,19): error TS2322: Type '{ id: string; courseId: string; studentId: string; status: "completed" | "in-progress" | "dropped" | "enrolled"; completedAt?: any; startedAt?: number | undefined; lastAccessedAt?: number | undefined; ... 13 more ...; totalRequiredLessons: number; }[]' is not assignable to type 'CourseProgress[]'.
+  Property 'progress' is missing in type '{ id: string; courseId: string; studentId: string; status: "completed" | "dropped" | "enrolled" | "in-progress"; completedAt?: any; startedAt?: Timestamp | undefined; lastAccessedAt?: Timestamp | undefined; ... 13 more ...; totalRequiredLessons: number; }' but required in type 'CourseProgress'.
+src/pages/admin/student-details.tsx(509,45): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/admin/student-details.tsx(511,28): error TS18047: 'activity.action' is possibly 'null'.
+src/pages/admin/student-details.tsx(552,52): error TS2551: Property 'issueDate' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 5 more ...; id: string; }'. Did you mean 'issued'?
+src/pages/admin/student-progress-monitoring.tsx(67,25): error TS2554: Expected 1 arguments, but got 0.
+src/pages/admin/student-progress-monitoring.tsx(116,32): error TS2339: Property 'timeSpent' does not exist on type '{ id: string; courseId: string; studentId: string; status: "completed" | "in-progress" | "dropped" | "enrolled"; completedAt?: any; startedAt?: number | undefined; lastAccessedAt?: number | undefined; ... 13 more ...; totalRequiredLessons: number; }'.
+src/pages/admin/student-progress-monitoring.tsx(311,40): error TS2339: Property 'progress' does not exist on type 'StudentProgress'.
+src/pages/admin/user-management.tsx(39,9): error TS6133: 'updateUser' is declared but its value is never read.
+src/pages/admin/user-management.tsx(42,14): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/pages/admin/user-management.tsx(61,27): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/admin/user-management.tsx(88,31): error TS6133: 'userId' is declared but its value is never read.
+src/pages/admin/user-management.tsx(88,47): error TS6133: 'isActive' is declared but its value is never read.
+src/pages/admin/user-management.tsx(127,37): error TS2339: Property 'seconds' does not exist on type 'number'.
+src/pages/public/certificate-verification.tsx(182,39): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'number | Date | Timestamp | null | undefined'.
+  Type 'string' is not assignable to type 'number | Date | Timestamp | null | undefined'.
+src/pages/public/certificate-verification.tsx(191,51): error TS2551: Property 'issueDate' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'. Did you mean 'issued'?
+src/pages/public/certificate-verification.tsx(200,40): error TS2339: Property 'id' does not exist on type '{ completionDate: string | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; studentId: string; }'.
+src/pages/public/landing.tsx(19,3): error TS6133: 'IconDatabase' is declared but its value is never read.
+src/pages/public/landing.tsx(20,3): error TS6133: 'IconNetwork' is declared but its value is never read.
+src/pages/public/landing.tsx(21,3): error TS6133: 'IconShield' is declared but its value is never read.
+src/pages/public/landing.tsx(22,3): error TS6133: 'IconBrandPython' is declared but its value is never read.
+src/pages/public/landing.tsx(23,3): error TS6133: 'IconBrandReact' is declared but its value is never read.
+src/pages/public/landing.tsx(66,31): error TS2339: Property 'seconds' does not exist on type 'number'.
+src/pages/public/landing.tsx(67,31): error TS2339: Property 'seconds' does not exist on type 'number'.
+src/pages/public/landing.tsx(82,26): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/pages/public/landing.tsx(186,47): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/pages/public/landing.tsx(197,47): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/pages/public/landing.tsx(248,45): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/pages/public/landing.tsx(294,45): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/pages/public/landing.tsx(315,50): error TS2339: Property 'videoUrl' does not exist on type '{ title: string | null; category: string | null; createdAt: number | null; averageRating: number | null; completionCount: number | null; completionRate: number | null; createdBy: string | null; ... 24 more ...; id: string; }'.
+src/pages/public/landing.tsx(332,51): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/pages/public/landing.tsx(452,49): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/pages/student/course-catalog.tsx(47,55): error TS2345: Argument of type 'string | null | undefined' is not assignable to parameter of type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/pages/student/course-catalog.tsx(156,14): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/pages/student/course-details.tsx(51,24): error TS2554: Expected 1 arguments, but got 0.
+src/pages/student/course-details.tsx(77,9): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/student/course-details.tsx(81,16): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/pages/student/course-details.tsx(165,47): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/student/course-details.tsx(169,22): error TS18047: 'course.difficulty' is possibly 'null'.
+src/pages/student/course-details.tsx(170,23): error TS18047: 'course.difficulty' is possibly 'null'.
+src/pages/student/course-details.tsx(193,24): error TS18047: 'course.enrollmentCount' is possibly 'null'.
+src/pages/student/course-details.tsx(197,20): error TS18047: 'course.averageRating' is possibly 'null'.
+src/pages/student/course-details.tsx(199,50): error TS2322: Type 'number | null' is not assignable to type 'number | undefined'.
+  Type 'null' is not assignable to type 'number | undefined'.
+src/pages/student/course-details.tsx(201,26): error TS18047: 'course.averageRating' is possibly 'null'.
+src/pages/student/course-details.tsx(435,50): error TS2339: Property 'bio' does not exist on type 'Nullish<{ biography: string; email: string; name: string; title: string; }, never>'.
+src/pages/student/course-details.tsx(439,62): error TS2339: Property 'bio' does not exist on type 'Nullish<{ biography: string; email: string; name: string; title: string; }, never>'.
+src/pages/student/course-details.tsx(447,43): error TS2339: Property 'bio' does not exist on type 'Nullish<{ biography: string; email: string; name: string; title: string; }, never>'.
+src/pages/student/course-details.tsx(499,31): error TS18047: 'course.enrollmentCount' is possibly 'null'.
+src/pages/student/course-details.tsx(578,49): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/student/course-details.tsx(582,24): error TS18047: 'course.difficulty' is possibly 'null'.
+src/pages/student/course-details.tsx(583,25): error TS18047: 'course.difficulty' is possibly 'null'.
+src/pages/student/course-details.tsx(678,24): error TS18047: 'course.enrollmentCount' is possibly 'null'.
+src/pages/student/course-details.tsx(686,24): error TS18047: 'course.completionCount' is possibly 'null'.
+src/pages/student/course-details.tsx(689,20): error TS18047: 'course.averageRating' is possibly 'null'.
+src/pages/student/course-details.tsx(696,28): error TS18047: 'course.averageRating' is possibly 'null'.
+src/pages/student/course-view.tsx(66,19): error TS2353: Object literal may only specify known properties, and 'lesson' does not exist in type 'ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARCH", string, string | undefined>'.
+src/pages/student/course-view.tsx(73,17): error TS2353: Object literal may only specify known properties, and 'lesson' does not exist in type 'ParamsReducerFn<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, "SEARCH", string, string | undefined>'.
+src/pages/student/course-view.tsx(144,15): error TS2322: Type '{ sections: { lessons: { type: "assignment" | "live-session" | "reading" | "video"; courseId: string; title: string; content: LessonContent; createdAt: Timestamp; ... 8 more ...; id: string; }[]; ... 12 more ...; id: string; }[]; ... 30 more ...; updatedAt: number | null; }' is not assignable to type 'Nullish<{ averageRating: number; category: string; completionCount: number; completionRate: number; createdAt: number; createdBy: string; createdByMeta: { name: string; photoUrl: string; }; description: string; ... 23 more ...; updatedAt: number; }, never>'.
+  Types of property 'sections' are incompatible.
+    Type '{ lessons: { type: "video" | "assignment" | "live-session" | "reading"; courseId: string; title: string; content: LessonContent; createdAt: number; description?: string | undefined; ... 7 more ...; id: string; }[]; ... 12 more ...; id: string; }[]' is not assignable to type 'string[]'.
+      Type '{ lessons: { type: "assignment" | "live-session" | "reading" | "video"; courseId: string; title: string; content: LessonContent; createdAt: Timestamp; ... 8 more ...; id: string; }[]; ... 12 more ...; id: string; }' is not assignable to type 'string'.
+src/pages/student/course-view.tsx(347,21): error TS2322: Type '{ sections: { lessons: { type: "assignment" | "live-session" | "reading" | "video"; courseId: string; title: string; content: LessonContent; createdAt: Timestamp; ... 8 more ...; id: string; }[]; ... 12 more ...; id: string; }[]; ... 30 more ...; updatedAt: number | null; }' is not assignable to type 'Nullish<{ averageRating: number; category: string; completionCount: number; completionRate: number; createdAt: number; createdBy: string; createdByMeta: { name: string; photoUrl: string; }; description: string; ... 23 more ...; updatedAt: number; }, never>'.
+  Types of property 'sections' are incompatible.
+    Type '{ lessons: { type: "video" | "assignment" | "live-session" | "reading"; courseId: string; title: string; content: LessonContent; createdAt: number; description?: string | undefined; ... 7 more ...; id: string; }[]; ... 12 more ...; id: string; }[]' is not assignable to type 'string[]'.
+      Type '{ lessons: { type: "assignment" | "live-session" | "reading" | "video"; courseId: string; title: string; content: LessonContent; createdAt: Timestamp; ... 8 more ...; id: string; }[]; ... 12 more ...; id: string; }' is not assignable to type 'string'.
+src/pages/student/course-view.tsx(367,17): error TS2322: Type '{ sections: { lessons: { type: "assignment" | "live-session" | "reading" | "video"; courseId: string; title: string; content: LessonContent; createdAt: Timestamp; ... 8 more ...; id: string; }[]; ... 12 more ...; id: string; }[]; ... 30 more ...; updatedAt: number | null; }' is not assignable to type 'Nullish<{ averageRating: number; category: string; completionCount: number; completionRate: number; createdAt: number; createdBy: string; createdByMeta: { name: string; photoUrl: string; }; description: string; ... 23 more ...; updatedAt: number; }, never>'.
+  Types of property 'sections' are incompatible.
+    Type '{ lessons: { type: "video" | "assignment" | "live-session" | "reading"; courseId: string; title: string; content: LessonContent; createdAt: number; description?: string | undefined; ... 7 more ...; id: string; }[]; ... 12 more ...; id: string; }[]' is not assignable to type 'string[]'.
+      Type '{ lessons: { type: "assignment" | "live-session" | "reading" | "video"; courseId: string; title: string; content: LessonContent; createdAt: Timestamp; ... 8 more ...; id: string; }[]; ... 12 more ...; id: string; }' is not assignable to type 'string'.
+src/pages/student/live-sessions.tsx(105,41): error TS2345: Argument of type '{ sessionId: string; studentId: string; }' is not assignable to parameter of type '{ courseId: string; sessionId: string; studentId: string; }'.
+  Property 'courseId' is missing in type '{ sessionId: string; studentId: string; }' but required in type '{ courseId: string; sessionId: string; studentId: string; }'.
+src/pages/student/quiz-assessment.tsx(56,32): error TS2554: Expected 1 arguments, but got 0.
+src/pages/student/quiz-assessment.tsx(110,11): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/student/quiz-assessment.tsx(313,43): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/pages/student/student-dashboard.tsx(40,5): error TS2345: Argument of type 'string | null | undefined' is not assignable to parameter of type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/pages/student/student-progress.tsx(35,35): error TS2339: Property 'timeSpent' does not exist on type '{ id: string; courseId: string; studentId: string; status: "completed" | "in-progress" | "dropped" | "enrolled"; completedAt?: any; startedAt?: number | undefined; lastAccessedAt?: number | undefined; ... 13 more ...; totalRequiredLessons: number; }'.
+src/pages/student/student-progress.tsx(222,58): error TS2339: Property 'timeSpent' does not exist on type '{ id: string; courseId: string; studentId: string; status: "completed" | "in-progress" | "dropped" | "enrolled"; completedAt?: any; startedAt?: number | undefined; lastAccessedAt?: number | undefined; ... 13 more ...; totalRequiredLessons: number; }'.
+src/pages/student/user-profile.tsx(107,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/student/user-profile.tsx(129,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/student/user-profile.tsx(189,26): error TS2339: Property 'timeSpent' does not exist on type '{ id: string; courseId: string; studentId: string; status: "completed" | "in-progress" | "dropped" | "enrolled"; completedAt?: any; startedAt?: number | undefined; lastAccessedAt?: number | undefined; ... 13 more ...; totalRequiredLessons: number; }'.
+src/pages/student/user-profile.tsx(358,23): error TS2322: Type 'string | null' is not assignable to type 'string | number | readonly string[] | undefined'.
+  Type 'null' is not assignable to type 'string | number | readonly string[] | undefined'.
+src/pages/super-admin/super-admin-dashboard.tsx(98,16): error TS2345: Argument of type 'UserRole | null' is not assignable to parameter of type 'SetStateAction<UserRole>'.
+  Type 'null' is not assignable to type 'SetStateAction<UserRole>'.
+src/pages/super-admin/super-admin-dashboard.tsx(106,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/super-admin/super-admin-dashboard.tsx(121,50): error TS2345: Argument of type 'string | null' is not assignable to parameter of type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/pages/super-admin/super-admin-dashboard.tsx(157,13): error TS2538: Type 'null' cannot be used as an index type.
+src/pages/super-admin/super-admin-dashboard.tsx(157,31): error TS2538: Type 'null' cannot be used as an index type.
+src/pages/super-admin/super-admin-dashboard.tsx(269,52): error TS2345: Argument of type 'UserRole | null' is not assignable to parameter of type 'UserRole'.
+  Type 'null' is not assignable to type 'UserRole'.
+src/pages/super-admin/super-admin-dashboard.tsx(270,52): error TS2345: Argument of type 'UserRole | null' is not assignable to parameter of type 'UserRole'.
+  Type 'null' is not assignable to type 'UserRole'.
+src/pages/super-admin/super-admin-dashboard.tsx(273,28): error TS18047: 'user.role' is possibly 'null'.
+src/pages/super-admin/super-admin-dashboard.tsx(285,44): error TS2769: No overload matches this call.
+  Overload 1 of 4, '(value: string | number | Date): Date', gave the following error.
+    Argument of type 'number | null' is not assignable to parameter of type 'string | number | Date'.
+      Type 'null' is not assignable to type 'string | number | Date'.
+  Overload 2 of 4, '(value: string | number): Date', gave the following error.
+    Argument of type 'number | null' is not assignable to parameter of type 'string | number'.
+      Type 'null' is not assignable to type 'string | number'.
+src/providers/auth-provider.tsx(8,1): error TS6133: 'serverTimestamp' is declared but its value is never read.
+src/providers/auth-provider.tsx(47,11): error TS2353: Object literal may only specify known properties, and 'targetId' does not exist in type 'Omit<LogLoginDetails, "timestamp" | "userAgent">'.
+src/routes/_public/index.tsx(57,19): error TS2531: Object is possibly 'null'.
+src/routes/_public/index.tsx(69,31): error TS2339: Property 'seconds' does not exist on type 'number'.
+src/routes/_public/index.tsx(70,31): error TS2339: Property 'seconds' does not exist on type 'number'.
+src/routes/_public/index.tsx(85,34): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/routes/_public/index.tsx(188,47): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/routes/_public/index.tsx(198,47): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/routes/_public/index.tsx(249,45): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/routes/_public/index.tsx(294,45): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/routes/_public/index.tsx(318,50): error TS2339: Property 'videoUrl' does not exist on type '{ title: string | null; category: string | null; createdAt: number | null; averageRating: number | null; completionCount: number | null; completionRate: number | null; createdBy: string | null; ... 24 more ...; id: string; }'.
+src/routes/_public/index.tsx(327,51): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/routes/_public/index.tsx(454,49): error TS2322: Type '"/auth"' is not assignable to type '"." | "/" | "/admin" | "/student" | "/super-admin" | "/admin/analytics" | "/admin/certificates" | "/admin/courses" | "/admin/live-sessions" | "/admin/users" | "/student/courses" | ... 10 more ... | ".."'.
+src/services/hooks.ts(198,33): error TS2339: Property 'delete' does not exist on type '{ create: (variables: CreateCourseVariables) => Promise<void>; enroll: (variables: { courseId: string; studentId: string; }) => Promise<void>; ... 4 more ...; update: (variables: { ...; }) => Promise<...>; }'.
+src/services/hooks.ts(367,49): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/services/hooks.ts(368,44): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.

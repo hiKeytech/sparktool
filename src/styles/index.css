@@ -1,0 +1,68 @@
+@layer theme, base, mantine, components, utilities;
+@import "tailwindcss";
+
+@import "aos/dist/aos.css";
+@import "@mantine/core/styles.layer.css";
+@import "@mantine/dates/styles.layer.css";
+
+@theme {
+  --color-chalet-green-50: #f6f8ed;
+  --color-chalet-green-100: #f6f9f1;
+  --color-chalet-green-200: #ebf0e3;
+  --color-chalet-green-300: #d4dfc1;
+  --color-chalet-green-400: #bccf9c;
+  --color-chalet-green-500: #a7c07d;
+  --color-chalet-green-600: #9ab768;
+  --color-chalet-green-700: #93b35d;
+  --color-chalet-green-800: #7f9d4d;
+  --color-chalet-green-900: #708b42;
+  --color-chalet-green-950: #4f642c;
+
+  --color-fun-green-50: #f1fcf4;
+  --color-fun-green-100: #defae7;
+  --color-fun-green-200: #bff3cf;
+  --color-fun-green-300: #8de8ab;
+  --color-fun-green-400: #54d47f;
+  --color-fun-green-500: #2dba5c;
+  --color-fun-green-600: #209949;
+  --color-fun-green-700: #1b7339;
+  --color-fun-green-800: #1b6033;
+  --color-fun-green-900: #184f2c;
+  --color-fun-green-950: #082b15;
+
+  /* Deep Space Theme Variables */
+  --color-primary: #050505;
+  --color-secondary: #0a0a0a;
+  --color-accent-cream: #f5f0eb;
+  --color-accent-rust: #c14953;
+  --color-accent-sage: #84a98c;
+  --color-text-muted: #666666;
+  
+  --font-display: "Merriweather", serif;
+  --font-sans: "Outfit", sans-serif;
+  --font-cursive: "Italianno", cursive;
+
+  --animate-fade-in: fadeIn 1s ease-in-out infinite;
+  @keyframes fadeIn {
+    "0%": {
+      opacity: "0";
+    }
+
+    "100%": {
+      opacity: "1";
+    }
+  }
+
+  --animate-slide-up: slideUp 0.5s ease-out forwards;
+  @keyframes slideUp {
+    "0%": {
+      transform: "translateY(10px)";
+      opacity: "0";
+    }
+
+    "100%": {
+      transform: "translateY(0)";
+      opacity: "1";
+    }
+  }
+}

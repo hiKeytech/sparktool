@@ -1,0 +1,81 @@
+
+> afri-learn@0.0.0 build /Users/ibnlanre/Desktop/workspace/hikey-learn/apps/afri-learn
+> tsc && vite build
+
+src/actions/authentication.ts(39,106): error TS6133: 'userId' is declared but its value is never read.
+src/components/certificates/certificate-generator.tsx(185,13): error TS2322: Type '{ label: string | null; value: string; }[]' is not assignable to type 'ComboboxData | undefined'.
+  Type '{ label: string | null; value: string; }[]' is not assignable to type '(string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>)[]'.
+    Type '{ label: string | null; value: string; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+      Type '{ label: string | null; value: string; }' is not assignable to type 'ComboboxItem'.
+        Types of property 'label' are incompatible.
+          Type 'string | null' is not assignable to type 'string'.
+            Type 'null' is not assignable to type 'string'.
+src/components/certificates/certificate-preview.tsx(54,31): error TS2339: Property 'id' does not exist on type '{ completionDate: number | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; courseId: string; }'.
+src/components/certificates/certificate-template.tsx(5,1): error TS6133: 'forwardRef' is declared but its value is never read.
+src/components/certificates/certificate-template.tsx(207,26): error TS2339: Property 'id' does not exist on type '{ completionDate: number | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; courseId: string; }'.
+src/components/certificates/certificate-template.tsx(357,48): error TS2339: Property 'id' does not exist on type '{ completionDate: number | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; courseId: string; }'.
+src/components/certificates/student-certificates.tsx(47,9): error TS6133: 'handleDownload' is declared but its value is never read.
+src/components/certificates/student-certificates.tsx(47,27): error TS6133: 'certificate' is declared but its value is never read.
+src/components/guards/admin-route-guard.tsx(13,39): error TS2322: Type '"/auth"' is not assignable to type '"." | "/super-admin" | "/" | "/admin" | "/admin/live-sessions" | "/admin/certificates" | "/admin/courses/$courseId/edit" | "/admin/courses" | ".." | "/login" | "/verify-certificate" | ... 17 more ... | "/student/courses/$courseId/quiz/$quizId"'.
+src/components/guards/student-route-guard.tsx(13,39): error TS2322: Type '"/auth"' is not assignable to type '"." | "/super-admin" | "/" | "/admin" | "/admin/live-sessions" | "/admin/certificates" | "/admin/courses/$courseId/edit" | "/admin/courses" | ".." | "/login" | "/verify-certificate" | ... 17 more ... | "/student/courses/$courseId/quiz/$quizId"'.
+src/components/guards/super-admin-route-guard.tsx(14,39): error TS2322: Type '"/auth"' is not assignable to type '"." | "/super-admin" | "/" | "/admin" | "/admin/live-sessions" | "/admin/certificates" | "/admin/courses/$courseId/edit" | "/admin/courses" | ".." | "/login" | "/verify-certificate" | ... 17 more ... | "/student/courses/$courseId/quiz/$quizId"'.
+src/components/layouts/admin-layout.tsx(52,27): error TS2353: Object literal may only specify known properties, and 'sessionStartTime' does not exist in type '{ userId?: string | undefined; }'.
+src/components/layouts/public-layout.tsx(33,16): error TS2322: Type '"/auth"' is not assignable to type '"." | "/super-admin" | "/" | "/admin" | "/admin/live-sessions" | "/admin/certificates" | "/admin/courses/$courseId/edit" | "/admin/courses" | ".." | "/login" | "/verify-certificate" | ... 17 more ... | "/student/courses/$courseId/quiz/$quizId"'.
+src/components/modals/create-course-modal.tsx(61,11): error TS2740: Type 'Record<string, unknown>' is missing the following properties from type 'Pick<Nullish<{ averageRating: number; category: string; completionCount: number; completionRate: number; createdAt: number; createdBy: string; createdByMeta: { name: string; photoUrl: string; }; description: string; ... 23 more ...; updatedAt: number; }, never>, "category" | ... 14 more ... | "thumbnailUrl">': category, difficulty, published, description, and 12 more.
+src/components/modals/create-course-modal.tsx(148,18): error TS18046: 'form.values.instructors' is of type 'unknown'.
+src/components/modals/create-course-modal.tsx(156,26): error TS18046: 'form.values.instructors' is of type 'unknown'.
+src/components/modals/create-live-session-modal.tsx(98,11): error TS2322: Type '{ label: string | null; value: string; }[]' is not assignable to type 'ComboboxData | undefined'.
+  Type '{ label: string | null; value: string; }[]' is not assignable to type '(string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>)[]'.
+    Type '{ label: string | null; value: string; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+      Type '{ label: string | null; value: string; }' is not assignable to type 'ComboboxItem'.
+        Types of property 'label' are incompatible.
+          Type 'string | null' is not assignable to type 'string'.
+            Type 'null' is not assignable to type 'string'.
+src/components/modals/duplicate-course-modal.tsx(43,26): error TS2339: Property 'duration' does not exist on type 'CourseWithId'.
+src/components/modals/duplicate-course-modal.tsx(52,26): error TS2339: Property 'videoUrl' does not exist on type 'CourseWithId'.
+src/components/modals/duplicate-course-modal.tsx(57,11): error TS2739: Type '{ category: string | null; description: string | null; difficulty: "advanced" | "beginner" | "intermediate" | null; duration: any; instructors: Nullish<{ biography: string; email: string; name: string; title: string; }, never>[]; ... 7 more ...; videoUrl: any; }' is missing the following properties from type 'Pick<Nullish<{ averageRating: number; category: string; completionCount: number; completionRate: number; createdAt: number; createdBy: string; createdByMeta: { name: string; photoUrl: string; }; description: string; ... 23 more ...; updatedAt: number; }, never>, "category" | ... 14 more ... | "thumbnailUrl">': featured, language, level, previewVideoUrl, price
+src/components/modals/edit-course-modal.tsx(47,24): error TS2339: Property 'duration' does not exist on type 'CourseWithId'.
+src/components/modals/edit-course-modal.tsx(58,24): error TS2339: Property 'videoUrl' does not exist on type 'CourseWithId'.
+src/components/modals/edit-course-modal.tsx(149,18): error TS18046: 'form.values.instructors' is of type 'unknown'.
+src/components/modals/edit-course-modal.tsx(157,26): error TS18046: 'form.values.instructors' is of type 'unknown'.
+src/components/modals/edit-live-session-modal.tsx(101,11): error TS2322: Type '{ label: string | null; value: string; }[]' is not assignable to type 'ComboboxData | undefined'.
+  Type '{ label: string | null; value: string; }[]' is not assignable to type '(string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>)[]'.
+    Type '{ label: string | null; value: string; }' is not assignable to type 'string | ComboboxItem | ComboboxItemGroup<string | ComboboxItem>'.
+      Type '{ label: string | null; value: string; }' is not assignable to type 'ComboboxItem'.
+        Types of property 'label' are incompatible.
+          Type 'string | null' is not assignable to type 'string'.
+            Type 'null' is not assignable to type 'string'.
+src/components/navigation/course-breadcrumbs.tsx(23,9): error TS6133: 'navigate' is declared but its value is never read.
+src/components/navigation/course-breadcrumbs.tsx(42,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/navigation/course-breadcrumbs.tsx(48,62): error TS2339: Property 'id' does not exist on type 'CourseSection'.
+src/components/navigation/course-breadcrumbs.tsx(50,7): error TS2322: Type 'string | null' is not assignable to type 'string'.
+  Type 'null' is not assignable to type 'string'.
+src/components/navigation/lesson-navigation.tsx(11,23): error TS2724: '"@tanstack/react-router"' has no exported member named 'useSearchParams'. Did you mean 'stripSearchParams'?
+src/components/navigation/lesson-navigation.tsx(58,14): error TS18047: 'a.section.order' is possibly 'null'.
+src/components/navigation/lesson-navigation.tsx(58,32): error TS18047: 'b.section.order' is possibly 'null'.
+src/components/navigation/lesson-navigation.tsx(78,14): error TS2345: Argument of type 'string' is not assignable to parameter of type 'NavigateOptions<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined, string, "">'.
+  Type 'string' is not assignable to type 'MakeOptionalSearchParams<RouterCore<Route<Register, any, "/", "/", string, "__root__", undefined, {}, RootContext, AnyContext, AnyContext, {}, undefined, ... 4 more ..., undefined>, "never", false, RouterHistory, Record<...>>, string, string | undefined>'.
+src/components/quiz/question-builder.tsx(7,3): error TS1484: 'DropResult' is a type and must be imported using a type-only import when 'verbatimModuleSyntax' is enabled.
+src/components/quiz/question-builder.tsx(119,7): error TS2322: Type '"essay" | "multiple-choice" | "true-false" | "short-answer"' is not assignable to type '"essay" | "multiple-choice" | "true-false"'.
+  Type '"short-answer"' is not assignable to type '"essay" | "multiple-choice" | "true-false"'.
+src/components/quiz/question-builder.tsx(177,18): error TS2365: Operator '>' cannot be applied to types 'string | number' and 'number'.
+src/components/quiz/quiz-manager.tsx(150,11): error TS2322: Type '{ courseId: string; createdBy: string; description: string; isRequired: boolean; lessonId: string | undefined; maxAttempts: number | null; order: number; passingScore: number; placement: "lesson" | ... 1 more ... | "course"; ... 4 more ...; unlockConditions: { ...; }; }' is not assignable to type 'Partial<Omit<CourseQuiz, "id">>'.
+  Types of property 'maxAttempts' are incompatible.
+    Type 'number | null' is not assignable to type 'number | undefined'.
+      Type 'null' is not assignable to type 'number | undefined'.
+src/components/quiz/quiz-manager.tsx(154,46): error TS2345: Argument of type '{ courseId: string; createdBy: string; description: string; isRequired: boolean; lessonId: string | undefined; maxAttempts: number | null; order: number; passingScore: number; placement: "lesson" | ... 1 more ... | "course"; ... 4 more ...; unlockConditions: { ...; }; }' is not assignable to parameter of type 'Omit<CourseQuiz, "id">'.
+  Type '{ courseId: string; createdBy: string; description: string; isRequired: boolean; lessonId: string | undefined; maxAttempts: number | null; order: number; passingScore: number; placement: "lesson" | ... 1 more ... | "course"; ... 4 more ...; unlockConditions: { ...; }; }' is missing the following properties from type 'Omit<CourseQuiz, "id">': createdAt, updatedAt
+src/components/shared/data-table/certificates-table-config.tsx(99,65): error TS2339: Property 'id' does not exist on type '{ completionDate: number | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; courseId: string; }'.
+src/components/shared/data-table/certificates-table-config.tsx(127,65): error TS2339: Property 'id' does not exist on type '{ completionDate: number | null; courseName: string | null; downloadCount: number | null; instructorName: string | null; issued: { name: string | null; photoUrl: string | null; at: number; by: string; } | null; ... 4 more ...; courseId: string; }'.
+src/components/shared/data-table/course-table-config.tsx(154,13): error TS2322: Type 'string | null' is not assignable to type 'string | undefined'.
+  Type 'null' is not assignable to type 'string | undefined'.
+src/components/shared/data-table/course-table-config.tsx(159,14): error TS18047: 'course.title' is possibly 'null'.
+src/components/video/universal-video-player.tsx(142,9): error TS6133: 'handleVolumeChange' is declared but its value is never read.
+src/lib/analytics/engagement.ts(43,24): error TS2339: Property 'targetId' does not exist on type 'ActivityLog'.
+src/lib/certificates/certificate-utils.ts(1,15): error TS2724: '"@/services/types"' has no exported member named 'CourseDocumentReference'. Did you mean 'CourseQuizDocumentReference'?
+src/lib/certificates/certificate-utils.ts(10,3): error TS6133: 'courseId' is declared but its value is never read.
+src/lib/certificates/certificate-utils.ts(11,3): error TS6133: 'studentId' is declared but its value is never read.
+src/lib/certificates/certificate-utils.ts(15,9): error TS6198: All destructured elements are unused.
+src/lib/certificates/certificate-utils.ts(16,9): error TS6133: 'studentName' is declared but its value is never read.
+ ELIFECYCLE  Command failed with exit code 1.
