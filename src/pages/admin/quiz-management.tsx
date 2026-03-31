@@ -1,41 +1,40 @@
 import {
-    Button,
-    Center,
-    Container,
-    Grid,
-    Group,
-    Loader,
-    Paper,
-    Stack,
-    Text,
-    ThemeIcon,
-    Title,
+  Button,
+  Center,
+  Container,
+  Grid,
+  Group,
+  Loader,
+  Paper,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
 } from "@mantine/core";
 import {
-    IconClipboard,
-    IconClock,
-    IconPlus,
-    IconTarget,
-    IconUsers,
+  IconClipboard,
+  IconClock,
+  IconPlus,
+  IconTarget,
+  IconUsers,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 
 import {
-    openCreateQuizModal,
-    openDeleteQuizModal,
-    openEditQuizModal,
+  openCreateQuizModal,
+  openDeleteQuizModal,
+  openEditQuizModal,
 } from "@/components/modals";
 import { DataTable } from "@/components/shared/data-table";
 import {
-    createQuizColumns,
-    createQuizTableFilters,
-    type QuizTableActions,
+  createQuizColumns,
+  createQuizTableFilters,
+  type QuizTableActions,
 } from "@/components/shared/data-table/quiz-table-config";
 import { useListCourses, useQuizzes } from "@/services/hooks";
-import { useAuthContext } from "@/providers/auth-provider";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 
-export function QuizManagement() {
-  const { tenant } = useAuthContext();
+export function QuizManagement({ tenant, user }: TenantUserPageProps) {
   const navigate = useNavigate();
 
   // Fetch data using TanStack Query
@@ -63,12 +62,20 @@ export function QuizManagement() {
       }
     },
     onManageQuestions: (quizId: string) => {
-      // @ts-expect-error route not yet implemented
-      navigate({ to: "/admin/quizzes/$quizId/questions", params: { quizId } });
+      if (!tenant?.id) return;
+
+      navigate({
+        to: "/$tenant/admin/quizzes/$quizId/questions",
+        params: { quizId, tenant: tenant.id },
+      });
     },
     onView: (quizId: string) => {
-      // @ts-expect-error route not yet implemented
-      navigate({ to: "/admin/quizzes/$quizId", params: { quizId } });
+      if (!tenant?.id) return;
+
+      navigate({
+        to: "/$tenant/admin/quizzes/$quizId",
+        params: { quizId, tenant: tenant.id },
+      });
     },
   };
 
@@ -99,7 +106,13 @@ export function QuizManagement() {
           <Button
             className="bg-fun-green-600 hover:bg-fun-green-700"
             leftSection={<IconPlus size={16} />}
-            onClick={() => openCreateQuizModal(courses)}
+            onClick={() => {
+              if (!user) {
+                return;
+              }
+
+              openCreateQuizModal(courses, user);
+            }}
           >
             Create Quiz
           </Button>

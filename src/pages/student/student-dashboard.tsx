@@ -1,35 +1,32 @@
 import {
-    Avatar,
-    Button,
-    Card,
-    Container,
-    Grid,
-    Group,
-    Progress,
-    SimpleGrid,
-    Stack,
-    Text,
-    Title,
+  Avatar,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Group,
+  Progress,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
-    IconClock,
-    IconMessage,
-    IconSettings,
-    IconTrendingUp,
+  IconClock,
+  IconMessage,
+  IconSettings,
+  IconTrendingUp,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 
 import { NotificationsDrawer } from "@/components/notifications";
 import { NCSLogo } from "@/components/shared/ncs-logo";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
-import { useAuthContext } from "@/providers/auth-provider";
 import { useUserProgress } from "@/services/hooks";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 
-interface StudentDashboardProps {}
-
-export function StudentDashboard(_props: StudentDashboardProps) {
-  const { user, tenant } = useAuthContext();
+export function StudentDashboard({ tenant, user }: TenantUserPageProps) {
   const navigate = useNavigate();
   const [
     notificationsOpened,
@@ -38,7 +35,7 @@ export function StudentDashboard(_props: StudentDashboardProps) {
 
   const { data: userProgress, isLoading: progressLoading } = useUserProgress(
     tenant?.id,
-    user?.uid
+    user?.uid,
   );
 
   const completedCourses =
@@ -88,7 +85,13 @@ export function StudentDashboard(_props: StudentDashboardProps) {
               className="bg-fun-green-800 hover:bg-fun-green-700"
               color="fun-green"
               leftSection={<IconSettings size={16} />}
-              onClick={() => navigate({ to: "/student/profile" })}
+              onClick={() =>
+                tenant?.id &&
+                navigate({
+                  params: { tenant: tenant.id },
+                  to: "/$tenant/student/profile",
+                })
+              }
               variant="filled"
             >
               Settings
@@ -128,7 +131,13 @@ export function StudentDashboard(_props: StudentDashboardProps) {
                     <Button
                       className="text-fun-green-700"
                       color="fun-green"
-                      onClick={() => navigate({ to: "/student/courses" })}
+                      onClick={() =>
+                        tenant?.id &&
+                        navigate({
+                          params: { tenant: tenant.id },
+                          to: "/$tenant/student/courses",
+                        })
+                      }
                       size="sm"
                       variant="white"
                     >
@@ -289,7 +298,7 @@ export function StudentDashboard(_props: StudentDashboardProps) {
                         <Text c="dimmed" size="xs">
                           {progress.lastAccessedAt
                             ? new Date(
-                                progress.lastAccessedAt
+                                progress.lastAccessedAt,
                               ).toLocaleDateString()
                             : "Recently updated"}
                         </Text>

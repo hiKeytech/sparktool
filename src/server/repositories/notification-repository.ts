@@ -41,6 +41,13 @@ export const notificationRepository = {
     return parseStoredNotification(document);
   },
 
+  async getById(notificationId: string) {
+    const notifications = await getNotificationCollection();
+    const notification = await notifications.findOne({ _id: notificationId });
+
+    return parseStoredNotification(notification);
+  },
+
   async countUnread(userId: string) {
     const notifications = await getNotificationCollection();
     return notifications.countDocuments({ isRead: false, userId });

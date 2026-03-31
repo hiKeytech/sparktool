@@ -4,7 +4,11 @@ import { z } from "zod";
 import { courseRepository } from "@/server/repositories/course-repository";
 import { courseLessonRepository } from "@/server/repositories/course-lesson-repository";
 import { courseSectionRepository } from "@/server/repositories/course-section-repository";
-import { userRepository } from "@/server/repositories/user-repository";
+import {
+  assertTenantAdminAccess,
+  requireTenantScopedActorWithTenant,
+  resolveTenantFromCurrentRequest,
+} from "@/server/tenant-context";
 
 const createSectionInputSchema = z.object({
   data: z.object({
@@ -78,26 +82,36 @@ async function syncCourseSectionIds(courseId: string) {
   });
 }
 
+async function getCourseForTenant(courseId: string, tenantId: string) {
+  const course = await courseRepository.getById(courseId);
+
+  if (!course || course.tenantId !== tenantId) {
+    throw new Error("Course does not belong to the current tenant.");
+  }
+
+  return course;
+}
+
 export const createSectionFn = createServerFn({ method: "POST" })
   .inputValidator(createSectionInputSchema)
   .handler(async ({ data }) => {
-    const actor = await userRepository.getById(data.userId);
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+
+    assertTenantAdminAccess(actor);
+    await getCourseForTenant(data.data.courseId, tenantId!);
+
     const createdSection = await courseSectionRepository.create({
       ...data.data,
-      createdBy: data.userId,
-      createdByMeta: actor
-        ? {
-            name: actor.displayName,
-            photoUrl: actor.photoURL,
-          }
-        : null,
-      updatedBy: data.userId,
-      updatedByMeta: actor
-        ? {
-            name: actor.displayName,
-            photoUrl: actor.photoURL,
-          }
-        : null,
+      createdBy: actor.id,
+      createdByMeta: {
+        name: actor.displayName,
+        photoUrl: actor.photoURL,
+      },
+      updatedBy: actor.id,
+      updatedByMeta: {
+        name: actor.displayName,
+        photoUrl: actor.photoURL,
+      },
     });
 
     if (!createdSection) {
@@ -106,7 +120,7 @@ export const createSectionFn = createServerFn({ method: "POST" })
 
     await syncCourseSectionIds(data.data.courseId);
     await courseRepository.update(data.data.courseId, {
-      lastModifiedBy: data.userId,
+      lastModifiedBy: actor.id,
     });
 
     return createdSection.id;
@@ -115,11 +129,16 @@ export const createSectionFn = createServerFn({ method: "POST" })
 export const deleteSectionFn = createServerFn({ method: "POST" })
   .inputValidator(sectionIdInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
     const section = await courseSectionRepository.getById(data);
+
+    assertTenantAdminAccess(actor);
 
     if (!section) {
       throw new Error("Section not found.");
     }
+
+    await getCourseForTenant(section.courseId, tenantId!);
 
     const lessons = await courseLessonRepository.listBySection(section.id);
 
@@ -144,18 +163,48 @@ export const deleteSectionFn = createServerFn({ method: "POST" })
 export const getSectionFn = createServerFn({ method: "GET" })
   .inputValidator((sectionId: string) => sectionId)
   .handler(async ({ data }) => {
-    return courseSectionRepository.getById(data);
+    const [tenant, section] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      courseSectionRepository.getById(data),
+    ]);
+
+    if (!section) {
+      return null;
+    }
+
+    if (!tenant) {
+      return section;
+    }
+
+    const course = await courseRepository.getById(section.courseId);
+
+    if (!course || course.tenantId !== tenant.id) {
+      return null;
+    }
+
+    return section;
   });
 
 export const listSectionsFn = createServerFn({ method: "GET" })
   .inputValidator((courseId: string) => courseId)
   .handler(async ({ data }) => {
+    const tenant = await resolveTenantFromCurrentRequest();
+
+    if (tenant) {
+      await getCourseForTenant(data, tenant.id);
+    }
+
     return courseSectionRepository.listByCourse(data);
   });
 
 export const reorderSectionsFn = createServerFn({ method: "POST" })
   .inputValidator(reorderSectionsInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+
+    assertTenantAdminAccess(actor);
+    await getCourseForTenant(data.courseId, tenantId!);
+
     await Promise.all(
       data.reorderData.map(({ itemId, newOrder }) =>
         courseSectionRepository.update(itemId, { order: newOrder }),
@@ -170,24 +219,26 @@ export const reorderSectionsFn = createServerFn({ method: "POST" })
 export const updateSectionFn = createServerFn({ method: "POST" })
   .inputValidator(updateSectionInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
     const section = await courseSectionRepository.getById(data.sectionId);
+
+    assertTenantAdminAccess(actor);
 
     if (!section) {
       throw new Error("Section not found.");
     }
 
-    const actor = await userRepository.getById(data.sectionData.userId);
+    await getCourseForTenant(section.courseId, tenantId!);
+
     const updatedSection = await courseSectionRepository.update(
       data.sectionId,
       {
         ...data.sectionData.updates,
-        updatedBy: data.sectionData.userId,
-        updatedByMeta: actor
-          ? {
-              name: actor.displayName,
-              photoUrl: actor.photoURL,
-            }
-          : section.updatedByMeta,
+        updatedBy: actor.id,
+        updatedByMeta: {
+          name: actor.displayName,
+          photoUrl: actor.photoURL,
+        },
       },
     );
 
@@ -201,6 +252,11 @@ export const updateSectionFn = createServerFn({ method: "POST" })
 export const createLessonFn = createServerFn({ method: "POST" })
   .inputValidator(createLessonInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+
+    assertTenantAdminAccess(actor);
+    await getCourseForTenant(data.lessonData.courseId, tenantId!);
+
     const createdLesson = await courseLessonRepository.create(data.lessonData);
 
     if (!createdLesson) {
@@ -211,7 +267,7 @@ export const createLessonFn = createServerFn({ method: "POST" })
 
     if (course) {
       await courseRepository.update(data.lessonData.courseId, {
-        lastModifiedBy: data.userId,
+        lastModifiedBy: actor.id,
         totalLessons: (course.totalLessons || 0) + 1,
       });
     }
@@ -222,11 +278,16 @@ export const createLessonFn = createServerFn({ method: "POST" })
 export const deleteLessonFn = createServerFn({ method: "POST" })
   .inputValidator(sectionIdInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
     const lesson = await courseLessonRepository.getById(data);
+
+    assertTenantAdminAccess(actor);
 
     if (!lesson) {
       throw new Error("Lesson not found.");
     }
+
+    await getCourseForTenant(lesson.courseId, tenantId!);
 
     await courseLessonRepository.delete(lesson.id);
 
@@ -244,24 +305,73 @@ export const deleteLessonFn = createServerFn({ method: "POST" })
 export const getLessonFn = createServerFn({ method: "GET" })
   .inputValidator((lessonId: string) => lessonId)
   .handler(async ({ data }) => {
-    return courseLessonRepository.getById(data);
+    const [tenant, lesson] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      courseLessonRepository.getById(data),
+    ]);
+
+    if (!lesson) {
+      return null;
+    }
+
+    if (!tenant) {
+      return lesson;
+    }
+
+    const course = await courseRepository.getById(lesson.courseId);
+
+    if (!course || course.tenantId !== tenant.id) {
+      return null;
+    }
+
+    return lesson;
   });
 
 export const listLessonsFn = createServerFn({ method: "GET" })
   .inputValidator((sectionId: string) => sectionId)
   .handler(async ({ data }) => {
+    const [tenant, section] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      courseSectionRepository.getById(data),
+    ]);
+
+    if (!section) {
+      return [];
+    }
+
+    if (tenant) {
+      await getCourseForTenant(section.courseId, tenant.id);
+    }
+
     return courseLessonRepository.listBySection(data);
   });
 
 export const listLessonsByCourseFn = createServerFn({ method: "GET" })
   .inputValidator((courseId: string) => courseId)
   .handler(async ({ data }) => {
+    const tenant = await resolveTenantFromCurrentRequest();
+
+    if (tenant) {
+      await getCourseForTenant(data, tenant.id);
+    }
+
     return courseLessonRepository.listByCourse(data);
   });
 
 export const reorderLessonsFn = createServerFn({ method: "POST" })
   .inputValidator(reorderLessonsInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+    const section = await courseSectionRepository.getById(data.sectionId);
+
+    assertTenantAdminAccess(actor);
+
+    if (!section) {
+      throw new Error("Section not found.");
+    }
+
+    await getCourseForTenant(section.courseId, tenantId!);
+
     await Promise.all(
       data.reorderData.map(({ itemId, newOrder }) =>
         courseLessonRepository.update(itemId, { order: newOrder }),
@@ -274,6 +384,17 @@ export const reorderLessonsFn = createServerFn({ method: "POST" })
 export const updateLessonFn = createServerFn({ method: "POST" })
   .inputValidator(updateLessonInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+    const lesson = await courseLessonRepository.getById(data.lessonId);
+
+    assertTenantAdminAccess(actor);
+
+    if (!lesson) {
+      throw new Error("Lesson not found.");
+    }
+
+    await getCourseForTenant(lesson.courseId, tenantId!);
+
     const updatedLesson = await courseLessonRepository.update(
       data.lessonId,
       data.lessonData,

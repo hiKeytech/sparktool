@@ -1,13 +1,13 @@
 import {
-    AppShell,
-    Burger,
-    Button,
-    Container,
-    Drawer,
-    Group,
-    Stack,
-    Text,
-    UnstyledButton,
+  AppShell,
+  Burger,
+  Button,
+  Container,
+  Drawer,
+  Group,
+  Stack,
+  Text,
+  UnstyledButton,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconLogin } from "@tabler/icons-react";
@@ -27,7 +27,7 @@ export function PublicLayout() {
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
     { href: "/verify-certificate", label: "Verify Certificate" },
-  ];
+  ] as const;
 
   function handleLogin() {
     navigate({ to: "/login" });
@@ -35,6 +35,10 @@ export function PublicLayout() {
 
   function handleHome() {
     navigate({ to: "/" });
+  }
+
+  function handlePublicNavigation(path: string) {
+    window.location.assign(path);
   }
 
   return (
@@ -68,7 +72,7 @@ export function PublicLayout() {
                 <UnstyledButton
                   className="font-medium text-gray-700 transition-colors hover:text-fun-green-600"
                   key={item.label}
-                  onClick={() => navigate({ to: item.href })}
+                  onClick={() => handlePublicNavigation(item.href)}
                 >
                   {item.label}
                 </UnstyledButton>
@@ -119,7 +123,7 @@ export function PublicLayout() {
               className="py-2 font-medium text-gray-700 hover:text-fun-green-600"
               key={item.label}
               onClick={() => {
-                navigate({ to: item.href });
+                handlePublicNavigation(item.href);
                 closeDrawer();
               }}
             >

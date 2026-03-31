@@ -12,26 +12,27 @@ import {
   IconMapPin,
   IconPhone,
 } from "@tabler/icons-react";
-import { useNavigate } from "@tanstack/react-router";
 
 import { NCSLogo } from "@/components/shared/ncs-logo";
 
 export function PublicFooter() {
-  const navigate = useNavigate();
+  function handlePublicNavigation(path: string) {
+    window.location.assign(path);
+  }
 
   const quickLinks = [
     { href: "/about", label: "About NCS" },
     { href: "/courses", label: "Course Catalog" },
     { href: "/guidelines", label: "Guidelines" },
     { href: "/contact", label: "Contact" },
-  ];
+  ] as const;
 
   const supportLinks = [
     { href: "/help", label: "Help Center" },
     { href: "/support", label: "Technical Support" },
     { href: "/certificate-verification", label: "Certificate Verification" },
     { href: "/privacy", label: "Privacy Policy" },
-  ];
+  ] as const;
 
   return (
     <footer className="text-white bg-gray-900">
@@ -69,7 +70,7 @@ export function PublicFooter() {
                   <UnstyledButton
                     className="text-sm text-gray-400 transition-colors hover:text-fun-green-400 w-fit"
                     key={link.label}
-                    onClick={() => navigate({ to: link.href })}
+                    onClick={() => handlePublicNavigation(link.href)}
                   >
                     {link.label}
                   </UnstyledButton>
@@ -89,7 +90,7 @@ export function PublicFooter() {
                   <UnstyledButton
                     className="text-sm text-gray-400 transition-colors hover:text-fun-green-400 w-fit"
                     key={link.label}
-                    onClick={() => navigate({ to: link.href })}
+                    onClick={() => handlePublicNavigation(link.href)}
                   >
                     {link.label}
                   </UnstyledButton>

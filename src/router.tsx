@@ -6,8 +6,6 @@ import { minutesToMilliseconds, secondsToMilliseconds } from "date-fns";
 import { ErrorBoundary } from "./components/error-boundary";
 import { NotFound } from "./components/not-found";
 import { routeTree } from "./routeTree.gen";
-import { AuthProvider } from "./providers/auth-provider";
-
 
 export function getRouter() {
   const queryClient = new QueryClient();
@@ -21,9 +19,6 @@ export function getRouter() {
     defaultStaleTime: minutesToMilliseconds(5),
     routeTree,
     scrollRestoration: true,
-    Wrap({ children }) {
-      return <AuthProvider>{children}</AuthProvider>
-    },
   });
 
   setupRouterSsrQueryIntegration({
@@ -31,8 +26,6 @@ export function getRouter() {
     router,
     wrapQueryClient: true,
   });
-
-
 
   return router;
 }

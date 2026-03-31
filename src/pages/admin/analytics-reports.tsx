@@ -1,39 +1,39 @@
 import {
-    ActionIcon,
-    Alert,
-    Badge,
-    Button,
-    Card,
-    Center,
-    Container,
-    Divider,
-    Grid,
-    Group,
-    Paper,
-    Progress,
-    RingProgress,
-    Select,
-    SimpleGrid,
-    Stack,
-    Tabs,
-    Text,
-    Title,
+  ActionIcon,
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Center,
+  Container,
+  Divider,
+  Grid,
+  Group,
+  Paper,
+  Progress,
+  RingProgress,
+  Select,
+  SimpleGrid,
+  Stack,
+  Tabs,
+  Text,
+  Title,
 } from "@mantine/core";
 import {
-    IconAward,
-    IconBook,
-    IconCalendar,
-    IconCertificate,
-    IconChartBar,
-    IconClock,
-    IconDownload,
-    IconEye,
-    IconFilter,
-    IconInfoCircle,
-    IconTarget,
-    IconTrendingDown,
-    IconTrendingUp,
-    IconUsers,
+  IconAward,
+  IconBook,
+  IconCalendar,
+  IconCertificate,
+  IconChartBar,
+  IconClock,
+  IconDownload,
+  IconEye,
+  IconFilter,
+  IconInfoCircle,
+  IconTarget,
+  IconTrendingDown,
+  IconTrendingUp,
+  IconUsers,
 } from "@tabler/icons-react";
 import { useState } from "react";
 
@@ -41,13 +41,12 @@ import { DataTable } from "@/components/shared/data-table";
 import { createAnalyticsTableColumns } from "@/components/shared/data-table/analytics-table-config";
 import { createTrendsTableColumns } from "@/components/shared/data-table/trends-table-config";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
-import { useAuthContext } from "@/providers/auth-provider";
 import { useDashboardMetrics, useListCourses } from "@/services/hooks";
+import type { TenantPageProps } from "@/types/route-page-props";
 
-export function AnalyticsReports() {
-  const { tenant, user: _user } = useAuthContext();
+export function AnalyticsReports({ tenant }: TenantPageProps) {
   const [timeframe, setTimeframe] = useState<"month" | "week" | "year">(
-    "month"
+    "month",
   );
   const [activeTab, setActiveTab] = useState<string>("overview");
   const [selectedCategory, setSelectedCategory] = useState<null | string>(null);
@@ -55,7 +54,7 @@ export function AnalyticsReports() {
   const { data: dashboardMetrics, isLoading: metricsLoading } =
     useDashboardMetrics(tenant?.id || "");
   const { data: courses = [], isLoading: coursesLoading } = useListCourses(
-    tenant?.id
+    tenant?.id,
   );
 
   const overallCompletionRate = dashboardMetrics?.completionRate || 0;
@@ -113,7 +112,8 @@ export function AnalyticsReports() {
               ]}
               leftSection={<IconCalendar size={16} />}
               onChange={(value) =>
-                setTimeframe(value as "month" | "week" | "year")}
+                setTimeframe(value as "month" | "week" | "year")
+              }
               placeholder="Timeframe"
               value={timeframe}
             />
@@ -358,7 +358,7 @@ export function AnalyticsReports() {
                           <Text fw={500} size="sm">
                             {Math.round(
                               dashboardMetrics?.engagement
-                                ?.courseEngagementRate || 0
+                                ?.courseEngagementRate || 0,
                             )}
                             %
                           </Text>
@@ -393,7 +393,7 @@ export function AnalyticsReports() {
                             ((dashboardMetrics?.engagement
                               ?.studentSatisfactionScore || 0) /
                               5) *
-                              100
+                            100
                           }
                         />
                       </div>
@@ -404,7 +404,7 @@ export function AnalyticsReports() {
                           <Text fw={500} size="sm">
                             {Math.round(
                               dashboardMetrics?.engagement
-                                ?.platformUtilizationRate || 0
+                                ?.platformUtilizationRate || 0,
                             )}
                             %
                           </Text>
@@ -426,7 +426,7 @@ export function AnalyticsReports() {
                           <Text fw={500} size="sm">
                             {Math.round(
                               dashboardMetrics?.engagement
-                                ?.contentQualityScore || 0
+                                ?.contentQualityScore || 0,
                             )}
                             %
                           </Text>
@@ -603,14 +603,14 @@ export function AnalyticsReports() {
                               (dashboardMetrics.engagement.dailyActiveUsers /
                                 dashboardMetrics.totalActiveStudents) *
                                 100,
-                              100
+                              100,
                             )}
                           />
                           <Text c="dimmed" mt="xs" size="xs">
                             {Math.round(
                               (dashboardMetrics.engagement.dailyActiveUsers /
                                 dashboardMetrics.totalActiveStudents) *
-                                100
+                                100,
                             )}
                             % of registered students
                           </Text>
@@ -654,7 +654,7 @@ export function AnalyticsReports() {
                               .averageStudyTimePerDay /
                               180) *
                               100,
-                            100
+                            100,
                           )}
                         />
                         <Text c="dimmed" mt="xs" size="xs">
@@ -766,20 +766,20 @@ export function AnalyticsReports() {
               <Grid>
                 <Grid.Col span={12}>
                   {dashboardMetrics?.monthlyTrends &&
-                    dashboardMetrics.monthlyTrends.length > 0 ? (
-                        <DataTable
-                          columns={createTrendsTableColumns()}
-                          data={dashboardMetrics.monthlyTrends}
-                          enableFilters
-                          enablePagination={false}
-                          enableSorting
-                        />
-                      ) : (
-                        <Text c="dimmed" py="xl" ta="center">
-                          Trend data will be available when sufficient historical
-                          data is collected.
-                        </Text>
-                      )}
+                  dashboardMetrics.monthlyTrends.length > 0 ? (
+                    <DataTable
+                      columns={createTrendsTableColumns()}
+                      data={dashboardMetrics.monthlyTrends}
+                      enableFilters
+                      enablePagination={false}
+                      enableSorting
+                    />
+                  ) : (
+                    <Text c="dimmed" py="xl" ta="center">
+                      Trend data will be available when sufficient historical
+                      data is collected.
+                    </Text>
+                  )}
                 </Grid.Col>
               </Grid>
             </Card>

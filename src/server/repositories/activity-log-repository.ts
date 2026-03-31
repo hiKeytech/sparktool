@@ -3,6 +3,7 @@ import type { Collection, Filter, Sort } from "mongodb";
 
 import type {
   ActivityLog,
+  ActivityLogCreateInput,
   ListActivityLogVariables,
 } from "@/schemas/activity-log";
 import { getMongoDb } from "@/server/db/mongo";
@@ -31,11 +32,7 @@ async function getActivityLogCollection(): Promise<
 }
 
 export const activityLogRepository = {
-  async create(
-    logData: Omit<ActivityLog, "timestamp" | "userAgent"> & {
-      userAgent?: null | string;
-    },
-  ) {
+  async create(logData: ActivityLogCreateInput) {
     const activityLogs = await getActivityLogCollection();
     const logId = randomUUID();
     const document: ActivityLogDocument = {
@@ -64,9 +61,11 @@ export const activityLogRepository = {
     }
 
     for (const filter of queryFilter) {
-      query[filter.field as keyof ActivityLogDocument] = {
-        [filter.operator]: filter.value,
-      } as never;
+      Object.assign(query, {
+        [filter.field]: {
+          [filter.operator]: filter.value,
+        },
+      });
     }
 
     const sort: Sort = queryOrder.length

@@ -50,15 +50,6 @@ export function generateHeadContent(): Awaited<HeadContent> {
         content: "width=device-width, initial-scale=1",
         name: "viewport",
       },
-      {
-        title:
-          "Nigerian Correctional Service - Nigerian Correctional Service E-Learning Platform",
-      },
-      {
-        content:
-          "Official e-learning platform for students within the Nigerian Correctional Service, focusing on IT skills and vocational training.",
-        name: "description",
-      },
     ],
   };
 }

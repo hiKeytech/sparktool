@@ -29,8 +29,12 @@ import {
 import { Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useState } from "react";
 
-import { useAuthContext } from "@/providers/auth-provider";
-import { useCourseWithStructure, useEnrollInCourse, useSubscribeToTenant } from "@/services/hooks";
+import type { TenantUserPageProps } from "@/types/route-page-props";
+import {
+  useCourseWithStructure,
+  useEnrollInCourse,
+  useSubscribeToTenant,
+} from "@/services/hooks";
 import { formatRelativeTime } from "@/utils/date-utils";
 import { UniversalVideoPlayer } from "@/components/video/universal-video-player";
 import { usePaystackPayment } from "react-paystack";
@@ -48,13 +52,11 @@ import { usePaystackPayment } from "react-paystack";
  * - Nigerian government branding
  */
 
-
 // ... imports
 
-export function CourseDetails() {
+export function CourseDetails({ tenant, user }: TenantUserPageProps) {
   const { courseId } = useParams({ strict: false }) as { courseId: string };
   const { data: course, isLoading, error } = useCourseWithStructure(courseId);
-  const { tenant, user } = useAuthContext();
   const navigate = useNavigate();
   const [isEnrolling, setIsEnrolling] = useState(false);
 
@@ -66,25 +68,42 @@ export function CourseDetails() {
 
   // Check if user is already enrolled or subscribed
   const isEnrolled = user?.enrolledCourses?.includes(courseId || "") || false;
-  
+
   const activeSubscription = user?.subscriptions?.find(
-    (sub) => sub.tenantId === tenant?.id && sub.status === "active" && sub.expiresAt > Date.now()
+    (sub) =>
+      sub.tenantId === tenant?.id &&
+      sub.status === "active" &&
+      sub.expiresAt > Date.now(),
   );
 
-  const hasAccessViaSubscription = tenant?.config?.monetization?.model === "subscription" && !!activeSubscription;
-  const isFree = tenant?.config?.monetization?.model === "free" || (tenant?.config?.monetization?.model === "pay-per-course" && (!course?.price || course.price <= 0));
+  const hasAccessViaSubscription =
+    tenant?.config?.monetization?.model === "subscription" &&
+    !!activeSubscription;
+  const isFree =
+    tenant?.config?.monetization?.model === "free" ||
+    (tenant?.config?.monetization?.model === "pay-per-course" &&
+      (!course?.price || course.price <= 0));
   const hasAccess = isEnrolled || hasAccessViaSubscription;
 
   // Paystack configuration logic
-  const getPaystackConfig = (amount: number, type: "enrollment" | "subscription", plan?: "monthly" | "yearly") => ({
+  const getPaystackConfig = (
+    amount: number,
+    type: "enrollment" | "subscription",
+    plan?: "monthly" | "yearly",
+  ) => ({
     amount: Math.round(amount * 100), // in kobo
     email: user?.email || "",
     metadata: {
       custom_fields: [
         {
-          display_name: type === "enrollment" ? "Course Title" : "Subscription Plan",
-          value: type === "enrollment" ? course?.title || "" : `${plan} Subscription`,
-          variable_name: type === "enrollment" ? "course_title" : "subscription_plan",
+          display_name:
+            type === "enrollment" ? "Course Title" : "Subscription Plan",
+          value:
+            type === "enrollment"
+              ? course?.title || ""
+              : `${plan} Subscription`,
+          variable_name:
+            type === "enrollment" ? "course_title" : "subscription_plan",
         },
         {
           display_name: "Student ID",
@@ -99,13 +118,13 @@ export function CourseDetails() {
       ],
     },
     publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || "",
-    reference: new Date().getTime().toString() + Math.random().toString(36).substring(2, 7),
+    reference:
+      new Date().getTime().toString() +
+      Math.random().toString(36).substring(2, 7),
   });
 
   const enrollmentConfig = getPaystackConfig(course?.price || 0, "enrollment");
   const initializeEnrollmentPayment = usePaystackPayment(enrollmentConfig);
-
-
 
   // Handle successful enrollment execution
   const executeEnrollment = async () => {
@@ -120,11 +139,13 @@ export function CourseDetails() {
       });
 
       // Navigate to course view after successful enrollment
-      navigate({
-        params: { courseId },
-        search: { lesson: undefined },
-        to: "/student/courses/$courseId/learn",
-      });
+      if (tenant?.id) {
+        navigate({
+          params: { courseId, tenant: tenant.id },
+          search: { lesson: undefined },
+          to: "/$tenant/student/courses/$courseId/learn",
+        });
+      }
     } catch (error) {
       console.error("Enrollment failed:", error);
       setIsEnrolling(false);
@@ -145,7 +166,6 @@ export function CourseDetails() {
 
       // After subscribing, automatically enroll them in the requested course
       await executeEnrollment();
-      
     } catch (error) {
       console.error("Subscription failed:", error);
       setIsEnrolling(false);
@@ -153,50 +173,65 @@ export function CourseDetails() {
   };
 
   // Handle specific subscription plan payment triggering
-  const handleSubscribePayment = (plan: "monthly" | "yearly", amount: number) => {
+  const handleSubscribePayment = (
+    plan: "monthly" | "yearly",
+    amount: number,
+  ) => {
     setIsEnrolling(true);
-    
-    // NOTE: This uses the global window approach since dynamically configuring usePaystackPayment 
+
+    // NOTE: This uses the global window approach since dynamically configuring usePaystackPayment
     // for multiple plans in an event handler requires complex state management.
     // The main usePaystackPayment hook is used for the primary enrollment flow.
     const config = getPaystackConfig(amount, "subscription", plan);
-    
-    const paystack = new (window as unknown as { PaystackPop: any }).PaystackPop();
-    paystack.newTransaction({
-       ...config,
-       onClose: () => {
-         setIsEnrolling(false);
-       },
-       onSuccess: () => {
-         executeSubscription(plan);
-       },
-    });
-  }
 
+    const paystack = new (
+      window as unknown as { PaystackPop: any }
+    ).PaystackPop();
+    paystack.newTransaction({
+      ...config,
+      onClose: () => {
+        setIsEnrolling(false);
+      },
+      onSuccess: () => {
+        executeSubscription(plan);
+      },
+    });
+  };
 
   // Handle enrollment / access button click
   const handleEnrollClick = () => {
     if (!user) {
-      navigate({
-        search: { redirect: window.location.pathname },
-        to: "/login",
-      });
+      if (tenant?.id) {
+        navigate({
+          params: { tenant: tenant.id },
+          search: { redirect: window.location.pathname },
+          to: "/$tenant/login",
+        });
+      } else {
+        navigate({
+          search: { redirect: window.location.pathname },
+          to: "/login",
+        });
+      }
       return;
     }
 
-    if (tenant?.config?.monetization?.model === "subscription" && !activeSubscription) {
-       // Logic for rendering payment options will go in the UI below, this button just scrolls them or opens modal
-        const subSection = document.getElementById('subscription-options');
-        if (subSection) subSection.scrollIntoView({ behavior: 'smooth' });
-        return;
+    if (
+      tenant?.config?.monetization?.model === "subscription" &&
+      !activeSubscription
+    ) {
+      // Logic for rendering payment options will go in the UI below, this button just scrolls them or opens modal
+      const subSection = document.getElementById("subscription-options");
+      if (subSection) subSection.scrollIntoView({ behavior: "smooth" });
+      return;
     }
 
     if (!isFree && tenant?.config?.monetization?.model === "pay-per-course") {
       setIsEnrolling(true);
-      
+
       initializeEnrollmentPayment({
-         onSuccess: () => executeEnrollment(),
-         onClose: () => setIsEnrolling(false)
+        onSuccess: () => executeEnrollment(),
+        onClose: () => setIsEnrolling(false),
       });
     } else {
       executeEnrollment();
@@ -279,11 +314,15 @@ export function CourseDetails() {
                 {/* Course Meta */}
                 <Group gap="lg">
                   <Badge
-                    color={getDifficultyColor(course.difficulty || "intermediate")}
+                    color={getDifficultyColor(
+                      course.difficulty || "intermediate",
+                    )}
                     size="lg"
                     variant="light"
                   >
-                    {(course.difficulty || "intermediate").charAt(0).toUpperCase() +
+                    {(course.difficulty || "intermediate")
+                      .charAt(0)
+                      .toUpperCase() +
                       (course.difficulty || "intermediate").slice(1)}
                   </Badge>
 
@@ -296,9 +335,9 @@ export function CourseDetails() {
                           (section.lessons?.reduce(
                             (lessonAcc: number, lesson: any) =>
                               lessonAcc + (lesson.estimatedDuration || 0),
-                            0
+                            0,
                           ) || 0),
-                        0
+                        0,
                       ) || 0}
                       m
                     </Text>
@@ -313,10 +352,14 @@ export function CourseDetails() {
 
                   {(course.averageRating || 0) > 0 && (
                     <Group gap="xs">
-                      <Rating readOnly size="sm" value={course.averageRating || 0} />
+                      <Rating
+                        readOnly
+                        size="sm"
+                        value={course.averageRating || 0}
+                      />
                       <Text className="text-gray-600" size="sm">
-                        {(course.averageRating || 0).toFixed(1)} ({course.totalRatings || 0}
-                        )
+                        {(course.averageRating || 0).toFixed(1)} (
+                        {course.totalRatings || 0})
                       </Text>
                     </Group>
                   )}
@@ -368,38 +411,38 @@ export function CourseDetails() {
               {/* Learning Objectives */}
               {course.learningObjectives &&
                 course.learningObjectives.length > 0 && (
-                <Card
-                  data-aos="fade-up"
-                  data-aos-delay="400"
-                  data-aos-duration="500"
-                  p="lg"
-                  radius="lg"
-                  withBorder
-                >
-                  <Title className="mb-4" order={3}>
-                    What You'll Learn
-                  </Title>
-                  <List
-                    icon={
-                      <ThemeIcon
-                        color="fun-green"
-                        radius="xl"
-                        size={24}
-                        variant="light"
-                      >
-                        <IconCheck size={12} />
-                      </ThemeIcon>
-                    }
-                    spacing="sm"
+                  <Card
+                    data-aos="fade-up"
+                    data-aos-delay="400"
+                    data-aos-duration="500"
+                    p="lg"
+                    radius="lg"
+                    withBorder
                   >
-                    {course.learningObjectives.map((objective, index) => (
-                      <List.Item key={index}>
-                        <Text className="text-gray-700">{objective}</Text>
-                      </List.Item>
-                    ))}
-                  </List>
-                </Card>
-              )}
+                    <Title className="mb-4" order={3}>
+                      What You'll Learn
+                    </Title>
+                    <List
+                      icon={
+                        <ThemeIcon
+                          color="fun-green"
+                          radius="xl"
+                          size={24}
+                          variant="light"
+                        >
+                          <IconCheck size={12} />
+                        </ThemeIcon>
+                      }
+                      spacing="sm"
+                    >
+                      {course.learningObjectives.map((objective, index) => (
+                        <List.Item key={index}>
+                          <Text className="text-gray-700">{objective}</Text>
+                        </List.Item>
+                      ))}
+                    </List>
+                  </Card>
+                )}
 
               {/* Course Curriculum */}
               {course.sections && course.sections.length > 0 && (
@@ -549,7 +592,7 @@ export function CourseDetails() {
                         .join(", ") || "No instructor assigned"}
                     </Text>
                     {course.instructors?.some(
-                      (instructor) => instructor?.biography // changed .bio to .biography (schema definition) which is nullable
+                      (instructor) => instructor?.biography, // changed .bio to .biography (schema definition) which is nullable
                     ) && (
                       <div className="mt-2 space-y-1">
                         {course.instructors
@@ -603,51 +646,70 @@ export function CourseDetails() {
                     </>
                   ) : (
                     <>
-                      {tenant?.config?.monetization?.model === "subscription" ? (
-                         <div id="subscription-options" className="space-y-4">
-                            <Text size="sm" className="text-gray-600 font-medium">Choose a Subscription Plan to Access</Text>
-                            {tenant.config.monetization.subscriptionConfig?.monthlyPrice && (
-                              <Button
-                                className="bg-purple-600 hover:bg-purple-700"
-                                fullWidth
-                                loading={isEnrolling}
-                                onClick={() => handleSubscribePayment("monthly", tenant.config.monetization!.subscriptionConfig!.monthlyPrice!)}
-                                size="lg"
-                                variant="filled"
-                              >
-                                Monthly Plan - ₦{tenant.config.monetization.subscriptionConfig.monthlyPrice.toLocaleString()}
-                              </Button>
-                            )}
-                            {tenant.config.monetization.subscriptionConfig?.yearlyPrice && (
-                                <Button
-                                  className="border-purple-600 text-purple-600 hover:bg-purple-50"
-                                  fullWidth
-                                  loading={isEnrolling}
-                                  onClick={() => handleSubscribePayment("yearly", tenant.config.monetization!.subscriptionConfig!.yearlyPrice!)}
-                                  size="lg"
-                                  variant="outline"
-                                >
-                                  Yearly Plan - ₦{tenant.config.monetization.subscriptionConfig.yearlyPrice.toLocaleString()}
-                                </Button>
-                            )}
-                         </div>
+                      {tenant?.config?.monetization?.model ===
+                      "subscription" ? (
+                        <div id="subscription-options" className="space-y-4">
+                          <Text size="sm" className="text-gray-600 font-medium">
+                            Choose a Subscription Plan to Access
+                          </Text>
+                          {tenant.config.monetization.subscriptionConfig
+                            ?.monthlyPrice && (
+                            <Button
+                              className="bg-purple-600 hover:bg-purple-700"
+                              fullWidth
+                              loading={isEnrolling}
+                              onClick={() =>
+                                handleSubscribePayment(
+                                  "monthly",
+                                  tenant.config.monetization!
+                                    .subscriptionConfig!.monthlyPrice!,
+                                )
+                              }
+                              size="lg"
+                              variant="filled"
+                            >
+                              Monthly Plan - ₦
+                              {tenant.config.monetization.subscriptionConfig.monthlyPrice.toLocaleString()}
+                            </Button>
+                          )}
+                          {tenant.config.monetization.subscriptionConfig
+                            ?.yearlyPrice && (
+                            <Button
+                              className="border-purple-600 text-purple-600 hover:bg-purple-50"
+                              fullWidth
+                              loading={isEnrolling}
+                              onClick={() =>
+                                handleSubscribePayment(
+                                  "yearly",
+                                  tenant.config.monetization!
+                                    .subscriptionConfig!.yearlyPrice!,
+                                )
+                              }
+                              size="lg"
+                              variant="outline"
+                            >
+                              Yearly Plan - ₦
+                              {tenant.config.monetization.subscriptionConfig.yearlyPrice.toLocaleString()}
+                            </Button>
+                          )}
+                        </div>
                       ) : (
-                         <Button
+                        <Button
                           className="bg-fun-green-600 hover:bg-fun-green-700"
                           fullWidth
                           loading={isEnrolling}
                           onClick={handleEnrollClick}
                           size="lg"
                         >
-                          {!isFree 
+                          {!isFree
                             ? `Enroll Now - ₦${course.price?.toLocaleString() || 0}`
                             : "Enroll Now - Free"}
                         </Button>
                       )}
-                      
+
                       <Text className="text-center text-gray-500" size="sm">
-                        Join {(course.enrollmentCount || 0).toLocaleString()} other
-                        students
+                        Join {(course.enrollmentCount || 0).toLocaleString()}{" "}
+                        other students
                       </Text>
                     </>
                   )}
@@ -690,7 +752,7 @@ export function CourseDetails() {
                       {course.sections?.reduce(
                         (acc: number, section: any) =>
                           acc + (section.lessons?.length || 0),
-                        0
+                        0,
                       ) || 0}
                     </Text>
                   </Group>
@@ -709,9 +771,9 @@ export function CourseDetails() {
                           (section.lessons?.reduce(
                             (lessonAcc: number, lesson: any) =>
                               lessonAcc + (lesson.estimatedDuration || 0),
-                            0
+                            0,
                           ) || 0),
-                        0
+                        0,
                       ) || 0}
                       m
                     </Text>
@@ -725,11 +787,15 @@ export function CourseDetails() {
                       </Text>
                     </Group>
                     <Badge
-                      color={getDifficultyColor(course.difficulty || "intermediate")}
+                      color={getDifficultyColor(
+                        course.difficulty || "intermediate",
+                      )}
                       size="sm"
                       variant="light"
                     >
-                      {(course.difficulty || "intermediate").charAt(0).toUpperCase() +
+                      {(course.difficulty || "intermediate")
+                        .charAt(0)
+                        .toUpperCase() +
                         (course.difficulty || "intermediate").slice(1)}
                     </Badge>
                   </Group>
@@ -778,7 +844,9 @@ export function CourseDetails() {
                       </Text>
                     </Group>
                     <Text className="font-medium" size="sm">
-                      {course.updatedAt ? formatRelativeTime(course.updatedAt) : 'N/A'}
+                      {course.updatedAt
+                        ? formatRelativeTime(course.updatedAt)
+                        : "N/A"}
                     </Text>
                   </Group>
                 </Stack>

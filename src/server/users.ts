@@ -4,12 +4,19 @@ import { z } from "zod";
 
 import { passwordAuthRepository } from "@/server/repositories/password-auth-repository";
 import { userRepository } from "@/server/repositories/user-repository";
+import {
+  requireTenantScopedActor,
+  userHasTenantAccess,
+} from "@/server/tenant-context";
 
 const userRoleInputSchema = z.enum(["admin", "student", "super-admin"]);
 
 const createUserInputSchema = z.object({
   department: z.string().trim().optional().nullable(),
-  displayName: z.string().trim().min(2, "Name must be at least 2 characters long"),
+  displayName: z
+    .string()
+    .trim()
+    .min(2, "Name must be at least 2 characters long"),
   email: z.email(),
   location: z.string().trim().optional().nullable(),
   password: z.string().min(8, "Password must be at least 8 characters long"),
@@ -45,6 +52,24 @@ const subscribeToTenantInputSchema = z.object({
 export const createUserFn = createServerFn({ method: "POST" })
   .inputValidator(createUserInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenant } = await requireTenantScopedActor();
+
+    if (actor.role !== "admin" && actor.role !== "super-admin") {
+      throw new Error("You do not have permission to create users.");
+    }
+
+    if (actor.role !== "super-admin" && data.role === "super-admin") {
+      throw new Error(
+        "Only super administrators can create another super administrator.",
+      );
+    }
+
+    const tenantId = data.tenantId ?? tenant?.id ?? null;
+
+    if (!userHasTenantAccess(actor, tenantId)) {
+      throw new Error("You can only create users inside your tenant.");
+    }
+
     const normalizedEmail = data.email.trim().toLowerCase();
     const existingUser = await userRepository.getByEmail(normalizedEmail);
 
@@ -52,7 +77,8 @@ export const createUserFn = createServerFn({ method: "POST" })
       throw new Error("A user with this email already exists.");
     }
 
-    const existingPasswordAccount = await passwordAuthRepository.getByEmail(normalizedEmail);
+    const existingPasswordAccount =
+      await passwordAuthRepository.getByEmail(normalizedEmail);
 
     if (existingPasswordAccount) {
       throw new Error("A password account with this email already exists.");
@@ -81,7 +107,7 @@ export const createUserFn = createServerFn({ method: "POST" })
       role: data.role,
       studentId: data.studentId || null,
       subscriptions: [],
-      tenantIds: data.tenantId ? [data.tenantId] : [],
+      tenantIds: tenantId ? [tenantId] : [],
       totalWatchTime: 0,
       uid: userId,
       updatedAt: now,
@@ -103,18 +129,63 @@ export const createUserFn = createServerFn({ method: "POST" })
 export const getUserFn = createServerFn({ method: "GET" })
   .inputValidator((userId: undefined | string) => userId)
   .handler(async ({ data }) => {
-    return userRepository.getById(data);
+    const { actor, tenant } = await requireTenantScopedActor();
+    const user = await userRepository.getById(data);
+
+    if (!user) {
+      return null;
+    }
+
+    if (!userHasTenantAccess(user, tenant?.id)) {
+      return null;
+    }
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.id !== user.id &&
+      !userHasTenantAccess(actor, user.tenantIds?.[0])
+    ) {
+      return null;
+    }
+
+    return user;
   });
 
 export const listUsersFn = createServerFn({ method: "GET" })
   .inputValidator(listUsersInputSchema)
   .handler(async ({ data }) => {
-    return userRepository.list(data.tenantId ?? undefined, data.filters || {});
+    const { actor, tenant } = await requireTenantScopedActor();
+    const tenantId = data.tenantId ?? tenant?.id ?? undefined;
+
+    if (!userHasTenantAccess(actor, tenantId)) {
+      throw new Error("You can only view users inside your tenant.");
+    }
+
+    return userRepository.list(tenantId, data.filters || {});
   });
 
 export const updateUserFn = createServerFn({ method: "POST" })
   .inputValidator(updateUserInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenant } = await requireTenantScopedActor();
+    const targetUser = await userRepository.getById(data.userId);
+
+    if (!targetUser) {
+      throw new Error("User not found.");
+    }
+
+    if (!userHasTenantAccess(targetUser, tenant?.id)) {
+      throw new Error(
+        "You do not have access to this user in the current tenant.",
+      );
+    }
+
+    if (actor.role !== "super-admin" && targetUser.role === "super-admin") {
+      throw new Error(
+        "Only super administrators can update another super administrator.",
+      );
+    }
+
     const updatedUser = await userRepository.update(data.userId, data.userData);
 
     if (!updatedUser) {
@@ -127,6 +198,25 @@ export const updateUserFn = createServerFn({ method: "POST" })
 export const deactivateUserFn = createServerFn({ method: "POST" })
   .inputValidator(userIdInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenant } = await requireTenantScopedActor();
+    const targetUser = await userRepository.getById(data);
+
+    if (!targetUser) {
+      throw new Error("User not found.");
+    }
+
+    if (!userHasTenantAccess(targetUser, tenant?.id)) {
+      throw new Error(
+        "You do not have access to this user in the current tenant.",
+      );
+    }
+
+    if (actor.role !== "super-admin" && targetUser.role === "super-admin") {
+      throw new Error(
+        "Only super administrators can deactivate another super administrator.",
+      );
+    }
+
     const updatedUser = await userRepository.deactivate(data);
 
     if (!updatedUser) {
@@ -139,6 +229,25 @@ export const deactivateUserFn = createServerFn({ method: "POST" })
 export const deleteUserFn = createServerFn({ method: "POST" })
   .inputValidator(userIdInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenant } = await requireTenantScopedActor();
+    const targetUser = await userRepository.getById(data);
+
+    if (!targetUser) {
+      throw new Error("User not found.");
+    }
+
+    if (!userHasTenantAccess(targetUser, tenant?.id)) {
+      throw new Error(
+        "You do not have access to this user in the current tenant.",
+      );
+    }
+
+    if (actor.role !== "super-admin" && targetUser.role === "super-admin") {
+      throw new Error(
+        "Only super administrators can remove another super administrator.",
+      );
+    }
+
     const updatedUser = await userRepository.deactivate(data);
 
     if (!updatedUser) {
@@ -151,6 +260,14 @@ export const deleteUserFn = createServerFn({ method: "POST" })
 export const subscribeToTenantFn = createServerFn({ method: "POST" })
   .inputValidator(subscribeToTenantInputSchema)
   .handler(async ({ data }) => {
+    const { actor } = await requireTenantScopedActor();
+
+    if (!userHasTenantAccess(actor, data.tenantId)) {
+      throw new Error(
+        "You can only update subscriptions for users in your tenant.",
+      );
+    }
+
     const updatedUser = await userRepository.subscribeToTenant(data);
 
     if (!updatedUser) {

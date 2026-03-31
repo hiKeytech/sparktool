@@ -27,6 +27,40 @@ export type ActivityLogCollection = Collection<ActivityLog>;
 
 export type ActivityLogDocumentReference = DocumentReference<ActivityLog>;
 
+export type ActivityLogAction = ActivityLog["action"];
+
+export interface ActivityLogCreateInput {
+  action: ActivityLogAction;
+  certificateId?: null | string;
+  courseId?: null | string;
+  enrollmentMethod?: "admin_enrolled" | "self_enrolled";
+  lessonId?: null | string;
+  method?:
+    | "manual_login"
+    | "session_restore"
+    | "social_login"
+    | "email_password"
+    | "phone_login"
+    | "manual_logout"
+    | "session_expired"
+    | "manual_signup"
+    | "social_signup"
+    | "phone_signup";
+  passed?: boolean;
+  progressPercentage?: number;
+  quizId?: null | string;
+  score?: number;
+  sessionId?: null | string;
+  studentId?: null | string;
+  tenantId?: string;
+  totalDurationInMinutes?: number;
+  updatedFields?: string[];
+  userAgent?: null | string;
+  userId: string;
+  videoId?: null | string;
+  watchedDurationInMinutes?: number;
+}
+
 export interface ListActivityLogVariables extends QueryFilters<ActivityLog> {
   userId: string;
 }
@@ -38,7 +72,7 @@ type ActivityLogDetails = Nullish<{
   userId: string;
 }>;
 
-type CreateActivityLogVariables = DistributiveOmit<
+export type CreateActivityLogVariables = DistributiveOmit<
   ActivityLog,
   "timestamp" | "userAgent"
 >;

@@ -9,46 +9,69 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerifyCertificateRouteImport } from './routes/verify-certificate'
 import { Route as SuperAdminRouteImport } from './routes/super-admin'
-import { Route as TenantRouteImport } from './routes/_tenant'
-import { Route as TenantStudentRouteImport } from './routes/_tenant/student'
-import { Route as TenantLoginRouteImport } from './routes/_tenant/login'
-import { Route as TenantAdminRouteImport } from './routes/_tenant/admin'
-import { Route as TenantPublicRouteImport } from './routes/_tenant/_public'
-import { Route as TenantAuthRouteImport } from './routes/_tenant/_auth'
-import { Route as TenantStudentIndexRouteImport } from './routes/_tenant/student/index'
-import { Route as TenantAdminIndexRouteImport } from './routes/_tenant/admin/index'
-import { Route as TenantPublicIndexRouteImport } from './routes/_tenant/_public/index'
-import { Route as TenantStudentProgressRouteImport } from './routes/_tenant/student/progress'
-import { Route as TenantStudentProfileRouteImport } from './routes/_tenant/student/profile'
-import { Route as TenantStudentLiveSessionsRouteImport } from './routes/_tenant/student/live-sessions'
-import { Route as TenantStudentCoursesRouteImport } from './routes/_tenant/student/courses'
-import { Route as TenantAdminUsersRouteImport } from './routes/_tenant/admin/users'
-import { Route as TenantAdminSettingsRouteImport } from './routes/_tenant/admin/settings'
-import { Route as TenantAdminSecurityRouteImport } from './routes/_tenant/admin/security'
-import { Route as TenantAdminProfileRouteImport } from './routes/_tenant/admin/profile'
-import { Route as TenantAdminLiveSessionsRouteImport } from './routes/_tenant/admin/live-sessions'
-import { Route as TenantAdminCoursesRouteImport } from './routes/_tenant/admin/courses'
-import { Route as TenantAdminCertificatesRouteImport } from './routes/_tenant/admin/certificates'
-import { Route as TenantAdminAnalyticsRouteImport } from './routes/_tenant/admin/analytics'
-import { Route as TenantPublicVerifyCertificateRouteImport } from './routes/_tenant/_public/verify-certificate'
-import { Route as TenantStudentCoursesCourseIdRouteImport } from './routes/_tenant/student/courses/$courseId'
-import { Route as TenantAdminUsersNewRouteImport } from './routes/_tenant/admin/users/new'
-import { Route as TenantAdminUsersStudentIdRouteImport } from './routes/_tenant/admin/users/$studentId'
-import { Route as TenantAdminAnalyticsReportsRouteImport } from './routes/_tenant/admin/analytics/reports'
-import { Route as TenantStudentCoursesCourseIdLearnRouteImport } from './routes/_tenant/student/courses/$courseId/learn'
-import { Route as TenantAdminUsersStudentIdProgressRouteImport } from './routes/_tenant/admin/users/$studentId/progress'
-import { Route as TenantAdminCoursesCourseIdEditRouteImport } from './routes/_tenant/admin/courses/$courseId/edit'
-import { Route as TenantStudentCoursesCourseIdQuizQuizIdRouteImport } from './routes/_tenant/student/courses/$courseId/quiz/$quizId'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as TenantRouteImport } from './routes/$tenant'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as TenantIndexRouteImport } from './routes/$tenant/index'
+import { Route as TenantStudentRouteImport } from './routes/$tenant/student'
+import { Route as TenantLoginRouteImport } from './routes/$tenant/login'
+import { Route as TenantAdminRouteImport } from './routes/$tenant/admin'
+import { Route as TenantStudentIndexRouteImport } from './routes/$tenant/student/index'
+import { Route as TenantAdminIndexRouteImport } from './routes/$tenant/admin/index'
+import { Route as TenantStudentProgressRouteImport } from './routes/$tenant/student/progress'
+import { Route as TenantStudentProfileRouteImport } from './routes/$tenant/student/profile'
+import { Route as TenantStudentLiveSessionsRouteImport } from './routes/$tenant/student/live-sessions'
+import { Route as TenantStudentCoursesRouteImport } from './routes/$tenant/student/courses'
+import { Route as TenantAdminUsersRouteImport } from './routes/$tenant/admin/users'
+import { Route as TenantAdminSettingsRouteImport } from './routes/$tenant/admin/settings'
+import { Route as TenantAdminSecurityRouteImport } from './routes/$tenant/admin/security'
+import { Route as TenantAdminQuizzesRouteImport } from './routes/$tenant/admin/quizzes'
+import { Route as TenantAdminProfileRouteImport } from './routes/$tenant/admin/profile'
+import { Route as TenantAdminLiveSessionsRouteImport } from './routes/$tenant/admin/live-sessions'
+import { Route as TenantAdminCoursesRouteImport } from './routes/$tenant/admin/courses'
+import { Route as TenantAdminCertificatesRouteImport } from './routes/$tenant/admin/certificates'
+import { Route as TenantAdminAnalyticsRouteImport } from './routes/$tenant/admin/analytics'
+import { Route as TenantStudentCoursesCourseIdRouteImport } from './routes/$tenant/student/courses/$courseId'
+import { Route as TenantAdminUsersNewRouteImport } from './routes/$tenant/admin/users/new'
+import { Route as TenantAdminUsersStudentIdRouteImport } from './routes/$tenant/admin/users/$studentId'
+import { Route as TenantAdminQuizzesQuizIdRouteImport } from './routes/$tenant/admin/quizzes/$quizId'
+import { Route as TenantStudentCoursesCourseIdLearnRouteImport } from './routes/$tenant/student/courses/$courseId/learn'
+import { Route as TenantAdminUsersStudentIdProgressRouteImport } from './routes/$tenant/admin/users/$studentId/progress'
+import { Route as TenantAdminQuizzesQuizIdQuestionsRouteImport } from './routes/$tenant/admin/quizzes/$quizId/questions'
+import { Route as TenantAdminCoursesCourseIdEditRouteImport } from './routes/$tenant/admin/courses/$courseId/edit'
+import { Route as TenantStudentCoursesCourseIdQuizQuizIdRouteImport } from './routes/$tenant/student/courses/$courseId/quiz/$quizId'
 
+const VerifyCertificateRoute = VerifyCertificateRouteImport.update({
+  id: '/verify-certificate',
+  path: '/verify-certificate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SuperAdminRoute = SuperAdminRouteImport.update({
   id: '/super-admin',
   path: '/super-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TenantRoute = TenantRouteImport.update({
-  id: '/_tenant',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
+} as any)
+const TenantRoute = TenantRouteImport.update({
+  id: '/$tenant',
+  path: '/$tenant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TenantIndexRoute = TenantIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TenantRoute,
 } as any)
 const TenantStudentRoute = TenantStudentRouteImport.update({
   id: '/student',
@@ -65,14 +88,6 @@ const TenantAdminRoute = TenantAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => TenantRoute,
 } as any)
-const TenantPublicRoute = TenantPublicRouteImport.update({
-  id: '/_public',
-  getParentRoute: () => TenantRoute,
-} as any)
-const TenantAuthRoute = TenantAuthRouteImport.update({
-  id: '/_auth',
-  getParentRoute: () => TenantRoute,
-} as any)
 const TenantStudentIndexRoute = TenantStudentIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -82,11 +97,6 @@ const TenantAdminIndexRoute = TenantAdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TenantAdminRoute,
-} as any)
-const TenantPublicIndexRoute = TenantPublicIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => TenantPublicRoute,
 } as any)
 const TenantStudentProgressRoute = TenantStudentProgressRouteImport.update({
   id: '/progress',
@@ -124,6 +134,11 @@ const TenantAdminSecurityRoute = TenantAdminSecurityRouteImport.update({
   path: '/security',
   getParentRoute: () => TenantAdminRoute,
 } as any)
+const TenantAdminQuizzesRoute = TenantAdminQuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => TenantAdminRoute,
+} as any)
 const TenantAdminProfileRoute = TenantAdminProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -149,12 +164,6 @@ const TenantAdminAnalyticsRoute = TenantAdminAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => TenantAdminRoute,
 } as any)
-const TenantPublicVerifyCertificateRoute =
-  TenantPublicVerifyCertificateRouteImport.update({
-    id: '/verify-certificate',
-    path: '/verify-certificate',
-    getParentRoute: () => TenantPublicRoute,
-  } as any)
 const TenantStudentCoursesCourseIdRoute =
   TenantStudentCoursesCourseIdRouteImport.update({
     id: '/$courseId',
@@ -172,11 +181,11 @@ const TenantAdminUsersStudentIdRoute =
     path: '/$studentId',
     getParentRoute: () => TenantAdminUsersRoute,
   } as any)
-const TenantAdminAnalyticsReportsRoute =
-  TenantAdminAnalyticsReportsRouteImport.update({
-    id: '/reports',
-    path: '/reports',
-    getParentRoute: () => TenantAdminAnalyticsRoute,
+const TenantAdminQuizzesQuizIdRoute =
+  TenantAdminQuizzesQuizIdRouteImport.update({
+    id: '/$quizId',
+    path: '/$quizId',
+    getParentRoute: () => TenantAdminQuizzesRoute,
   } as any)
 const TenantStudentCoursesCourseIdLearnRoute =
   TenantStudentCoursesCourseIdLearnRouteImport.update({
@@ -189,6 +198,12 @@ const TenantAdminUsersStudentIdProgressRoute =
     id: '/progress',
     path: '/progress',
     getParentRoute: () => TenantAdminUsersStudentIdRoute,
+  } as any)
+const TenantAdminQuizzesQuizIdQuestionsRoute =
+  TenantAdminQuizzesQuizIdQuestionsRouteImport.update({
+    id: '/questions',
+    path: '/questions',
+    getParentRoute: () => TenantAdminQuizzesQuizIdRoute,
   } as any)
 const TenantAdminCoursesCourseIdEditRoute =
   TenantAdminCoursesCourseIdEditRouteImport.update({
@@ -204,198 +219,230 @@ const TenantStudentCoursesCourseIdQuizQuizIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/$tenant': typeof TenantRouteWithChildren
+  '/login': typeof LoginRoute
   '/super-admin': typeof SuperAdminRoute
-  '/admin': typeof TenantAdminRouteWithChildren
-  '/login': typeof TenantLoginRoute
-  '/student': typeof TenantStudentRouteWithChildren
-  '/verify-certificate': typeof TenantPublicVerifyCertificateRoute
-  '/admin/analytics': typeof TenantAdminAnalyticsRouteWithChildren
-  '/admin/certificates': typeof TenantAdminCertificatesRoute
-  '/admin/courses': typeof TenantAdminCoursesRouteWithChildren
-  '/admin/live-sessions': typeof TenantAdminLiveSessionsRoute
-  '/admin/profile': typeof TenantAdminProfileRoute
-  '/admin/security': typeof TenantAdminSecurityRoute
-  '/admin/settings': typeof TenantAdminSettingsRoute
-  '/admin/users': typeof TenantAdminUsersRouteWithChildren
-  '/student/courses': typeof TenantStudentCoursesRouteWithChildren
-  '/student/live-sessions': typeof TenantStudentLiveSessionsRoute
-  '/student/profile': typeof TenantStudentProfileRoute
-  '/student/progress': typeof TenantStudentProgressRoute
-  '/': typeof TenantPublicIndexRoute
-  '/admin/': typeof TenantAdminIndexRoute
-  '/student/': typeof TenantStudentIndexRoute
-  '/admin/analytics/reports': typeof TenantAdminAnalyticsReportsRoute
-  '/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
-  '/admin/users/new': typeof TenantAdminUsersNewRoute
-  '/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
-  '/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
-  '/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
-  '/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
-  '/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
+  '/verify-certificate': typeof VerifyCertificateRoute
+  '/$tenant/admin': typeof TenantAdminRouteWithChildren
+  '/$tenant/login': typeof TenantLoginRoute
+  '/$tenant/student': typeof TenantStudentRouteWithChildren
+  '/$tenant/': typeof TenantIndexRoute
+  '/$tenant/admin/analytics': typeof TenantAdminAnalyticsRoute
+  '/$tenant/admin/certificates': typeof TenantAdminCertificatesRoute
+  '/$tenant/admin/courses': typeof TenantAdminCoursesRouteWithChildren
+  '/$tenant/admin/live-sessions': typeof TenantAdminLiveSessionsRoute
+  '/$tenant/admin/profile': typeof TenantAdminProfileRoute
+  '/$tenant/admin/quizzes': typeof TenantAdminQuizzesRouteWithChildren
+  '/$tenant/admin/security': typeof TenantAdminSecurityRoute
+  '/$tenant/admin/settings': typeof TenantAdminSettingsRoute
+  '/$tenant/admin/users': typeof TenantAdminUsersRouteWithChildren
+  '/$tenant/student/courses': typeof TenantStudentCoursesRouteWithChildren
+  '/$tenant/student/live-sessions': typeof TenantStudentLiveSessionsRoute
+  '/$tenant/student/profile': typeof TenantStudentProfileRoute
+  '/$tenant/student/progress': typeof TenantStudentProgressRoute
+  '/$tenant/admin/': typeof TenantAdminIndexRoute
+  '/$tenant/student/': typeof TenantStudentIndexRoute
+  '/$tenant/admin/quizzes/$quizId': typeof TenantAdminQuizzesQuizIdRouteWithChildren
+  '/$tenant/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
+  '/$tenant/admin/users/new': typeof TenantAdminUsersNewRoute
+  '/$tenant/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
+  '/$tenant/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
+  '/$tenant/admin/quizzes/$quizId/questions': typeof TenantAdminQuizzesQuizIdQuestionsRoute
+  '/$tenant/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
+  '/$tenant/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
+  '/$tenant/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/super-admin': typeof SuperAdminRoute
-  '/login': typeof TenantLoginRoute
-  '/verify-certificate': typeof TenantPublicVerifyCertificateRoute
-  '/admin/analytics': typeof TenantAdminAnalyticsRouteWithChildren
-  '/admin/certificates': typeof TenantAdminCertificatesRoute
-  '/admin/courses': typeof TenantAdminCoursesRouteWithChildren
-  '/admin/live-sessions': typeof TenantAdminLiveSessionsRoute
-  '/admin/profile': typeof TenantAdminProfileRoute
-  '/admin/security': typeof TenantAdminSecurityRoute
-  '/admin/settings': typeof TenantAdminSettingsRoute
-  '/admin/users': typeof TenantAdminUsersRouteWithChildren
-  '/student/courses': typeof TenantStudentCoursesRouteWithChildren
-  '/student/live-sessions': typeof TenantStudentLiveSessionsRoute
-  '/student/profile': typeof TenantStudentProfileRoute
-  '/student/progress': typeof TenantStudentProgressRoute
-  '/': typeof TenantPublicIndexRoute
-  '/admin': typeof TenantAdminIndexRoute
-  '/student': typeof TenantStudentIndexRoute
-  '/admin/analytics/reports': typeof TenantAdminAnalyticsReportsRoute
-  '/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
-  '/admin/users/new': typeof TenantAdminUsersNewRoute
-  '/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
-  '/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
-  '/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
-  '/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
-  '/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
+  '/verify-certificate': typeof VerifyCertificateRoute
+  '/$tenant/login': typeof TenantLoginRoute
+  '/$tenant': typeof TenantIndexRoute
+  '/$tenant/admin/analytics': typeof TenantAdminAnalyticsRoute
+  '/$tenant/admin/certificates': typeof TenantAdminCertificatesRoute
+  '/$tenant/admin/courses': typeof TenantAdminCoursesRouteWithChildren
+  '/$tenant/admin/live-sessions': typeof TenantAdminLiveSessionsRoute
+  '/$tenant/admin/profile': typeof TenantAdminProfileRoute
+  '/$tenant/admin/quizzes': typeof TenantAdminQuizzesRouteWithChildren
+  '/$tenant/admin/security': typeof TenantAdminSecurityRoute
+  '/$tenant/admin/settings': typeof TenantAdminSettingsRoute
+  '/$tenant/admin/users': typeof TenantAdminUsersRouteWithChildren
+  '/$tenant/student/courses': typeof TenantStudentCoursesRouteWithChildren
+  '/$tenant/student/live-sessions': typeof TenantStudentLiveSessionsRoute
+  '/$tenant/student/profile': typeof TenantStudentProfileRoute
+  '/$tenant/student/progress': typeof TenantStudentProgressRoute
+  '/$tenant/admin': typeof TenantAdminIndexRoute
+  '/$tenant/student': typeof TenantStudentIndexRoute
+  '/$tenant/admin/quizzes/$quizId': typeof TenantAdminQuizzesQuizIdRouteWithChildren
+  '/$tenant/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
+  '/$tenant/admin/users/new': typeof TenantAdminUsersNewRoute
+  '/$tenant/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
+  '/$tenant/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
+  '/$tenant/admin/quizzes/$quizId/questions': typeof TenantAdminQuizzesQuizIdQuestionsRoute
+  '/$tenant/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
+  '/$tenant/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
+  '/$tenant/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/_tenant': typeof TenantRouteWithChildren
+  '/': typeof IndexRoute
+  '/$tenant': typeof TenantRouteWithChildren
+  '/login': typeof LoginRoute
   '/super-admin': typeof SuperAdminRoute
-  '/_tenant/_auth': typeof TenantAuthRoute
-  '/_tenant/_public': typeof TenantPublicRouteWithChildren
-  '/_tenant/admin': typeof TenantAdminRouteWithChildren
-  '/_tenant/login': typeof TenantLoginRoute
-  '/_tenant/student': typeof TenantStudentRouteWithChildren
-  '/_tenant/_public/verify-certificate': typeof TenantPublicVerifyCertificateRoute
-  '/_tenant/admin/analytics': typeof TenantAdminAnalyticsRouteWithChildren
-  '/_tenant/admin/certificates': typeof TenantAdminCertificatesRoute
-  '/_tenant/admin/courses': typeof TenantAdminCoursesRouteWithChildren
-  '/_tenant/admin/live-sessions': typeof TenantAdminLiveSessionsRoute
-  '/_tenant/admin/profile': typeof TenantAdminProfileRoute
-  '/_tenant/admin/security': typeof TenantAdminSecurityRoute
-  '/_tenant/admin/settings': typeof TenantAdminSettingsRoute
-  '/_tenant/admin/users': typeof TenantAdminUsersRouteWithChildren
-  '/_tenant/student/courses': typeof TenantStudentCoursesRouteWithChildren
-  '/_tenant/student/live-sessions': typeof TenantStudentLiveSessionsRoute
-  '/_tenant/student/profile': typeof TenantStudentProfileRoute
-  '/_tenant/student/progress': typeof TenantStudentProgressRoute
-  '/_tenant/_public/': typeof TenantPublicIndexRoute
-  '/_tenant/admin/': typeof TenantAdminIndexRoute
-  '/_tenant/student/': typeof TenantStudentIndexRoute
-  '/_tenant/admin/analytics/reports': typeof TenantAdminAnalyticsReportsRoute
-  '/_tenant/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
-  '/_tenant/admin/users/new': typeof TenantAdminUsersNewRoute
-  '/_tenant/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
-  '/_tenant/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
-  '/_tenant/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
-  '/_tenant/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
-  '/_tenant/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
+  '/verify-certificate': typeof VerifyCertificateRoute
+  '/$tenant/admin': typeof TenantAdminRouteWithChildren
+  '/$tenant/login': typeof TenantLoginRoute
+  '/$tenant/student': typeof TenantStudentRouteWithChildren
+  '/$tenant/': typeof TenantIndexRoute
+  '/$tenant/admin/analytics': typeof TenantAdminAnalyticsRoute
+  '/$tenant/admin/certificates': typeof TenantAdminCertificatesRoute
+  '/$tenant/admin/courses': typeof TenantAdminCoursesRouteWithChildren
+  '/$tenant/admin/live-sessions': typeof TenantAdminLiveSessionsRoute
+  '/$tenant/admin/profile': typeof TenantAdminProfileRoute
+  '/$tenant/admin/quizzes': typeof TenantAdminQuizzesRouteWithChildren
+  '/$tenant/admin/security': typeof TenantAdminSecurityRoute
+  '/$tenant/admin/settings': typeof TenantAdminSettingsRoute
+  '/$tenant/admin/users': typeof TenantAdminUsersRouteWithChildren
+  '/$tenant/student/courses': typeof TenantStudentCoursesRouteWithChildren
+  '/$tenant/student/live-sessions': typeof TenantStudentLiveSessionsRoute
+  '/$tenant/student/profile': typeof TenantStudentProfileRoute
+  '/$tenant/student/progress': typeof TenantStudentProgressRoute
+  '/$tenant/admin/': typeof TenantAdminIndexRoute
+  '/$tenant/student/': typeof TenantStudentIndexRoute
+  '/$tenant/admin/quizzes/$quizId': typeof TenantAdminQuizzesQuizIdRouteWithChildren
+  '/$tenant/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
+  '/$tenant/admin/users/new': typeof TenantAdminUsersNewRoute
+  '/$tenant/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
+  '/$tenant/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
+  '/$tenant/admin/quizzes/$quizId/questions': typeof TenantAdminQuizzesQuizIdQuestionsRoute
+  '/$tenant/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
+  '/$tenant/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
+  '/$tenant/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/super-admin'
-    | '/admin'
-    | '/login'
-    | '/student'
-    | '/verify-certificate'
-    | '/admin/analytics'
-    | '/admin/certificates'
-    | '/admin/courses'
-    | '/admin/live-sessions'
-    | '/admin/profile'
-    | '/admin/security'
-    | '/admin/settings'
-    | '/admin/users'
-    | '/student/courses'
-    | '/student/live-sessions'
-    | '/student/profile'
-    | '/student/progress'
     | '/'
-    | '/admin/'
-    | '/student/'
-    | '/admin/analytics/reports'
-    | '/admin/users/$studentId'
-    | '/admin/users/new'
-    | '/student/courses/$courseId'
-    | '/admin/courses/$courseId/edit'
-    | '/admin/users/$studentId/progress'
-    | '/student/courses/$courseId/learn'
-    | '/student/courses/$courseId/quiz/$quizId'
+    | '/$tenant'
+    | '/login'
+    | '/super-admin'
+    | '/verify-certificate'
+    | '/$tenant/admin'
+    | '/$tenant/login'
+    | '/$tenant/student'
+    | '/$tenant/'
+    | '/$tenant/admin/analytics'
+    | '/$tenant/admin/certificates'
+    | '/$tenant/admin/courses'
+    | '/$tenant/admin/live-sessions'
+    | '/$tenant/admin/profile'
+    | '/$tenant/admin/quizzes'
+    | '/$tenant/admin/security'
+    | '/$tenant/admin/settings'
+    | '/$tenant/admin/users'
+    | '/$tenant/student/courses'
+    | '/$tenant/student/live-sessions'
+    | '/$tenant/student/profile'
+    | '/$tenant/student/progress'
+    | '/$tenant/admin/'
+    | '/$tenant/student/'
+    | '/$tenant/admin/quizzes/$quizId'
+    | '/$tenant/admin/users/$studentId'
+    | '/$tenant/admin/users/new'
+    | '/$tenant/student/courses/$courseId'
+    | '/$tenant/admin/courses/$courseId/edit'
+    | '/$tenant/admin/quizzes/$quizId/questions'
+    | '/$tenant/admin/users/$studentId/progress'
+    | '/$tenant/student/courses/$courseId/learn'
+    | '/$tenant/student/courses/$courseId/quiz/$quizId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/super-admin'
-    | '/login'
-    | '/verify-certificate'
-    | '/admin/analytics'
-    | '/admin/certificates'
-    | '/admin/courses'
-    | '/admin/live-sessions'
-    | '/admin/profile'
-    | '/admin/security'
-    | '/admin/settings'
-    | '/admin/users'
-    | '/student/courses'
-    | '/student/live-sessions'
-    | '/student/profile'
-    | '/student/progress'
     | '/'
-    | '/admin'
-    | '/student'
-    | '/admin/analytics/reports'
-    | '/admin/users/$studentId'
-    | '/admin/users/new'
-    | '/student/courses/$courseId'
-    | '/admin/courses/$courseId/edit'
-    | '/admin/users/$studentId/progress'
-    | '/student/courses/$courseId/learn'
-    | '/student/courses/$courseId/quiz/$quizId'
+    | '/login'
+    | '/super-admin'
+    | '/verify-certificate'
+    | '/$tenant/login'
+    | '/$tenant'
+    | '/$tenant/admin/analytics'
+    | '/$tenant/admin/certificates'
+    | '/$tenant/admin/courses'
+    | '/$tenant/admin/live-sessions'
+    | '/$tenant/admin/profile'
+    | '/$tenant/admin/quizzes'
+    | '/$tenant/admin/security'
+    | '/$tenant/admin/settings'
+    | '/$tenant/admin/users'
+    | '/$tenant/student/courses'
+    | '/$tenant/student/live-sessions'
+    | '/$tenant/student/profile'
+    | '/$tenant/student/progress'
+    | '/$tenant/admin'
+    | '/$tenant/student'
+    | '/$tenant/admin/quizzes/$quizId'
+    | '/$tenant/admin/users/$studentId'
+    | '/$tenant/admin/users/new'
+    | '/$tenant/student/courses/$courseId'
+    | '/$tenant/admin/courses/$courseId/edit'
+    | '/$tenant/admin/quizzes/$quizId/questions'
+    | '/$tenant/admin/users/$studentId/progress'
+    | '/$tenant/student/courses/$courseId/learn'
+    | '/$tenant/student/courses/$courseId/quiz/$quizId'
   id:
     | '__root__'
-    | '/_tenant'
+    | '/'
+    | '/$tenant'
+    | '/login'
     | '/super-admin'
-    | '/_tenant/_auth'
-    | '/_tenant/_public'
-    | '/_tenant/admin'
-    | '/_tenant/login'
-    | '/_tenant/student'
-    | '/_tenant/_public/verify-certificate'
-    | '/_tenant/admin/analytics'
-    | '/_tenant/admin/certificates'
-    | '/_tenant/admin/courses'
-    | '/_tenant/admin/live-sessions'
-    | '/_tenant/admin/profile'
-    | '/_tenant/admin/security'
-    | '/_tenant/admin/settings'
-    | '/_tenant/admin/users'
-    | '/_tenant/student/courses'
-    | '/_tenant/student/live-sessions'
-    | '/_tenant/student/profile'
-    | '/_tenant/student/progress'
-    | '/_tenant/_public/'
-    | '/_tenant/admin/'
-    | '/_tenant/student/'
-    | '/_tenant/admin/analytics/reports'
-    | '/_tenant/admin/users/$studentId'
-    | '/_tenant/admin/users/new'
-    | '/_tenant/student/courses/$courseId'
-    | '/_tenant/admin/courses/$courseId/edit'
-    | '/_tenant/admin/users/$studentId/progress'
-    | '/_tenant/student/courses/$courseId/learn'
-    | '/_tenant/student/courses/$courseId/quiz/$quizId'
+    | '/verify-certificate'
+    | '/$tenant/admin'
+    | '/$tenant/login'
+    | '/$tenant/student'
+    | '/$tenant/'
+    | '/$tenant/admin/analytics'
+    | '/$tenant/admin/certificates'
+    | '/$tenant/admin/courses'
+    | '/$tenant/admin/live-sessions'
+    | '/$tenant/admin/profile'
+    | '/$tenant/admin/quizzes'
+    | '/$tenant/admin/security'
+    | '/$tenant/admin/settings'
+    | '/$tenant/admin/users'
+    | '/$tenant/student/courses'
+    | '/$tenant/student/live-sessions'
+    | '/$tenant/student/profile'
+    | '/$tenant/student/progress'
+    | '/$tenant/admin/'
+    | '/$tenant/student/'
+    | '/$tenant/admin/quizzes/$quizId'
+    | '/$tenant/admin/users/$studentId'
+    | '/$tenant/admin/users/new'
+    | '/$tenant/student/courses/$courseId'
+    | '/$tenant/admin/courses/$courseId/edit'
+    | '/$tenant/admin/quizzes/$quizId/questions'
+    | '/$tenant/admin/users/$studentId/progress'
+    | '/$tenant/student/courses/$courseId/learn'
+    | '/$tenant/student/courses/$courseId/quiz/$quizId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   TenantRoute: typeof TenantRouteWithChildren
+  LoginRoute: typeof LoginRoute
   SuperAdminRoute: typeof SuperAdminRoute
+  VerifyCertificateRoute: typeof VerifyCertificateRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verify-certificate': {
+      id: '/verify-certificate'
+      path: '/verify-certificate'
+      fullPath: '/verify-certificate'
+      preLoaderRoute: typeof VerifyCertificateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/super-admin': {
       id: '/super-admin'
       path: '/super-admin'
@@ -403,243 +450,225 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SuperAdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_tenant': {
-      id: '/_tenant'
-      path: ''
-      fullPath: ''
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$tenant': {
+      id: '/$tenant'
+      path: '/$tenant'
+      fullPath: '/$tenant'
       preLoaderRoute: typeof TenantRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_tenant/student': {
-      id: '/_tenant/student'
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$tenant/': {
+      id: '/$tenant/'
+      path: '/'
+      fullPath: '/$tenant/'
+      preLoaderRoute: typeof TenantIndexRouteImport
+      parentRoute: typeof TenantRoute
+    }
+    '/$tenant/student': {
+      id: '/$tenant/student'
       path: '/student'
-      fullPath: '/student'
+      fullPath: '/$tenant/student'
       preLoaderRoute: typeof TenantStudentRouteImport
       parentRoute: typeof TenantRoute
     }
-    '/_tenant/login': {
-      id: '/_tenant/login'
+    '/$tenant/login': {
+      id: '/$tenant/login'
       path: '/login'
-      fullPath: '/login'
+      fullPath: '/$tenant/login'
       preLoaderRoute: typeof TenantLoginRouteImport
       parentRoute: typeof TenantRoute
     }
-    '/_tenant/admin': {
-      id: '/_tenant/admin'
+    '/$tenant/admin': {
+      id: '/$tenant/admin'
       path: '/admin'
-      fullPath: '/admin'
+      fullPath: '/$tenant/admin'
       preLoaderRoute: typeof TenantAdminRouteImport
       parentRoute: typeof TenantRoute
     }
-    '/_tenant/_public': {
-      id: '/_tenant/_public'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof TenantPublicRouteImport
-      parentRoute: typeof TenantRoute
-    }
-    '/_tenant/_auth': {
-      id: '/_tenant/_auth'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof TenantAuthRouteImport
-      parentRoute: typeof TenantRoute
-    }
-    '/_tenant/student/': {
-      id: '/_tenant/student/'
+    '/$tenant/student/': {
+      id: '/$tenant/student/'
       path: '/'
-      fullPath: '/student/'
+      fullPath: '/$tenant/student/'
       preLoaderRoute: typeof TenantStudentIndexRouteImport
       parentRoute: typeof TenantStudentRoute
     }
-    '/_tenant/admin/': {
-      id: '/_tenant/admin/'
+    '/$tenant/admin/': {
+      id: '/$tenant/admin/'
       path: '/'
-      fullPath: '/admin/'
+      fullPath: '/$tenant/admin/'
       preLoaderRoute: typeof TenantAdminIndexRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/_public/': {
-      id: '/_tenant/_public/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof TenantPublicIndexRouteImport
-      parentRoute: typeof TenantPublicRoute
-    }
-    '/_tenant/student/progress': {
-      id: '/_tenant/student/progress'
+    '/$tenant/student/progress': {
+      id: '/$tenant/student/progress'
       path: '/progress'
-      fullPath: '/student/progress'
+      fullPath: '/$tenant/student/progress'
       preLoaderRoute: typeof TenantStudentProgressRouteImport
       parentRoute: typeof TenantStudentRoute
     }
-    '/_tenant/student/profile': {
-      id: '/_tenant/student/profile'
+    '/$tenant/student/profile': {
+      id: '/$tenant/student/profile'
       path: '/profile'
-      fullPath: '/student/profile'
+      fullPath: '/$tenant/student/profile'
       preLoaderRoute: typeof TenantStudentProfileRouteImport
       parentRoute: typeof TenantStudentRoute
     }
-    '/_tenant/student/live-sessions': {
-      id: '/_tenant/student/live-sessions'
+    '/$tenant/student/live-sessions': {
+      id: '/$tenant/student/live-sessions'
       path: '/live-sessions'
-      fullPath: '/student/live-sessions'
+      fullPath: '/$tenant/student/live-sessions'
       preLoaderRoute: typeof TenantStudentLiveSessionsRouteImport
       parentRoute: typeof TenantStudentRoute
     }
-    '/_tenant/student/courses': {
-      id: '/_tenant/student/courses'
+    '/$tenant/student/courses': {
+      id: '/$tenant/student/courses'
       path: '/courses'
-      fullPath: '/student/courses'
+      fullPath: '/$tenant/student/courses'
       preLoaderRoute: typeof TenantStudentCoursesRouteImport
       parentRoute: typeof TenantStudentRoute
     }
-    '/_tenant/admin/users': {
-      id: '/_tenant/admin/users'
+    '/$tenant/admin/users': {
+      id: '/$tenant/admin/users'
       path: '/users'
-      fullPath: '/admin/users'
+      fullPath: '/$tenant/admin/users'
       preLoaderRoute: typeof TenantAdminUsersRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/admin/settings': {
-      id: '/_tenant/admin/settings'
+    '/$tenant/admin/settings': {
+      id: '/$tenant/admin/settings'
       path: '/settings'
-      fullPath: '/admin/settings'
+      fullPath: '/$tenant/admin/settings'
       preLoaderRoute: typeof TenantAdminSettingsRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/admin/security': {
-      id: '/_tenant/admin/security'
+    '/$tenant/admin/security': {
+      id: '/$tenant/admin/security'
       path: '/security'
-      fullPath: '/admin/security'
+      fullPath: '/$tenant/admin/security'
       preLoaderRoute: typeof TenantAdminSecurityRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/admin/profile': {
-      id: '/_tenant/admin/profile'
+    '/$tenant/admin/quizzes': {
+      id: '/$tenant/admin/quizzes'
+      path: '/quizzes'
+      fullPath: '/$tenant/admin/quizzes'
+      preLoaderRoute: typeof TenantAdminQuizzesRouteImport
+      parentRoute: typeof TenantAdminRoute
+    }
+    '/$tenant/admin/profile': {
+      id: '/$tenant/admin/profile'
       path: '/profile'
-      fullPath: '/admin/profile'
+      fullPath: '/$tenant/admin/profile'
       preLoaderRoute: typeof TenantAdminProfileRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/admin/live-sessions': {
-      id: '/_tenant/admin/live-sessions'
+    '/$tenant/admin/live-sessions': {
+      id: '/$tenant/admin/live-sessions'
       path: '/live-sessions'
-      fullPath: '/admin/live-sessions'
+      fullPath: '/$tenant/admin/live-sessions'
       preLoaderRoute: typeof TenantAdminLiveSessionsRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/admin/courses': {
-      id: '/_tenant/admin/courses'
+    '/$tenant/admin/courses': {
+      id: '/$tenant/admin/courses'
       path: '/courses'
-      fullPath: '/admin/courses'
+      fullPath: '/$tenant/admin/courses'
       preLoaderRoute: typeof TenantAdminCoursesRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/admin/certificates': {
-      id: '/_tenant/admin/certificates'
+    '/$tenant/admin/certificates': {
+      id: '/$tenant/admin/certificates'
       path: '/certificates'
-      fullPath: '/admin/certificates'
+      fullPath: '/$tenant/admin/certificates'
       preLoaderRoute: typeof TenantAdminCertificatesRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/admin/analytics': {
-      id: '/_tenant/admin/analytics'
+    '/$tenant/admin/analytics': {
+      id: '/$tenant/admin/analytics'
       path: '/analytics'
-      fullPath: '/admin/analytics'
+      fullPath: '/$tenant/admin/analytics'
       preLoaderRoute: typeof TenantAdminAnalyticsRouteImport
       parentRoute: typeof TenantAdminRoute
     }
-    '/_tenant/_public/verify-certificate': {
-      id: '/_tenant/_public/verify-certificate'
-      path: '/verify-certificate'
-      fullPath: '/verify-certificate'
-      preLoaderRoute: typeof TenantPublicVerifyCertificateRouteImport
-      parentRoute: typeof TenantPublicRoute
-    }
-    '/_tenant/student/courses/$courseId': {
-      id: '/_tenant/student/courses/$courseId'
+    '/$tenant/student/courses/$courseId': {
+      id: '/$tenant/student/courses/$courseId'
       path: '/$courseId'
-      fullPath: '/student/courses/$courseId'
+      fullPath: '/$tenant/student/courses/$courseId'
       preLoaderRoute: typeof TenantStudentCoursesCourseIdRouteImport
       parentRoute: typeof TenantStudentCoursesRoute
     }
-    '/_tenant/admin/users/new': {
-      id: '/_tenant/admin/users/new'
+    '/$tenant/admin/users/new': {
+      id: '/$tenant/admin/users/new'
       path: '/new'
-      fullPath: '/admin/users/new'
+      fullPath: '/$tenant/admin/users/new'
       preLoaderRoute: typeof TenantAdminUsersNewRouteImport
       parentRoute: typeof TenantAdminUsersRoute
     }
-    '/_tenant/admin/users/$studentId': {
-      id: '/_tenant/admin/users/$studentId'
+    '/$tenant/admin/users/$studentId': {
+      id: '/$tenant/admin/users/$studentId'
       path: '/$studentId'
-      fullPath: '/admin/users/$studentId'
+      fullPath: '/$tenant/admin/users/$studentId'
       preLoaderRoute: typeof TenantAdminUsersStudentIdRouteImport
       parentRoute: typeof TenantAdminUsersRoute
     }
-    '/_tenant/admin/analytics/reports': {
-      id: '/_tenant/admin/analytics/reports'
-      path: '/reports'
-      fullPath: '/admin/analytics/reports'
-      preLoaderRoute: typeof TenantAdminAnalyticsReportsRouteImport
-      parentRoute: typeof TenantAdminAnalyticsRoute
+    '/$tenant/admin/quizzes/$quizId': {
+      id: '/$tenant/admin/quizzes/$quizId'
+      path: '/$quizId'
+      fullPath: '/$tenant/admin/quizzes/$quizId'
+      preLoaderRoute: typeof TenantAdminQuizzesQuizIdRouteImport
+      parentRoute: typeof TenantAdminQuizzesRoute
     }
-    '/_tenant/student/courses/$courseId/learn': {
-      id: '/_tenant/student/courses/$courseId/learn'
+    '/$tenant/student/courses/$courseId/learn': {
+      id: '/$tenant/student/courses/$courseId/learn'
       path: '/learn'
-      fullPath: '/student/courses/$courseId/learn'
+      fullPath: '/$tenant/student/courses/$courseId/learn'
       preLoaderRoute: typeof TenantStudentCoursesCourseIdLearnRouteImport
       parentRoute: typeof TenantStudentCoursesCourseIdRoute
     }
-    '/_tenant/admin/users/$studentId/progress': {
-      id: '/_tenant/admin/users/$studentId/progress'
+    '/$tenant/admin/users/$studentId/progress': {
+      id: '/$tenant/admin/users/$studentId/progress'
       path: '/progress'
-      fullPath: '/admin/users/$studentId/progress'
+      fullPath: '/$tenant/admin/users/$studentId/progress'
       preLoaderRoute: typeof TenantAdminUsersStudentIdProgressRouteImport
       parentRoute: typeof TenantAdminUsersStudentIdRoute
     }
-    '/_tenant/admin/courses/$courseId/edit': {
-      id: '/_tenant/admin/courses/$courseId/edit'
+    '/$tenant/admin/quizzes/$quizId/questions': {
+      id: '/$tenant/admin/quizzes/$quizId/questions'
+      path: '/questions'
+      fullPath: '/$tenant/admin/quizzes/$quizId/questions'
+      preLoaderRoute: typeof TenantAdminQuizzesQuizIdQuestionsRouteImport
+      parentRoute: typeof TenantAdminQuizzesQuizIdRoute
+    }
+    '/$tenant/admin/courses/$courseId/edit': {
+      id: '/$tenant/admin/courses/$courseId/edit'
       path: '/$courseId/edit'
-      fullPath: '/admin/courses/$courseId/edit'
+      fullPath: '/$tenant/admin/courses/$courseId/edit'
       preLoaderRoute: typeof TenantAdminCoursesCourseIdEditRouteImport
       parentRoute: typeof TenantAdminCoursesRoute
     }
-    '/_tenant/student/courses/$courseId/quiz/$quizId': {
-      id: '/_tenant/student/courses/$courseId/quiz/$quizId'
+    '/$tenant/student/courses/$courseId/quiz/$quizId': {
+      id: '/$tenant/student/courses/$courseId/quiz/$quizId'
       path: '/quiz/$quizId'
-      fullPath: '/student/courses/$courseId/quiz/$quizId'
+      fullPath: '/$tenant/student/courses/$courseId/quiz/$quizId'
       preLoaderRoute: typeof TenantStudentCoursesCourseIdQuizQuizIdRouteImport
       parentRoute: typeof TenantStudentCoursesCourseIdRoute
     }
   }
 }
-
-interface TenantPublicRouteChildren {
-  TenantPublicVerifyCertificateRoute: typeof TenantPublicVerifyCertificateRoute
-  TenantPublicIndexRoute: typeof TenantPublicIndexRoute
-}
-
-const TenantPublicRouteChildren: TenantPublicRouteChildren = {
-  TenantPublicVerifyCertificateRoute: TenantPublicVerifyCertificateRoute,
-  TenantPublicIndexRoute: TenantPublicIndexRoute,
-}
-
-const TenantPublicRouteWithChildren = TenantPublicRoute._addFileChildren(
-  TenantPublicRouteChildren,
-)
-
-interface TenantAdminAnalyticsRouteChildren {
-  TenantAdminAnalyticsReportsRoute: typeof TenantAdminAnalyticsReportsRoute
-}
-
-const TenantAdminAnalyticsRouteChildren: TenantAdminAnalyticsRouteChildren = {
-  TenantAdminAnalyticsReportsRoute: TenantAdminAnalyticsReportsRoute,
-}
-
-const TenantAdminAnalyticsRouteWithChildren =
-  TenantAdminAnalyticsRoute._addFileChildren(TenantAdminAnalyticsRouteChildren)
 
 interface TenantAdminCoursesRouteChildren {
   TenantAdminCoursesCourseIdEditRoute: typeof TenantAdminCoursesCourseIdEditRoute
@@ -651,6 +680,32 @@ const TenantAdminCoursesRouteChildren: TenantAdminCoursesRouteChildren = {
 
 const TenantAdminCoursesRouteWithChildren =
   TenantAdminCoursesRoute._addFileChildren(TenantAdminCoursesRouteChildren)
+
+interface TenantAdminQuizzesQuizIdRouteChildren {
+  TenantAdminQuizzesQuizIdQuestionsRoute: typeof TenantAdminQuizzesQuizIdQuestionsRoute
+}
+
+const TenantAdminQuizzesQuizIdRouteChildren: TenantAdminQuizzesQuizIdRouteChildren =
+  {
+    TenantAdminQuizzesQuizIdQuestionsRoute:
+      TenantAdminQuizzesQuizIdQuestionsRoute,
+  }
+
+const TenantAdminQuizzesQuizIdRouteWithChildren =
+  TenantAdminQuizzesQuizIdRoute._addFileChildren(
+    TenantAdminQuizzesQuizIdRouteChildren,
+  )
+
+interface TenantAdminQuizzesRouteChildren {
+  TenantAdminQuizzesQuizIdRoute: typeof TenantAdminQuizzesQuizIdRouteWithChildren
+}
+
+const TenantAdminQuizzesRouteChildren: TenantAdminQuizzesRouteChildren = {
+  TenantAdminQuizzesQuizIdRoute: TenantAdminQuizzesQuizIdRouteWithChildren,
+}
+
+const TenantAdminQuizzesRouteWithChildren =
+  TenantAdminQuizzesRoute._addFileChildren(TenantAdminQuizzesRouteChildren)
 
 interface TenantAdminUsersStudentIdRouteChildren {
   TenantAdminUsersStudentIdProgressRoute: typeof TenantAdminUsersStudentIdProgressRoute
@@ -681,11 +736,12 @@ const TenantAdminUsersRouteWithChildren =
   TenantAdminUsersRoute._addFileChildren(TenantAdminUsersRouteChildren)
 
 interface TenantAdminRouteChildren {
-  TenantAdminAnalyticsRoute: typeof TenantAdminAnalyticsRouteWithChildren
+  TenantAdminAnalyticsRoute: typeof TenantAdminAnalyticsRoute
   TenantAdminCertificatesRoute: typeof TenantAdminCertificatesRoute
   TenantAdminCoursesRoute: typeof TenantAdminCoursesRouteWithChildren
   TenantAdminLiveSessionsRoute: typeof TenantAdminLiveSessionsRoute
   TenantAdminProfileRoute: typeof TenantAdminProfileRoute
+  TenantAdminQuizzesRoute: typeof TenantAdminQuizzesRouteWithChildren
   TenantAdminSecurityRoute: typeof TenantAdminSecurityRoute
   TenantAdminSettingsRoute: typeof TenantAdminSettingsRoute
   TenantAdminUsersRoute: typeof TenantAdminUsersRouteWithChildren
@@ -693,11 +749,12 @@ interface TenantAdminRouteChildren {
 }
 
 const TenantAdminRouteChildren: TenantAdminRouteChildren = {
-  TenantAdminAnalyticsRoute: TenantAdminAnalyticsRouteWithChildren,
+  TenantAdminAnalyticsRoute: TenantAdminAnalyticsRoute,
   TenantAdminCertificatesRoute: TenantAdminCertificatesRoute,
   TenantAdminCoursesRoute: TenantAdminCoursesRouteWithChildren,
   TenantAdminLiveSessionsRoute: TenantAdminLiveSessionsRoute,
   TenantAdminProfileRoute: TenantAdminProfileRoute,
+  TenantAdminQuizzesRoute: TenantAdminQuizzesRouteWithChildren,
   TenantAdminSecurityRoute: TenantAdminSecurityRoute,
   TenantAdminSettingsRoute: TenantAdminSettingsRoute,
   TenantAdminUsersRoute: TenantAdminUsersRouteWithChildren,
@@ -759,27 +816,28 @@ const TenantStudentRouteWithChildren = TenantStudentRoute._addFileChildren(
 )
 
 interface TenantRouteChildren {
-  TenantAuthRoute: typeof TenantAuthRoute
-  TenantPublicRoute: typeof TenantPublicRouteWithChildren
   TenantAdminRoute: typeof TenantAdminRouteWithChildren
   TenantLoginRoute: typeof TenantLoginRoute
   TenantStudentRoute: typeof TenantStudentRouteWithChildren
+  TenantIndexRoute: typeof TenantIndexRoute
 }
 
 const TenantRouteChildren: TenantRouteChildren = {
-  TenantAuthRoute: TenantAuthRoute,
-  TenantPublicRoute: TenantPublicRouteWithChildren,
   TenantAdminRoute: TenantAdminRouteWithChildren,
   TenantLoginRoute: TenantLoginRoute,
   TenantStudentRoute: TenantStudentRouteWithChildren,
+  TenantIndexRoute: TenantIndexRoute,
 }
 
 const TenantRouteWithChildren =
   TenantRoute._addFileChildren(TenantRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   TenantRoute: TenantRouteWithChildren,
+  LoginRoute: LoginRoute,
   SuperAdminRoute: SuperAdminRoute,
+  VerifyCertificateRoute: VerifyCertificateRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

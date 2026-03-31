@@ -30,17 +30,11 @@
   --color-fun-green-900: #184f2c;
   --color-fun-green-950: #082b15;
 
-  /* Deep Space Theme Variables */
-  --color-primary: #050505;
-  --color-secondary: #0a0a0a;
-  --color-accent-cream: #f5f0eb;
-  --color-accent-rust: #c14953;
-  --color-accent-sage: #84a98c;
-  --color-text-muted: #666666;
-  
-  --font-display: "Merriweather", serif;
-  --font-sans: "Outfit", sans-serif;
-  --font-cursive: "Italianno", cursive;
+  --color-primary: #1b7339;
+  --color-secondary: #ffffff;
+  --color-text-muted: #57534e;
+
+  --font-sans: "Inter", system-ui, sans-serif;
 
   --animate-fade-in: fadeIn 1s ease-in-out infinite;
   @keyframes fadeIn {

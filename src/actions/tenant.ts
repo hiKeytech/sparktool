@@ -1,18 +1,27 @@
 import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
+
+import { tenantLookupSchema } from "@/schemas/tenant-contract";
 import { TenantService } from "@/services/tenant-service";
 
-export const getTenant = createServerFn({ method: "GET" }).handler(async () => {
+export const getTenant = createServerFn({ method: "GET" })
+  .inputValidator(tenantLookupSchema)
+  .handler(async ({ data }) => {
+    if (data) {
+      return TenantService.getTenantById(data);
+    }
+
     const request = getRequest();
-    
+
     // Strict Host-Based Resolution
     // We trust the Host header to be the source of truth for the tenant.
     // The external infrastructure (proxy/rewrite) ensures this Host matches a tenant's configured domain or subdomain.
-    const host = request.headers.get("x-forwarded-host") || request.headers.get("host");
+    const host =
+      request.headers.get("x-forwarded-host") || request.headers.get("host");
 
     if (!host) {
-        console.error("No Host header found in request");
-        return null;
+      console.error("No Host header found in request");
+      return null;
     }
 
     // Pass the raw Host to the service
@@ -22,4 +31,4 @@ export const getTenant = createServerFn({ method: "GET" }).handler(async () => {
     const tenant = await TenantService.getTenantByHost(host);
 
     return tenant;
-});
+  });

@@ -1,31 +1,33 @@
 import {
-    Alert,
-    Button,
-    Center,
-    Group,
-    Select,
-    Stack,
-    Text,
-    TextInput,
+  Alert,
+  Button,
+  Center,
+  Group,
+  Select,
+  Stack,
+  Text,
+  TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import {
-    IconAlertCircle,
-    IconCertificate,
-    IconCheck,
-    IconSend,
+  IconAlertCircle,
+  IconCertificate,
+  IconCheck,
+  IconSend,
 } from "@tabler/icons-react";
 import { useState } from "react";
 
 import {
-    useCreateCertificate,
-    useListCourses,
-    useUsers,
+  useCreateCertificate,
+  useListCourses,
+  useUsers,
 } from "@/services/hooks";
 
 import { PendingOverlay } from "../shared/pending-overlay";
 
 import type { Certificate } from "@/types";
+import type { User } from "@/types";
+import type { Tenant } from "@/schemas/tenant-contract";
 import { formatDateInput } from "@/utils/date-utils";
 
 // ... (keep imports)
@@ -43,9 +45,9 @@ interface CertificateGeneratorProps {
   certificate: Certificate | null;
   onClose: () => void;
   onGenerated: () => void;
+  tenant: Tenant;
+  user: User;
 }
-
-import { useAuthContext } from "@/providers/auth-provider";
 
 // ... imports
 
@@ -53,10 +55,11 @@ export function CertificateGenerator({
   certificate,
   onClose,
   onGenerated,
+  tenant,
+  user,
 }: CertificateGeneratorProps) {
-  const { user, tenant } = useAuthContext();
-  const { data: courses } = useListCourses(tenant?.id);
-  const { data: users } = useUsers(tenant?.id);
+  const { data: courses } = useListCourses(tenant.id);
+  const { data: users } = useUsers(tenant.id);
   const generateCertificateMutation = useCreateCertificate();
 
   const [generationComplete, setGenerationComplete] = useState(false);
@@ -79,14 +82,10 @@ export function CertificateGenerator({
   });
 
   const handleSubmit = async (values: CertificateFormData) => {
-    if (!user) return;
-
     const selectedCourse = courses?.find((c) => c.id === values.courseId);
     const selectedStudent = users?.find((u) => u.uid === values.studentId);
 
     if (!selectedCourse || !selectedStudent) return;
-
-    const tenantId = user.tenantIds?.[0] || ""; // Include a safe fallback for tenantId
 
     await generateCertificateMutation.mutateAsync(
       {
@@ -111,7 +110,7 @@ export function CertificateGenerator({
           status: "issued",
           studentId: values.studentId,
           studentName: selectedStudent.displayName || "Unknown Student",
-          tenantId: tenantId,
+          tenantId: tenant.id,
         },
         userId: user.uid,
       },
@@ -120,7 +119,7 @@ export function CertificateGenerator({
           onGenerated();
           setGenerationComplete(true);
         },
-      }
+      },
     );
   };
 

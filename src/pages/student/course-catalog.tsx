@@ -1,41 +1,38 @@
 import {
-    Badge,
-    Button,
-    Card,
-    Container,
-    Grid,
-    Group,
-    Progress,
-    Select,
-    SimpleGrid,
-    Stack,
-    Text,
-    TextInput,
-    Title,
+  Badge,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Group,
+  Progress,
+  Select,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import {
-    IconBooks,
-    IconClock,
-    IconListCheck,
-    IconPlayerPlay,
-    IconSearch,
+  IconBooks,
+  IconClock,
+  IconListCheck,
+  IconPlayerPlay,
+  IconSearch,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 import { PendingOverlay } from "@/components/shared/pending-overlay";
-import { useAuthContext } from "@/providers/auth-provider";
 import {
-    useEnrollInCourse,
-    useListCourses,
-    useUserProgress,
+  useEnrollInCourse,
+  useListCourses,
+  useUserProgress,
 } from "@/services/hooks";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 
-interface CourseCatalogProps {}
-
-export function CourseCatalog(_props: CourseCatalogProps) {
-  const { tenant, user } = useAuthContext();
+export function CourseCatalog({ tenant, user }: TenantUserPageProps) {
   const navigate = useNavigate();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,14 +40,11 @@ export function CourseCatalog(_props: CourseCatalogProps) {
   const [categoryFilter, setCategoryFilter] = useState<null | string>(null);
 
   // Fetch courses using TanStack Query
-  const { data: courses = [], isLoading } = useListCourses(
-    tenant?.id,
-    {
-      category: categoryFilter || undefined,
-      difficulty: difficultyFilter || undefined,
-      search: searchQuery || undefined,
-    }
-  );
+  const { data: courses = [], isLoading } = useListCourses(tenant?.id, {
+    category: categoryFilter || undefined,
+    difficulty: difficultyFilter || undefined,
+    search: searchQuery || undefined,
+  });
   const { data: userProgress = [] } = useUserProgress(tenant?.id, user?.uid);
   const enrollMutation = useEnrollInCourse();
 
@@ -72,7 +66,7 @@ export function CourseCatalog(_props: CourseCatalogProps) {
     const sections = course.sections || [];
     const totalLessons = sections.reduce(
       (acc: number, section: any) => acc + (section.lessons?.length || 0),
-      0
+      0,
     );
     const totalDuration = sections.reduce(
       (acc: number, section: any) =>
@@ -80,9 +74,9 @@ export function CourseCatalog(_props: CourseCatalogProps) {
         (section.lessons?.reduce(
           (lessonAcc: number, lesson: any) =>
             lessonAcc + (lesson.estimatedDuration || 0),
-          0
+          0,
         ) || 0),
-      0
+      0,
     );
 
     return {
@@ -126,7 +120,7 @@ export function CourseCatalog(_props: CourseCatalogProps) {
 
   // Extract unique categories and difficulties from real data
   const categories = Array.from(
-    new Set(courses.map((course: any) => course.category))
+    new Set(courses.map((course: any) => course.category)),
   );
   const difficulties = ["beginner", "intermediate", "advanced"];
 
@@ -155,13 +149,17 @@ export function CourseCatalog(_props: CourseCatalogProps) {
             title: "Enrollment Successful",
           });
         },
-      }
+      },
     );
   }
 
   function handleContinue(courseId: string) {
-    // Navigate to course view
-    navigate({ to: "/student/courses/$courseId", params: { courseId } });
+    if (!tenant?.id) return;
+
+    navigate({
+      params: { courseId, tenant: tenant.id },
+      to: "/$tenant/student/courses/$courseId",
+    });
   }
 
   if (isLoading) {
@@ -194,7 +192,8 @@ export function CourseCatalog(_props: CourseCatalogProps) {
                 <TextInput
                   leftSection={<IconSearch size={16} />}
                   onChange={(event) =>
-                    setSearchQuery(event.currentTarget.value)}
+                    setSearchQuery(event.currentTarget.value)
+                  }
                   placeholder="Search courses..."
                   value={searchQuery}
                 />
@@ -305,26 +304,26 @@ export function CourseCatalog(_props: CourseCatalogProps) {
                       {/* Progress if enrolled */}
                       {isEnrolled(course.id) &&
                         getCourseProgress(course.id) > 0 && (
-                        <div className="mb-3">
-                          <Group justify="space-between" mb="xs">
-                            <Text className="text-gray-600" size="xs">
-                              Progress
-                            </Text>
-                            <Text
-                              className="text-fun-green-600"
-                              fw={500}
-                              size="xs"
-                            >
-                              {getCourseProgress(course.id)}%
-                            </Text>
-                          </Group>
-                          <Progress
-                            color="fun-green"
-                            size="sm"
-                            value={getCourseProgress(course.id)}
-                          />
-                        </div>
-                      )}
+                          <div className="mb-3">
+                            <Group justify="space-between" mb="xs">
+                              <Text className="text-gray-600" size="xs">
+                                Progress
+                              </Text>
+                              <Text
+                                className="text-fun-green-600"
+                                fw={500}
+                                size="xs"
+                              >
+                                {getCourseProgress(course.id)}%
+                              </Text>
+                            </Group>
+                            <Progress
+                              color="fun-green"
+                              size="sm"
+                              value={getCourseProgress(course.id)}
+                            />
+                          </div>
+                        )}
                     </div>
 
                     {/* Action Button */}
@@ -339,7 +338,8 @@ export function CourseCatalog(_props: CourseCatalogProps) {
                       onClick={() =>
                         isEnrolled(course.id)
                           ? handleContinue(course.id)
-                          : handleEnroll(course.id)}
+                          : handleEnroll(course.id)
+                      }
                       size="md"
                     >
                       {isEnrolled(course.id)

@@ -29,11 +29,13 @@ import {
 } from "@/components/modals";
 import { DataTable } from "@/components/shared/data-table";
 import { createUserTableColumns } from "@/components/shared/data-table/user-table-config";
-import { useAuthContext } from "@/providers/auth-provider";
 import { useDeleteUser, useUpdateUser, useUsers } from "@/services/hooks";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 
-export function UserManagement() {
-  const { tenant } = useAuthContext();
+export function UserManagement({
+  tenant,
+  user: currentUser,
+}: TenantUserPageProps) {
   const navigate = useNavigate();
 
   // Real API calls with basic filters
@@ -42,7 +44,12 @@ export function UserManagement() {
   const updateUser = useUpdateUser();
 
   function handleViewUser(userId: string) {
-    navigate({ to: "/admin/users/$studentId", params: { studentId: userId } });
+    if (!tenant?.id) return;
+
+    navigate({
+      params: { studentId: userId, tenant: tenant.id },
+      to: "/$tenant/admin/users/$studentId",
+    });
   }
 
   function handleEditUser(user: User) {
@@ -85,7 +92,11 @@ export function UserManagement() {
   }
 
   function handleSendMessage(user: User) {
-    openSendMessageModal(user);
+    if (!currentUser) {
+      return;
+    }
+
+    openSendMessageModal(user, currentUser);
   }
 
   function handleResetPassword(user: User) {
@@ -120,7 +131,9 @@ export function UserManagement() {
   }
 
   function handleCreateUser() {
-    navigate({ to: "/admin/users/new" });
+    if (!tenant?.id) return;
+
+    navigate({ params: { tenant: tenant.id }, to: "/$tenant/admin/users/new" });
   }
 
   function handleExportUsers() {

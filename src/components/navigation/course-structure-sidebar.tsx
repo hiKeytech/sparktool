@@ -1,29 +1,27 @@
 import type { CourseWithStructure } from "@/schemas/course";
-import type {
-    CourseLesson
-} from "@/types";
+import type { CourseLesson } from "@/types";
 
 import {
-    ActionIcon,
-    Badge,
-    Box,
-    Card,
-    Collapse,
-    Divider,
-    Group,
-    Progress,
-    ScrollArea,
-    Stack,
-    Text,
+  ActionIcon,
+  Badge,
+  Box,
+  Card,
+  Collapse,
+  Divider,
+  Group,
+  Progress,
+  ScrollArea,
+  Stack,
+  Text,
 } from "@mantine/core";
 import {
-    IconCheck,
-    IconChevronDown,
-    IconChevronRight,
-    IconFileText,
-    IconLock,
-    IconPlayerPlay as IconPlay,
-    IconVideo,
+  IconCheck,
+  IconChevronDown,
+  IconChevronRight,
+  IconFileText,
+  IconLock,
+  IconPlayerPlay as IconPlay,
+  IconVideo,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 import React, { useState } from "react";
@@ -33,6 +31,7 @@ interface CourseStructureSidebarProps {
   course: CourseWithStructure;
   currentLessonId?: string;
   onLessonSelect?: (lessonId: string) => void;
+  tenantId?: string;
 }
 
 export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
@@ -40,11 +39,12 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
   course,
   currentLessonId,
   onLessonSelect,
+  tenantId,
 }) => {
   const navigate = useNavigate();
   // searchParams removed as it was unused
   const [expandedSections, setExpandedSections] = useState<Set<string>>(
-    new Set(course.sections?.map((section) => section.id) || [])
+    new Set(course.sections?.map((section) => section.id) || []),
   );
 
   const toggleSection = (sectionId: string) => {
@@ -63,10 +63,12 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
     if (onLessonSelect) {
       onLessonSelect(lesson.id);
     } else {
+      if (!course.id || !tenantId) return;
+
       navigate({
-        to: "/student/courses/$courseId",
-        params: { courseId: course.id || "" },
-        search: (prev: Record<string, any>) => ({ ...prev, lesson: lesson.id }),
+        params: { courseId: course.id, tenant: tenantId },
+        search: { lesson: lesson.id },
+        to: "/$tenant/student/courses/$courseId",
       });
     }
   };
@@ -75,7 +77,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
   const calculateSectionProgress = (section: any) => {
     if (!section.lessons || section.lessons.length === 0) return 0;
     const completedInSection = section.lessons.filter((lesson: any) =>
-      completedLessons.has(lesson.id)
+      completedLessons.has(lesson.id),
     ).length;
     return (completedInSection / section.lessons.length) * 100;
   };
@@ -84,7 +86,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
     const totalLessons =
       course.sections?.reduce(
         (acc, section) => acc + (section.lessons?.length || 0),
-        0
+        0,
       ) || 0;
 
     if (totalLessons === 0) return 0;
@@ -95,7 +97,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
     // Simple sequential unlock logic - can be enhanced based on requirements
     const sectionLessons = section.lessons || [];
     const currentLessonIndex = sectionLessons.findIndex(
-      (l: any) => l.id === lesson.id
+      (l: any) => l.id === lesson.id,
     );
 
     if (currentLessonIndex === 0) return false; // First lesson is always unlocked
@@ -183,7 +185,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
               const isExpanded = expandedSections.has(section.id);
               const sectionProgressValue = calculateSectionProgress(section);
               const isCurrentSection = section.lessons?.some(
-                (lesson) => lesson.id === currentLessonId
+                (lesson) => lesson.id === currentLessonId,
               );
 
               return (
@@ -272,7 +274,8 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                             gap="sm"
                             key={lesson.id}
                             onClick={() =>
-                              !isLocked && handleLessonClick(lesson)}
+                              !isLocked && handleLessonClick(lesson)
+                            }
                             style={{
                               backgroundColor: isCurrentLesson
                                 ? "var(--mantine-color-fun-green-1)"

@@ -7,24 +7,23 @@ import { notifications } from "@mantine/notifications";
 import { IconCheck } from "@tabler/icons-react";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 
-import { useAuthContext } from "@/providers/auth-provider";
 import { type SendMessageFormData, sendMessageSchema } from "@/schemas";
 import { useCreateNotification } from "@/services/hooks";
 
 interface SendMessageModalProps {
+  currentUser: User;
   student: User;
 }
 
-export function openSendMessageModal(student: User) {
+export function openSendMessageModal(student: User, currentUser: User) {
   modals.open({
-    children: <SendMessageModal student={student} />,
+    children: <SendMessageModal currentUser={currentUser} student={student} />,
     size: "md",
     title: `Send Message to ${student.displayName}`,
   });
 }
 
-function SendMessageModal({ student }: SendMessageModalProps) {
-  const { user: currentUser } = useAuthContext();
+function SendMessageModal({ currentUser, student }: SendMessageModalProps) {
   const createNotification = useCreateNotification();
 
   const form = useForm<SendMessageFormData>({
@@ -36,14 +35,12 @@ function SendMessageModal({ student }: SendMessageModalProps) {
   });
 
   const handleSubmit = (values: SendMessageFormData) => {
-    if (!currentUser) return;
-
     createNotification.mutate(
       {
         category: "message" as const,
         createdAt: Date.now(), // Uses Number (ms)
-        fromUserId: currentUser?.uid,
-        fromUserName: currentUser?.displayName || "Administrator",
+        fromUserId: currentUser.uid,
+        fromUserName: currentUser.displayName || "Administrator",
         isRead: false,
         message: values.message,
         title: values.subject,
@@ -66,7 +63,7 @@ function SendMessageModal({ student }: SendMessageModalProps) {
           });
           modals.closeAll();
         },
-      }
+      },
     );
   };
 

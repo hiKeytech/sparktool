@@ -8,22 +8,25 @@ interface LoginFeaturesProps {
   }[];
 }
 
-export function LoginFeatures({ features: configuredFeatures }: LoginFeaturesProps) {
+export function LoginFeatures({
+  features: configuredFeatures,
+}: LoginFeaturesProps) {
   const defaultFeatures = [
     {
-        description: "Comprehensive technology courses aligned with modern standards.",
-        icon: "users",
-        title: "Digital Transformation",
+      description:
+        "Comprehensive technology courses aligned with modern standards.",
+      icon: "users",
+      title: "Digital Transformation",
     },
     {
-        description: "Recognized certifications that advance careers.",
-        icon: "certificate",
-        title: "Official Accreditation",
+      description: "Recognized certifications that advance careers.",
+      icon: "certificate",
+      title: "Official Accreditation",
     },
     {
-        description: "Mandate for technology integration.",
-        icon: "shield",
-        title: "Government Initiative",
+      description: "Mandate for technology integration.",
+      icon: "shield",
+      title: "Government Initiative",
     },
   ];
 
@@ -36,19 +39,23 @@ export function LoginFeatures({ features: configuredFeatures }: LoginFeaturesPro
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 20 }}
           key={feature.title}
-          transition={{ delay: 0.4 + index * 0.1, duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
+          transition={{
+            delay: 0.4 + index * 0.1,
+            duration: 0.8,
+            ease: [0.19, 1, 0.22, 1],
+          }}
           className="group flex gap-5 items-start"
         >
           {/* Feature Icon Map */}
-          <div className="flex shrink-0 items-center justify-center w-12 h-12 rounded-full border border-accent-cream/10 bg-accent-cream/5 text-accent-cream group-hover:bg-accent-cream group-hover:text-primary transition-colors duration-500">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors duration-500 group-hover:bg-white group-hover:text-fun-green-800">
             <i className={`icon-${feature.icon} text-lg`} />
           </div>
-          
+
           <div className="flex flex-col pt-1">
-            <h3 className="font-sans font-medium text-accent-cream tracking-wide">
+            <h3 className="font-sans font-medium tracking-wide text-white">
               {feature.title}
             </h3>
-            <p className="font-sans text-accent-cream/60 text-sm mt-1.5 leading-relaxed font-light">
+            <p className="mt-1.5 font-sans text-sm font-normal leading-relaxed text-white/75">
               {feature.description}
             </p>
           </div>

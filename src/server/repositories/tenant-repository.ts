@@ -1,7 +1,8 @@
 import type { Collection } from "mongodb";
 
-import { tenantSchema, type Tenant } from "@/schemas/tenant";
+import { tenantSchema, type Tenant } from "@/schemas/tenant-contract";
 import { getMongoDb } from "@/server/db/mongo";
+import { normalizeTenantHost } from "@/server/tenant-context";
 
 type TenantDocument = Tenant & { _id: string };
 
@@ -31,9 +32,27 @@ function parseTenant(document: null | TenantDocument): Tenant | null {
 }
 
 export const tenantRepository = {
-  async getByDomain(domain: string) {
+  async create(data: Tenant) {
     const tenants = await getTenantCollection();
-    const tenant = await tenants.findOne({ domain });
+    const document: TenantDocument = {
+      ...data,
+      _id: data.id,
+    };
+
+    await tenants.insertOne(document);
+
+    return parseTenant(document);
+  },
+
+  async getByDomain(domain: string) {
+    const normalizedDomain = normalizeTenantHost(domain);
+
+    if (!normalizedDomain) {
+      return null;
+    }
+
+    const tenants = await getTenantCollection();
+    const tenant = await tenants.findOne({ domain: normalizedDomain });
 
     return parseTenant(tenant);
   },
@@ -46,13 +65,19 @@ export const tenantRepository = {
   },
 
   async getByHost(host: string) {
-    const byDomain = await this.getByDomain(host);
+    const normalizedHost = normalizeTenantHost(host);
+
+    if (!normalizedHost) {
+      return null;
+    }
+
+    const byDomain = await this.getByDomain(normalizedHost);
 
     if (byDomain) {
       return byDomain;
     }
 
-    return this.getById(host);
+    return this.getById(normalizedHost);
   },
 
   async initialize(id: string, data: Tenant) {
@@ -67,7 +92,32 @@ export const tenantRepository = {
           id,
         },
       },
-      { upsert: true }
+      { upsert: true },
     );
+  },
+
+  async list() {
+    const tenants = await getTenantCollection();
+    const documents = await tenants.find({}).sort({ name: 1 }).toArray();
+
+    return documents
+      .map((document) => parseTenant(document))
+      .filter((tenant): tenant is Tenant => tenant !== null);
+  },
+
+  async update(id: string, updates: Partial<Tenant>) {
+    const tenants = await getTenantCollection();
+
+    await tenants.updateOne(
+      { _id: id },
+      {
+        $set: {
+          ...updates,
+          id,
+        },
+      },
+    );
+
+    return this.getById(id);
   },
 };

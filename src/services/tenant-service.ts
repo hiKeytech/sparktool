@@ -1,48 +1,5 @@
-import { type Tenant, tenantSchema } from "@/schemas/tenant";
+import { type Tenant, tenantSchema } from "@/schemas/tenant-contract";
 import { tenantRepository } from "@/server/repositories/tenant-repository";
-
-export const dummyTenant: Tenant = {
-  config: {
-    auth: {
-      strategies: [
-        {
-          type: "email-password",
-          config: {},
-        },
-      ],
-      allowSignup: true,
-      domains: [],
-    },
-    branding: {
-      fontFamily: "Inter, sans-serif",
-      logoUrl: "/logo.png",
-      portalName: "Sparktool",
-      primaryColor: "#000000",
-      secondaryColor: "#ffffff",
-      loginPage: {
-        heading: "Welcome to Sparktool",
-        subheading: "Your gateway to knowledge",
-        heroImage:
-          "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=2671&auto=format&fit=crop",
-      },
-    },
-    dashboard: {
-      layout: "modern",
-      widgets: [],
-    },
-    modules: {
-      certificates: false,
-      gamification: false,
-      liveClasses: false,
-      messaging: false,
-      reports: false,
-    },
-  },
-  domain: "localhost",
-  id: "demo",
-  name: "Demo Tenant",
-  subscriptionStatus: "active",
-};
 
 export const TenantService = {
   getTenantByDomain: async (domain: string): Promise<Tenant | null> => {
@@ -99,11 +56,10 @@ export const TenantService = {
         }
       }
 
-      return dummyTenant;
+      return null;
     } catch (error) {
       console.error("Error fetching tenant by host:", error);
-      // Fallback to dummy tenant on error
-      return dummyTenant;
+      return null;
     }
   },
 

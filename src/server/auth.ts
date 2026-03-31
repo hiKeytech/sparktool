@@ -4,11 +4,20 @@ import { z } from "zod";
 
 import { passwordAuthRepository } from "@/server/repositories/password-auth-repository";
 import { userRepository } from "@/server/repositories/user-repository";
+import { PlatformConfigService } from "@/services/platform-config-service";
+import { TenantService } from "@/services/tenant-service";
+import {
+  resolveTenantFromCurrentRequest,
+  userHasTenantAccess,
+} from "@/server/tenant-context";
+
 import { sessionDataSchema, useAppSession } from "./session";
 
 const setSessionDataSchema = sessionDataSchema.extend({
   uid: z.string().min(1),
 });
+
+const userLookupSchema = z.string().min(1).nullable();
 
 const passwordAuthSchema = z.object({
   allowSignup: z.boolean().default(false),
@@ -17,6 +26,7 @@ const passwordAuthSchema = z.object({
   mode: z.enum(["sign-in", "sign-up"]).default("sign-in"),
   password: z.string().min(8, "Password must be at least 8 characters long"),
   restrictedDomains: z.array(z.string()).optional(),
+  tenantId: z.string().min(1).optional(),
 });
 
 const changePasswordSchema = z
@@ -67,6 +77,18 @@ export const clearUserSessionFn = createServerFn({ method: "POST" }).handler(
   },
 );
 
+export const getSessionDataFn = createServerFn({ method: "GET" }).handler(
+  async () => {
+    const session = await useAppSession();
+
+    if (!session.data.uid) {
+      return null;
+    }
+
+    return sessionDataSchema.parse(session.data);
+  },
+);
+
 export const getCurrentUserFn = createServerFn({ method: "GET" }).handler(
   async () => {
     const session = await useAppSession();
@@ -74,9 +96,16 @@ export const getCurrentUserFn = createServerFn({ method: "GET" }).handler(
       return null;
     }
 
-    const user = await userRepository.getById(session.data.uid);
+    const [tenant, user] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      userRepository.getById(session.data.uid),
+    ]);
 
     if (!user) {
+      return null;
+    }
+
+    if (!userHasTenantAccess(user, tenant?.id)) {
       return null;
     }
 
@@ -85,26 +114,53 @@ export const getCurrentUserFn = createServerFn({ method: "GET" }).handler(
 );
 
 export const getUserByIdFn = createServerFn({ method: "GET" })
-  .inputValidator((userId: null | string) => userId)
+  .inputValidator(userLookupSchema)
   .handler(async ({ data: userId }) => {
-    return userRepository.getById(userId);
+    const [tenant, user] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      userRepository.getById(userId),
+    ]);
+
+    if (!user) {
+      return null;
+    }
+
+    if (!userHasTenantAccess(user, tenant?.id)) {
+      return null;
+    }
+
+    return user;
   });
 
 export const signInWithPasswordFn = createServerFn({ method: "POST" })
   .inputValidator(passwordAuthSchema)
   .handler(async ({ data }) => {
     const normalizedEmail = data.email.trim().toLowerCase();
+    const resolvedTenant = data.tenantId
+      ? await TenantService.getTenantById(data.tenantId)
+      : await resolveTenantFromCurrentRequest();
+    const platformConfig = resolvedTenant
+      ? null
+      : await PlatformConfigService.getPlatformConfig();
+    const authConfig = resolvedTenant?.config.auth ?? platformConfig?.auth;
+    const restrictedDomains = authConfig?.restrictedDomains?.length
+      ? authConfig.restrictedDomains
+      : authConfig?.domains;
 
-    if (!isDomainAllowed(normalizedEmail, data.restrictedDomains)) {
+    if (!isDomainAllowed(normalizedEmail, restrictedDomains)) {
       throw new Error(
-        `Unauthorized email domain. Expected one of: ${(data.restrictedDomains || []).join(", ")}`,
+        `Unauthorized email domain. Expected one of: ${(restrictedDomains || []).join(", ")}`,
       );
     }
 
     const session = await useAppSession();
 
     if (data.mode === "sign-up") {
-      if (!data.allowSignup) {
+      if (!resolvedTenant) {
+        throw new Error("Sign up is not available from the platform login.");
+      }
+
+      if (!(authConfig?.allowSignup ?? data.allowSignup)) {
         throw new Error("Sign up is disabled for this tenant.");
       }
 
@@ -118,6 +174,7 @@ export const signInWithPasswordFn = createServerFn({ method: "POST" })
       const user = await userRepository.provisionIdentityUser({
         displayName: data.displayName || normalizedEmail.split("@")[0],
         email: normalizedEmail,
+        tenantIds: resolvedTenant ? [resolvedTenant.id] : [],
         uid: randomUUID(),
       });
 
@@ -132,6 +189,7 @@ export const signInWithPasswordFn = createServerFn({ method: "POST" })
       });
 
       await session.update({
+        activeTenantId: resolvedTenant?.id,
         email: user.email,
         role: user.role,
         tenantIds: user.tenantIds || [],
@@ -156,6 +214,14 @@ export const signInWithPasswordFn = createServerFn({ method: "POST" })
       throw new Error("User account is missing. Please contact support.");
     }
 
+    if (!userHasTenantAccess(user, resolvedTenant?.id)) {
+      throw new Error("You do not have access to this tenant.");
+    }
+
+    if (!resolvedTenant && user.role !== "super-admin") {
+      throw new Error("This login is restricted to platform administrators.");
+    }
+
     if (user.isActive === false) {
       throw new Error(
         "This account has been deactivated. Please contact an administrator.",
@@ -171,6 +237,7 @@ export const signInWithPasswordFn = createServerFn({ method: "POST" })
     }
 
     await session.update({
+      activeTenantId: resolvedTenant?.id,
       email: updatedUser.email,
       role: updatedUser.role,
       tenantIds: updatedUser.tenantIds || [],

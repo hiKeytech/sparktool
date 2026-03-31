@@ -1,29 +1,25 @@
 import {
-    Badge,
-    Card,
-    Center,
-    Container,
-    Group,
-    RingProgress,
-    SimpleGrid,
-    Stack,
-    Text,
-    ThemeIcon,
-    Title,
+  Badge,
+  Card,
+  Center,
+  Container,
+  Group,
+  RingProgress,
+  SimpleGrid,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
 } from "@mantine/core";
 import { IconBook, IconClock } from "@tabler/icons-react";
 
 import { PendingOverlay } from "@/components/shared/pending-overlay";
-import { useAuthContext } from "@/providers/auth-provider";
 import { useListStudentProgress } from "@/services/hooks";
+import type { UserPageProps } from "@/types/route-page-props";
 
-interface StudentProgressProps {}
-
-export function StudentProgress(_props: StudentProgressProps) {
-  const { user } = useAuthContext();
-
+export function StudentProgress({ user }: UserPageProps) {
   const { data: progressData, isLoading } = useListStudentProgress(
-    user?.uid || ""
+    user?.uid || "",
   );
 
   const completedCourses =
@@ -34,12 +30,12 @@ export function StudentProgress(_props: StudentProgressProps) {
   const completedHours = Math.round(
     (progressData?.reduce(
       (sum, { timeSpentMinutes = 0 }) => sum + timeSpentMinutes,
-      0
-    ) || 0) / 60
+      0,
+    ) || 0) / 60,
   );
 
   const completionPercentage = Math.round(
-    totalCourses > 0 ? (completedCourses / totalCourses) * 100 : 0
+    totalCourses > 0 ? (completedCourses / totalCourses) * 100 : 0,
   );
 
   if (isLoading) {

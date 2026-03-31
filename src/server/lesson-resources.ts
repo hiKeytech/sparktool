@@ -8,7 +8,13 @@ import { z } from "zod";
 
 import { lessonResourceSchema } from "@/schemas/course-lesson";
 import { serverEnv } from "@/server/env";
+import { courseRepository } from "@/server/repositories/course-repository";
 import { courseLessonRepository } from "@/server/repositories/course-lesson-repository";
+import {
+  assertTenantAdminAccess,
+  requireTenantScopedActorWithTenant,
+  resolveTenantFromCurrentRequest,
+} from "@/server/tenant-context";
 
 const lessonResourceDataSchema = lessonResourceSchema
   .omit({
@@ -195,10 +201,28 @@ async function getLessonResourceOrThrow(resourceId: string) {
   return { lesson, resource };
 }
 
+async function assertLessonTenantAccess(lessonId: string, tenantId: string) {
+  const lesson = await getLessonOrThrow(lessonId);
+  const course = await courseRepository.getById(lesson.courseId);
+
+  if (!course || course.tenantId !== tenantId) {
+    throw new Error("Lesson does not belong to the current tenant.");
+  }
+
+  return lesson;
+}
+
 export const createLessonResourceFn = createServerFn({ method: "POST" })
   .inputValidator(createLessonResourceInputSchema)
   .handler(async ({ data }) => {
-    const lesson = await getLessonOrThrow(data.resourceData.lessonId);
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+
+    assertTenantAdminAccess(actor);
+
+    const lesson = await assertLessonTenantAccess(
+      data.resourceData.lessonId,
+      tenantId!,
+    );
     let nextUrl = data.resourceData.url;
     let nextFileSize = data.resourceData.fileSize;
     let nextStorageKey: string | undefined;
@@ -242,9 +266,13 @@ export const createLessonResourceFn = createServerFn({ method: "POST" })
 export const deleteLessonResourceFn = createServerFn({ method: "POST" })
   .inputValidator(deleteLessonResourceInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
     const { lesson, resource } = await getLessonResourceOrThrow(
       data.resourceId,
     );
+
+    assertTenantAdminAccess(actor);
+    await assertLessonTenantAccess(lesson.id, tenantId!);
 
     await deleteStoredAsset(resource);
 
@@ -260,14 +288,30 @@ export const deleteLessonResourceFn = createServerFn({ method: "POST" })
 export const getLessonResourceFn = createServerFn({ method: "GET" })
   .inputValidator(resourceIdInputSchema)
   .handler(async ({ data }) => {
-    const { resource } = await getLessonResourceOrThrow(data);
+    const [tenant, resourceData] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      getLessonResourceOrThrow(data),
+    ]);
+
+    if (tenant) {
+      await assertLessonTenantAccess(resourceData.lesson.id, tenant.id);
+    }
+
+    const { resource } = resourceData;
     return resource;
   });
 
 export const listLessonResourcesFn = createServerFn({ method: "GET" })
   .inputValidator(lessonIdInputSchema)
   .handler(async ({ data }) => {
-    const lesson = await getLessonOrThrow(data);
+    const [tenant, lesson] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      getLessonOrThrow(data),
+    ]);
+
+    if (tenant) {
+      await assertLessonTenantAccess(data, tenant.id);
+    }
 
     return [...lesson.resources].sort(
       (left, right) =>
@@ -278,9 +322,14 @@ export const listLessonResourcesFn = createServerFn({ method: "GET" })
 export const updateLessonResourceFn = createServerFn({ method: "POST" })
   .inputValidator(updateLessonResourceInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
     const { lesson, resource } = await getLessonResourceOrThrow(
       data.resourceId,
     );
+
+    assertTenantAdminAccess(actor);
+    await assertLessonTenantAccess(lesson.id, tenantId!);
+
     let nextUrl = data.resourceData.url ?? resource.url;
     let nextFileSize = data.resourceData.fileSize ?? resource.fileSize;
     let nextStorageKey = resource.storageKey;

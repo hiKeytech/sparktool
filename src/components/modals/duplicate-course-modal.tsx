@@ -6,7 +6,7 @@ import { modals } from "@mantine/modals";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
 
-import { useAuthContext } from "@/providers/auth-provider";
+import type { User } from "@/types";
 import { useCreateCourse } from "@/services/hooks";
 
 type CourseWithId = Course & { id: string };
@@ -20,13 +20,14 @@ type DuplicateCourseForm = z.infer<typeof duplicateCourseSchema>;
 interface DuplicateCourseModalProps {
   course: CourseWithId;
   onSuccess?: () => void;
+  user: User;
 }
 
 export function DuplicateCourseModal({
   course,
   onSuccess,
+  user,
 }: DuplicateCourseModalProps) {
-  const { user } = useAuthContext();
   const createCourse = useCreateCourse();
 
   const form = useForm<DuplicateCourseForm>({
@@ -37,41 +38,39 @@ export function DuplicateCourseModal({
   });
 
   const handleDuplicate = () => {
-    if (user) {
-      const duplicatedCourseData = {
-        category: course.category,
-        description: course.description,
-        difficulty: course.difficulty,
-        estimatedDurationInMinutes: course.estimatedDurationInMinutes || 0,
-        featured: course.featured || false,
-        instructors: course.instructors || [],
-        language: course.language || "en",
-        learningObjectives: course.learningObjectives,
-        level: course.level || "beginner",
-        prerequisites: course.prerequisites || [],
-        previewVideoUrl: course.previewVideoUrl || "",
-        price: course.price || 0,
-        published: false, // Always start as draft
-        shortDescription: course.shortDescription || "",
-        tags: course.tags,
-        thumbnailUrl: course.thumbnailUrl || "",
-        title: form.values.title,
-      };
+    const duplicatedCourseData = {
+      category: course.category,
+      description: course.description,
+      difficulty: course.difficulty,
+      estimatedDurationInMinutes: course.estimatedDurationInMinutes || 0,
+      featured: course.featured || false,
+      instructors: course.instructors || [],
+      language: course.language || "en",
+      learningObjectives: course.learningObjectives,
+      level: course.level || "beginner",
+      prerequisites: course.prerequisites || [],
+      previewVideoUrl: course.previewVideoUrl || "",
+      price: course.price || 0,
+      published: false,
+      shortDescription: course.shortDescription || "",
+      tags: course.tags,
+      thumbnailUrl: course.thumbnailUrl || "",
+      title: form.values.title,
+    };
 
-      createCourse.mutate(
-        {
-          courseData: duplicatedCourseData,
-          tenantId: user.tenantIds?.[0] || "ncs",
-          userId: user.uid,
+    createCourse.mutate(
+      {
+        courseData: duplicatedCourseData,
+        tenantId: user.tenantIds?.[0] || "ncs",
+        userId: user.uid,
+      },
+      {
+        onSuccess: () => {
+          modals.closeAll();
+          onSuccess?.();
         },
-        {
-          onSuccess: () => {
-            modals.closeAll();
-            onSuccess?.();
-          },
-        }
-      );
-    }
+      },
+    );
   };
 
   return (
@@ -114,10 +113,13 @@ export function DuplicateCourseModal({
 
 export const openDuplicateCourseModal = (
   course: CourseWithId,
-  onSuccess?: () => void
+  user: User,
+  onSuccess?: () => void,
 ) => {
   modals.open({
-    children: <DuplicateCourseModal course={course} onSuccess={onSuccess} />,
+    children: (
+      <DuplicateCourseModal course={course} onSuccess={onSuccess} user={user} />
+    ),
     size: "md",
     title: "Duplicate Course",
   });

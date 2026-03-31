@@ -1,14 +1,14 @@
 import type { SectionProgress } from "@/types";
 
 import {
-    Button,
-    Card,
-    Container,
-    Grid,
-    Group,
-    Stack,
-    Text,
-    Title,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Group,
+  Stack,
+  Text,
+  Title,
 } from "@mantine/core";
 import { IconCheck, IconFileText, IconSettings } from "@tabler/icons-react";
 import { useNavigate, useParams, useSearch } from "@tanstack/react-router";
@@ -19,18 +19,17 @@ import { CourseStructureSidebar } from "@/components/navigation/course-structure
 import { LessonNavigation } from "@/components/navigation/lesson-navigation";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
 import { UniversalVideoPlayer } from "@/components/video/universal-video-player";
-import { useAuthContext } from "@/providers/auth-provider";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 import {
-    useCourseProgress,
-    useCourseWithStructure,
-    useMarkLessonComplete,
+  useCourseProgress,
+  useCourseWithStructure,
+  useMarkLessonComplete,
 } from "@/services/hooks";
 
-export function CourseView() {
-  const { courseId } = useParams({ from: "/_tenant/student/courses/$courseId/learn" });
-  const { user } = useAuthContext();
+export function CourseView({ tenant, user }: TenantUserPageProps) {
+  const { courseId } = useParams({ strict: false }) as { courseId?: string };
   const navigate = useNavigate();
-  const searchParams = useSearch({ from: "/_tenant/student/courses/$courseId/learn" });
+  const searchParams = useSearch({ strict: false }) as { lesson?: string };
 
   // Get current lesson from URL params
   const currentLessonId = searchParams.lesson as string | undefined;
@@ -54,25 +53,31 @@ export function CourseView() {
 
   // Get current section (containing current lesson)
   const currentSection = courseStructure?.sections?.find((section) =>
-    section.lessons?.some((lesson) => lesson.id === currentLessonId)
+    section.lessons?.some((lesson) => lesson.id === currentLessonId),
   );
 
   // If no lesson is selected, redirect to first lesson
   useEffect(() => {
+    if (!tenant?.id || !courseId) return;
+
     if (!currentLessonId && courseStructure?.sections?.[0]?.lessons?.[0]) {
       const firstLesson = courseStructure.sections[0].lessons[0];
       navigate({
-        from: "/student/courses/$courseId/learn",
+        params: { courseId, tenant: tenant.id },
         replace: true,
         search: { lesson: firstLesson.id },
+        to: "/$tenant/student/courses/$courseId/learn",
       });
     }
-  }, [currentLessonId, courseStructure, navigate]);
+  }, [courseId, courseStructure, currentLessonId, navigate, tenant?.id]);
 
   const handleLessonSelect = (lessonId: string) => {
+    if (!tenant?.id || !courseId) return;
+
     navigate({
-      from: "/student/courses/$courseId/learn",
+      params: { courseId, tenant: tenant.id },
       search: { lesson: lessonId },
+      to: "/$tenant/student/courses/$courseId/learn",
     });
   };
 
@@ -113,7 +118,7 @@ export function CourseView() {
   // Check if lesson is completed
   const isLessonCompleted = (lessonId: string, sectionId: string) => {
     const sectionProgressData = studentProgress?.sectionProgress?.find(
-      (sp: SectionProgress) => sp.sectionId === sectionId
+      (sp: SectionProgress) => sp.sectionId === sectionId,
     );
 
     return sectionProgressData?.lessonsCompleted?.includes(lessonId) || false;
@@ -146,6 +151,7 @@ export function CourseView() {
               course={courseStructure}
               lesson={currentLesson}
               section={currentSection}
+              tenantId={tenant?.id}
             />
             <Button
               color="fun-green"
@@ -234,70 +240,70 @@ export function CourseView() {
                       </Text>
                       {courseStructure?.learningObjectives &&
                         courseStructure.learningObjectives.length > 0 && (
-                        <div className="mt-4">
-                          <Text
-                            className="mb-2 font-medium text-gray-800"
-                            size="sm"
-                          >
-                            Learning Objectives:
-                          </Text>
-                          <ul className="space-y-1 list-disc list-inside">
-                            {courseStructure.learningObjectives.map(
-                              (objective: string, index: number) => (
-                                <li
-                                  className="text-sm text-gray-600"
-                                  key={index}
-                                >
-                                  {objective}
-                                </li>
-                              )
-                            )}
-                          </ul>
-                        </div>
-                      )}
+                          <div className="mt-4">
+                            <Text
+                              className="mb-2 font-medium text-gray-800"
+                              size="sm"
+                            >
+                              Learning Objectives:
+                            </Text>
+                            <ul className="space-y-1 list-disc list-inside">
+                              {courseStructure.learningObjectives.map(
+                                (objective: string, index: number) => (
+                                  <li
+                                    className="text-sm text-gray-600"
+                                    key={index}
+                                  >
+                                    {objective}
+                                  </li>
+                                ),
+                              )}
+                            </ul>
+                          </div>
+                        )}
                     </div>
                   ) : activeTab === "resources" ? (
                     <div>
                       {currentLesson?.resources &&
-                        currentLesson.resources.length > 0 ? (
-                            <Stack gap="sm">
-                              {currentLesson.resources.map((resource, index) => (
-                                <Group
-                                  className="p-3 border rounded-lg bg-gray-50"
-                                  gap="sm"
-                                  key={index}
-                                >
-                                  <IconFileText
-                                    className="text-gray-600"
-                                    size={16}
-                                  />
-                                  <div className="flex-1">
-                                    <Text className="font-medium" size="sm">
-                                      {resource.title}
-                                    </Text>
-                                    <Text className="text-gray-600" size="xs">
-                                      {resource.type.charAt(0).toUpperCase() +
-                                        resource.type.slice(1)}
-                                    </Text>
-                                  </div>
-                                  <Button
-                                    component="a"
-                                    href={resource.url}
-                                    rel="noopener noreferrer"
-                                    size="xs"
-                                    target="_blank"
-                                    variant="subtle"
-                                  >
-                                    Open
-                                  </Button>
-                                </Group>
-                              ))}
-                            </Stack>
-                          ) : (
-                            <Text className="text-gray-500">
-                              No resources available for this lesson.
-                            </Text>
-                          )}
+                      currentLesson.resources.length > 0 ? (
+                        <Stack gap="sm">
+                          {currentLesson.resources.map((resource, index) => (
+                            <Group
+                              className="p-3 border rounded-lg bg-gray-50"
+                              gap="sm"
+                              key={index}
+                            >
+                              <IconFileText
+                                className="text-gray-600"
+                                size={16}
+                              />
+                              <div className="flex-1">
+                                <Text className="font-medium" size="sm">
+                                  {resource.title}
+                                </Text>
+                                <Text className="text-gray-600" size="xs">
+                                  {resource.type.charAt(0).toUpperCase() +
+                                    resource.type.slice(1)}
+                                </Text>
+                              </div>
+                              <Button
+                                component="a"
+                                href={resource.url}
+                                rel="noopener noreferrer"
+                                size="xs"
+                                target="_blank"
+                                variant="subtle"
+                              >
+                                Open
+                              </Button>
+                            </Group>
+                          ))}
+                        </Stack>
+                      ) : (
+                        <Text className="text-gray-500">
+                          No resources available for this lesson.
+                        </Text>
+                      )}
                     </div>
                   ) : (
                     <Text className="text-gray-700">
@@ -313,14 +319,14 @@ export function CourseView() {
                     className={`${
                       isLessonCompleted(
                         currentLesson.id,
-                        currentSection?.id || ""
+                        currentSection?.id || "",
                       )
                         ? "bg-gray-400 hover:bg-gray-500"
                         : "bg-fun-green-600 hover:bg-fun-green-700"
                     }`}
                     disabled={isLessonCompleted(
                       currentLesson.id,
-                      currentSection?.id || ""
+                      currentSection?.id || "",
                     )}
                     fullWidth
                     leftSection={<IconCheck size={16} />}
@@ -329,7 +335,7 @@ export function CourseView() {
                   >
                     {isLessonCompleted(
                       currentLesson.id,
-                      currentSection?.id || ""
+                      currentSection?.id || "",
                     )
                       ? "Completed"
                       : "Mark as Complete"}
@@ -342,13 +348,14 @@ export function CourseView() {
                     completedLessons={
                       new Set(
                         studentProgress?.sectionProgress?.flatMap(
-                          (sp) => sp.lessonsCompleted || []
-                        ) || []
+                          (sp) => sp.lessonsCompleted || [],
+                        ) || [],
                       )
                     }
                     course={courseStructure}
                     currentLesson={currentLesson}
                     currentSection={currentSection}
+                    tenantId={tenant?.id}
                   />
                 )}
               </Stack>
@@ -362,13 +369,14 @@ export function CourseView() {
                 completedLessons={
                   new Set(
                     studentProgress?.sectionProgress?.flatMap(
-                      (sp) => sp.lessonsCompleted || []
-                    ) || []
+                      (sp) => sp.lessonsCompleted || [],
+                    ) || [],
                   )
                 }
                 course={courseStructure}
                 currentLessonId={currentLessonId || undefined}
                 onLessonSelect={handleLessonSelect}
+                tenantId={tenant?.id}
               />
             )}
           </Grid.Col>

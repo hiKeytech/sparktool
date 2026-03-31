@@ -2,15 +2,23 @@ import type { CourseWithStructure } from "@/schemas/course";
 import type { Course, CourseLesson, CourseSection } from "@/types";
 
 import { Anchor, Breadcrumbs, Text } from "@mantine/core";
-import { IconBook as IconBookOpen, IconHome, IconList, IconVideo } from "@tabler/icons-react";
+import {
+  IconBook as IconBookOpen,
+  IconHome,
+  IconList,
+  IconVideo,
+} from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
 
 import React from "react";
+
+import { buildTenantPath } from "@/utils/tenant-paths";
 
 interface CourseBreadcrumbsProps {
   course?: Course | CourseWithStructure;
   lesson?: CourseLesson;
   section?: CourseSection;
+  tenantId?: string;
   variant?: "compact" | "full";
 }
 
@@ -18,16 +26,17 @@ export const CourseBreadcrumbs: React.FC<CourseBreadcrumbsProps> = ({
   course,
   lesson,
   section,
+  tenantId,
   variant = "full",
 }) => {
   const breadcrumbItems = [
     {
-      href: "/student/dashboard",
+      href: buildTenantPath(tenantId, "/student"),
       icon: <IconHome size={14} />,
       title: "Home",
     },
     {
-      href: "/student/courses",
+      href: buildTenantPath(tenantId, "/student/courses"),
       icon: <IconBookOpen size={14} />,
       title: "Course Catalog",
     },
@@ -35,7 +44,7 @@ export const CourseBreadcrumbs: React.FC<CourseBreadcrumbsProps> = ({
 
   if (course) {
     breadcrumbItems.push({
-      href: `/student/courses/${course.id}`,
+      href: buildTenantPath(tenantId, `/student/courses/${course.id}`),
       icon: <IconBookOpen size={14} />,
       title: course.title ?? "Untitled Course",
     });
@@ -45,7 +54,10 @@ export const CourseBreadcrumbs: React.FC<CourseBreadcrumbsProps> = ({
     // Determine section ID fallback if missing
     const sectionId = (section as any).id || section.title || "section";
     breadcrumbItems.push({
-      href: `/student/courses/${course.id}?section=${sectionId}`,
+      href: buildTenantPath(
+        tenantId,
+        `/student/courses/${course.id}?section=${sectionId}`,
+      ),
       icon: <IconList size={14} />,
       title: section.title ?? "Untitled Section",
     });
@@ -53,7 +65,10 @@ export const CourseBreadcrumbs: React.FC<CourseBreadcrumbsProps> = ({
 
   if (lesson && section && course) {
     breadcrumbItems.push({
-      href: `/student/courses/${course.id}?lesson=${lesson.id}`,
+      href: buildTenantPath(
+        tenantId,
+        `/student/courses/${course.id}?lesson=${lesson.id}`,
+      ),
       icon: <IconVideo size={14} />,
       title: lesson.title ?? "Untitled Lesson",
     });

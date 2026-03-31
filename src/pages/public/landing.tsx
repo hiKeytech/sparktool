@@ -1,43 +1,63 @@
 import {
-    Box,
-    Button,
-    Card,
-    Container,
-    Grid,
-    Group,
-    Image,
-    SimpleGrid,
-    Stack,
-    Text,
-    Title,
-    Paper,
-    Badge,
-    Flex,
+  Box,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Group,
+  Image,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
+  Paper,
+  Badge,
+  Flex,
 } from "@mantine/core";
 import {
-    IconCode, IconBriefcase,
-    IconBrain,
-    IconChartLine,
-    IconCpu,
-    IconDeviceDesktop,
-    IconHeart,
-    IconUsers,
-    IconMath,
-    IconAtom,
-    IconPalette,
-    IconGlobe,
-    IconArrowRight
+  IconCode,
+  IconBriefcase,
+  IconBrain,
+  IconChartLine,
+  IconCpu,
+  IconDeviceDesktop,
+  IconHeart,
+  IconUsers,
+  IconMath,
+  IconAtom,
+  IconPalette,
+  IconGlobe,
+  IconArrowRight,
 } from "@tabler/icons-react";
-import { Navigate, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
-import { useAuthContext } from "@/providers/auth-provider";
+import type { Tenant } from "@/schemas/tenant-contract";
 import { useListCourses } from "@/services/hooks";
+import { resolveLoginTarget } from "@/utils/tenant-paths";
 
-export default function Landing() {
+interface LandingProps {
+  tenant: Tenant;
+}
+
+const categoryIconMap = {
+  atom: IconAtom,
+  briefcase: IconBriefcase,
+  brain: IconBrain,
+  "chart-line": IconChartLine,
+  cpu: IconCpu,
+  "device-desktop": IconDeviceDesktop,
+  globe: IconGlobe,
+  heart: IconHeart,
+  math: IconMath,
+  palette: IconPalette,
+  users: IconUsers,
+} as const;
+
+export default function Landing({ tenant }: LandingProps) {
   const navigate = useNavigate();
-  const { loading, tenant, user } = useAuthContext();
+  const publicSite = tenant.config.publicSite;
   const { data: courses = [], isLoading: coursesLoading } = useListCourses(
-    tenant?.id
+    tenant.id,
   );
 
   // Helper function to extract YouTube thumbnail
@@ -60,50 +80,18 @@ export default function Landing() {
     .sort(
       (a, b) =>
         new Date(b.createdAt || 0).getTime() -
-        new Date(a.createdAt || 0).getTime()
+        new Date(a.createdAt || 0).getTime(),
     )
     .slice(0, 4);
 
-  // Redirect authenticated users to their appropriate dashboard
-  if (!loading && user) {
-    switch (user.role) {
-      case "super-admin":
-        return <Navigate to="/super-admin" replace />;
-      case "admin":
-        return <Navigate to="/admin" replace />;
-      case "student":
-        return <Navigate to="/student" replace />;
-      default:
-        // Unknown role, redirect to auth
-        return <Navigate to="/login" replace />;
-    }
-  }
-
-  const categories = [
-    { name: "Business", icon: IconBriefcase },
-    { name: "Artificial Intelligence", icon: IconBrain },
-    { name: "Data Science", icon: IconChartLine },
-    { name: "Computer Science", icon: IconCpu },
-    { name: "Information Technology", icon: IconDeviceDesktop },
-    { name: "Personal Development", icon: IconHeart },
-    { name: "Healthcare", icon: IconHeart },
-    { name: "Language Learning", icon: IconGlobe },
-    { name: "Social Sciences", icon: IconUsers },
-    { name: "Arts and Humanities", icon: IconPalette },
-    { name: "Physical Science and Engineering", icon: IconAtom },
-    { name: "Math and Logic", icon: IconMath },
-  ];
-
-  const stats = [
-    { label: "Active Students", value: "3,500+" },
-    { label: "Completed Courses", value: "12,000+" },
-    { label: "Expert Instructors", value: "150+" },
-    { label: "Success Rate", value: "96%" },
-  ];
+  const categories = publicSite.categories.map((category) => ({
+    ...category,
+    icon: categoryIconMap[category.icon],
+  }));
+  const stats = publicSite.stats;
 
   return (
     <Box>
-      {/* Hero Section with Nigerian Coat of Arms */}
       <Box
         className="bg-linear-135 from-0% from-fun-green-700 to-100% to-fun-green-600"
         style={{
@@ -123,7 +111,7 @@ export default function Landing() {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundImage: "url('/nigerian-correctional-service-staff.jpg')",
+            backgroundImage: `url('${publicSite.heroBackgroundImageUrl}')`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             opacity: 0.1,
@@ -135,11 +123,10 @@ export default function Landing() {
           <Grid align="center" gutter="xl">
             <Grid.Col span={{ base: 12, md: 8 }}>
               <Stack gap="xl" data-aos="fade-up">
-                {/* Political Header with Coat of Arms */}
                 <Group gap="lg" align="center">
                   <Image
-                    src="/nigerian-coat-of-arms.svg"
-                    alt="Nigerian Coat of Arms"
+                    src={publicSite.heroLogoUrl}
+                    alt={publicSite.heroLogoAlt}
                     h={80}
                     w="auto"
                     data-aos="zoom-in"
@@ -155,7 +142,7 @@ export default function Landing() {
                       letterSpacing: "-0.02em",
                     }}
                   >
-                    Nigerian Correctional Service
+                    {publicSite.heroTitle}
                   </Title>
                 </Group>
 
@@ -167,11 +154,7 @@ export default function Landing() {
                     opacity: 0.95,
                   }}
                 >
-                  The <strong>Renewed Hope Agenda</strong> brings comprehensive
-                  technology education to the Nigerian Correctional Service.
-                  This platform is built to enable and assist those in
-                  correctional centres to learn technology skills with our
-                  comprehensive e-learning platform.
+                  {publicSite.heroDescription}
                 </Text>
 
                 <Group gap="md" data-aos="fade-up" data-aos-delay="200">
@@ -179,21 +162,21 @@ export default function Landing() {
                     size="xl"
                     variant="white"
                     px="xl"
-                    onClick={() => navigate({ to: "/login" })}
+                    onClick={() => navigate(resolveLoginTarget(tenant.id))}
                     fw={600}
                     fz={18}
                   >
-                    Start Learning Today
+                    {publicSite.heroPrimaryCtaLabel}
                   </Button>
 
                   <Button
                     size="xl"
                     variant="outline"
                     px="xl"
-                    onClick={() => navigate({ to: "/login" })}
+                    onClick={() => navigate(resolveLoginTarget(tenant.id))}
                     color="white"
                   >
-                    Explore Courses
+                    {publicSite.heroSecondaryCtaLabel}
                   </Button>
                 </Group>
 
@@ -228,7 +211,7 @@ export default function Landing() {
           {/* Categories Section */}
           <Box data-aos="fade-up">
             <Title order={2} size={28} c="gray.9" mb="lg" fw={600}>
-              Explore The Renewed Hope Agenda Correctional Courses
+              {publicSite.categorySectionTitle}
             </Title>
 
             {/* Categories Grid */}
@@ -241,7 +224,7 @@ export default function Landing() {
                   leftSection={<category.icon size={14} />}
                   data-aos="fade-up"
                   data-aos-delay={index * 50}
-                  onClick={() => navigate({ to: "/login" })}
+                  onClick={() => navigate(resolveLoginTarget(tenant.id))}
                 >
                   {category.name}
                 </Badge>
@@ -281,15 +264,15 @@ export default function Landing() {
             >
               <Group justify="space-between" align="center" mb="lg">
                 <Title order={2} c="white" size={24} fw={600}>
-                  Hot new releases
+                  {publicSite.featuredCoursesTitle}
                 </Title>
                 <Button
                   variant="white"
                   size="sm"
                   rightSection={<IconArrowRight size={16} />}
-                  onClick={() => navigate({ to: "/login" })}
+                  onClick={() => navigate(resolveLoginTarget(tenant.id))}
                 >
-                  View All
+                  {publicSite.featuredCoursesCtaLabel}
                 </Button>
               </Group>
 
@@ -325,7 +308,7 @@ export default function Landing() {
                         className="hover:scale-105"
                         data-aos="fade-up"
                         data-aos-delay={300 + index * 100}
-                        onClick={() => navigate({ to: "/login" })}
+                        onClick={() => navigate(resolveLoginTarget(tenant.id))}
                       >
                         {/* YouTube Thumbnail */}
                         <Box
@@ -416,38 +399,31 @@ export default function Landing() {
         </Stack>
       </Container>
 
-      {/* Mission Statement Section */}
       <Box bg="gray.0" py="xl">
         <Container size="xl">
           <Paper p="xl" radius="lg" shadow="sm" data-aos="fade-up">
             <Grid align="center" gutter="xl">
               <Grid.Col span={{ base: 12, md: 4 }}>
                 <Image
-                  src="/nigerian-correctional-service-office.webp"
-                  alt="Nigerian Correctional Service Office"
+                  src={publicSite.missionImageUrl}
+                  alt={publicSite.missionImageAlt}
                   radius="md"
                 />
               </Grid.Col>
               <Grid.Col span={{ base: 12, md: 8 }}>
                 <Stack gap="lg">
                   <Title order={2} c="gray.8">
-                    Empowering Correctional Excellence Through Technology
+                    {publicSite.missionTitle}
                   </Title>
                   <Text size="lg" c="gray.6">
-                    Under the <strong>Renewed Hope Agenda</strong>, we are
-                    committed to transforming the Nigerian Correctional Service
-                    through cutting-edge technology education. Our platform
-                    ensures that every correctional officer has access to
-                    world-class digital skills training, supporting
-                    rehabilitation programs and modernizing correctional
-                    practices across Nigeria.
+                    {publicSite.missionDescription}
                   </Text>
                   <Group>
                     <Button
                       variant="subtle"
-                      onClick={() => navigate({ to: "/login" })}
+                      onClick={() => navigate(resolveLoginTarget(tenant.id))}
                     >
-                      Learn More About Our Mission
+                      {publicSite.missionCtaLabel}
                     </Button>
                   </Group>
                 </Stack>
@@ -457,28 +433,27 @@ export default function Landing() {
         </Container>
       </Box>
 
-      {/* Footer with Government Branding */}
       <Box className="bg-fun-green-800" py="lg">
         <Container size="xl">
           <Group justify="space-between" align="center">
             <Group gap="md">
               <Image
-                src="/nigerian-coat-of-arms.svg"
-                alt="Nigerian Coat of Arms"
+                src={publicSite.footerLogoUrl}
+                alt={publicSite.footerLogoAlt}
                 h={40}
                 w="auto"
               />
               <Stack gap={0}>
                 <Text c="white" fw={600}>
-                  Nigerian Correctional Service
+                  {tenant.config.branding.portalName}
                 </Text>
                 <Text c="white" size="sm" opacity={0.8}>
-                  Renewed Hope Agenda • Technology Education Platform
+                  {publicSite.footerTagline}
                 </Text>
               </Stack>
             </Group>
             <Text c="white" size="xs" opacity={0.7}>
-              © 2024 Federal Republic of Nigeria. All rights reserved.
+              {publicSite.copyright}
             </Text>
           </Group>
         </Container>

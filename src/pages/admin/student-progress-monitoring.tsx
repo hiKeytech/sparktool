@@ -1,42 +1,42 @@
+import type { TenantPageProps } from "@/types/route-page-props";
 import type { Course, StudentProgress, User } from "../../types";
 
 import {
-    ActionIcon,
-    Button,
-    Card,
-    Flex,
-    Grid,
-    Group,
-    Paper,
-    Progress,
-    Stack,
-    Text,
-    Title,
+  ActionIcon,
+  Button,
+  Card,
+  Flex,
+  Grid,
+  Group,
+  Paper,
+  Progress,
+  Stack,
+  Text,
+  Title,
 } from "@mantine/core";
 import {
-    IconArrowLeft,
-    IconCertificate,
-    IconClock,
-    IconTrophy,
-    IconUser,
+  IconArrowLeft,
+  IconCertificate,
+  IconClock,
+  IconTrophy,
+  IconUser,
 } from "@tabler/icons-react";
 import { Link, useParams } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 
 import { DataTable } from "../../components/shared/data-table";
 import {
-    type CourseProgressRow,
-    createProgressMonitoringTableColumns,
+  type CourseProgressRow,
+  createProgressMonitoringTableColumns,
 } from "../../components/shared/data-table/progress-monitoring-table-config";
 import { PendingOverlay } from "../../components/shared/pending-overlay";
 import {
-    useGetCertificates,
-    useListCourses,
-    useListStudentProgress,
-    useUser,
+  useGetCertificates,
+  useListCourses,
+  useListStudentProgress,
+  useUser,
 } from "../../services/hooks";
 import { formatStudyTime } from "../../utils/date-utils";
-import { useAuthContext } from "@/providers/auth-provider";
 
 // Extended types with Firestore document IDs
 interface CourseWithId extends Course {
@@ -64,8 +64,7 @@ interface StudentProgressData {
  * - Certificate status
  * - Activity timeline
  */
-export function StudentProgressMonitoring() {
-  const { tenant } = useAuthContext();
+export function StudentProgressMonitoring({ tenant }: TenantPageProps) {
   const { studentId } = useParams({ strict: false }) as { studentId: string };
 
   const {
@@ -75,7 +74,7 @@ export function StudentProgressMonitoring() {
   } = useUser(studentId!);
 
   const { data: allCourses = [], isLoading: coursesLoading } = useListCourses(
-    tenant?.id
+    tenant?.id,
   );
 
   const { data: progressData = [], isLoading: progressLoading } =
@@ -95,7 +94,12 @@ export function StudentProgressMonitoring() {
     return (
       <Card className="text-center p-8">
         <Text c="red">Student not found or error loading student data.</Text>
-        <Button component={Link} mt="md" to="/admin/users" variant="light">
+        <Button
+          component={Link}
+          mt="md"
+          to={tenant?.id ? "/$tenant/admin/users" : "/login"}
+          variant="light"
+        >
           Back to User Management
         </Button>
       </Card>
@@ -105,7 +109,7 @@ export function StudentProgressMonitoring() {
   // Filter courses that the student is enrolled in
   const enrolledCourseIds = student.enrolledCourses || [];
   const enrolledCourses = (allCourses as CourseWithId[]).filter((course) =>
-    enrolledCourseIds.includes(course.id)
+    enrolledCourseIds.includes(course.id),
   );
 
   // Calculate aggregated progress data
@@ -118,7 +122,7 @@ export function StudentProgressMonitoring() {
     totalProgress: calculateOverallProgress(progressData),
     totalStudyTime: progressData.reduce(
       (total, p) => total + (p.timeSpentMinutes || 0),
-      0
+      0,
     ),
     user: student,
   };
@@ -128,7 +132,7 @@ export function StudentProgressMonitoring() {
     (course) => {
       const progress = progressData.find((p) => p.courseId === course.id);
       const hasCertificate = certificates.some(
-        (cert) => cert.courseId === course.id
+        (cert) => cert.courseId === course.id,
       );
 
       return {
@@ -136,7 +140,7 @@ export function StudentProgressMonitoring() {
         hasCertificate,
         progress,
       };
-    }
+    },
   );
 
   return (
@@ -152,7 +156,7 @@ export function StudentProgressMonitoring() {
             className="text-stone-600 hover:text-fun-green-700"
             component={Link}
             size="lg"
-            to="/admin/users"
+            to={tenant?.id ? "/$tenant/admin/users" : "/login"}
             variant="subtle"
           >
             <IconArrowLeft size={20} />
@@ -313,7 +317,7 @@ function calculateOverallProgress(progressData: StudentProgress[]): number {
 
   const totalProgress = progressData.reduce(
     (sum, progress) => sum + (progress.completionPercentage || 0),
-    0
+    0,
   );
 
   return Math.round(totalProgress / progressData.length);

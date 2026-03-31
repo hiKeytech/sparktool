@@ -50,13 +50,12 @@ import {
   useUser,
   useUserProgress,
 } from "@/services/hooks";
-import { useAuthContext } from "@/providers/auth-provider";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 import { formatDate, formatDateTime } from "@/utils/date-utils";
 
-export function StudentDetails() {
-  const { tenant } = useAuthContext();
+export function StudentDetails({ tenant, user }: TenantUserPageProps) {
   const router = useRouter();
-  const { studentId } = useParams({ from: "/_tenant/admin/users/$studentId" });
+  const { studentId } = useParams({ strict: false }) as { studentId?: string };
   const [activeTab, setActiveTab] = useState<null | string>("overview");
 
   // Real API calls
@@ -83,8 +82,8 @@ export function StudentDetails() {
   }
 
   function handleSendMessage() {
-    if (!studentData) return;
-    openSendMessageModal(studentData);
+    if (!studentData || !user) return;
+    openSendMessageModal(studentData, user);
   }
 
   function getStatusColor(status: string) {

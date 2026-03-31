@@ -1,4 +1,4 @@
-import type { CreateLiveSession } from "@/types";
+import type { CreateLiveSession, User } from "@/types";
 
 import {
   Button,
@@ -15,7 +15,7 @@ import { modals } from "@mantine/modals";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
 
-import { useAuthContext } from "@/providers/auth-provider";
+import type { Tenant } from "@/schemas/tenant-contract";
 import { useCreateLiveSession, useListCourses } from "@/services/hooks";
 import { DATE_PICKER_PRESETS, formatDateInput } from "@/utils/date-utils";
 
@@ -34,9 +34,16 @@ const schema = z.object({
   title: z.string().min(1, "Session title is required"),
 });
 
-export function CreateLiveSessionModal() {
-  const { user, tenant } = useAuthContext();
-  const { data: courses = [] } = useListCourses(tenant?.id);
+interface CreateLiveSessionModalProps {
+  tenant: Tenant;
+  user: User;
+}
+
+export function CreateLiveSessionModal({
+  tenant,
+  user,
+}: CreateLiveSessionModalProps) {
+  const { data: courses = [] } = useListCourses(tenant.id);
 
   const createLiveSession = useCreateLiveSession();
 
@@ -45,7 +52,7 @@ export function CreateLiveSessionModal() {
       courseId: "",
       description: "",
       duration: 60,
-      instructorName: user?.displayName ?? "",
+      instructorName: user.displayName ?? "",
       maxParticipants: 1000 as number | undefined,
       scheduledAt: formatDateInput(new Date()),
       title: "",
@@ -61,13 +68,13 @@ export function CreateLiveSessionModal() {
     await createLiveSession.mutateAsync(
       {
         sessionData,
-        userId: user?.uid || "",
+        userId: user.uid,
       },
       {
         onSuccess() {
           handleClose();
         },
-      }
+      },
     );
   };
 

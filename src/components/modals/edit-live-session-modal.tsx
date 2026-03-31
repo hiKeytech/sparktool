@@ -1,13 +1,13 @@
 import type { LiveSession } from "@/types";
 
 import {
-    Button,
-    Group,
-    NumberInput,
-    Select,
-    Stack,
-    Textarea,
-    TextInput,
+  Button,
+  Group,
+  NumberInput,
+  Select,
+  Stack,
+  Textarea,
+  TextInput,
 } from "@mantine/core";
 import { DateTimePicker } from "@mantine/dates";
 import { useForm } from "@mantine/form";
@@ -15,9 +15,9 @@ import { modals } from "@mantine/modals";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { z } from "zod";
 
+import type { Tenant } from "@/schemas/tenant-contract";
 import { useListCourses, useUpdateLiveSession } from "@/services/hooks";
 import { DATE_PICKER_PRESETS } from "@/utils/date-utils";
-import { useAuthContext } from "@/providers/auth-provider";
 
 const schema = z.object({
   courseId: z.string().min(1, "Please select a course"),
@@ -37,11 +37,14 @@ const schema = z.object({
 
 interface EditLiveSessionModalProps {
   session: LiveSession;
+  tenant: Tenant;
 }
 
-export function EditLiveSessionModal({ session }: EditLiveSessionModalProps) {
-  const { tenant } = useAuthContext();
-  const { data: courses = [] } = useListCourses(tenant?.id);
+export function EditLiveSessionModal({
+  session,
+  tenant,
+}: EditLiveSessionModalProps) {
+  const { data: courses = [] } = useListCourses(tenant.id);
   const updateLiveSession = useUpdateLiveSession();
 
   const form = useForm({

@@ -1,4 +1,5 @@
 import type { Options } from "./types";
+import type { EmailPasswordCredentials } from "@/types";
 
 import {
   queryOptions,
@@ -9,7 +10,27 @@ import {
 import { useNavigate } from "@tanstack/react-router";
 import { minutesToMilliseconds } from "date-fns";
 
+import {
+  extractTenantIdFromPath,
+  resolveRoleHomeTarget,
+} from "@/utils/tenant-paths";
+
 import { api } from "./api";
+
+export function useCreateTenant() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to create tenant. Please try again.",
+      successMessage: "Tenant created successfully.",
+    },
+    mutationFn: api.$use.tenant.create,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["tenant"] });
+    },
+  });
+}
 // Course Progress Calculation Hooks
 export function useCalculateCourseProgress() {
   return useMutation({
@@ -857,11 +878,19 @@ export function useSignInWithEmailAndPassword() {
     meta: {
       errorMessage: "Failed to authenticate. Please verify your credentials.",
     },
-    mutationFn: api.$use.auth.signInWithEmailAndPassword,
+    mutationFn: (credentials: EmailPasswordCredentials) =>
+      api.$use.auth.signInWithEmailAndPassword({
+        ...credentials,
+        tenantId: extractTenantIdFromPath(window.location.pathname),
+      }),
     onSuccess: (data) => {
-      let redirectPath = "/";
-      if (data.userData.role) redirectPath = `/${data.userData.role}`;
-      navigate({ replace: true, to: redirectPath });
+      const tenantId =
+        extractTenantIdFromPath(window.location.pathname) ??
+        data.userData.tenantIds?.[0];
+      navigate({
+        replace: true,
+        ...resolveRoleHomeTarget(data.userData.role, tenantId),
+      });
     },
   });
 }
@@ -1207,4 +1236,29 @@ export function useUsers(
   }),
 ) {
   return useQuery({ ...query, ...options });
+}
+
+export function useTenants(
+  options: Options<typeof query> = {},
+  query = queryOptions({
+    queryFn: () => api.$use.tenant.list(),
+    queryKey: api.tenant.list.$use(),
+  }),
+) {
+  return useQuery({ ...query, ...options });
+}
+
+export function useUpdateTenant() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to update tenant. Please try again.",
+      successMessage: "Tenant updated successfully.",
+    },
+    mutationFn: api.$use.tenant.update,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["tenant"] });
+    },
+  });
 }

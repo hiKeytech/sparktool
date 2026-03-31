@@ -15,6 +15,7 @@ import { liveSessions } from "@/schemas/live-session";
 import { notification } from "@/schemas/notification";
 import { quizAttempt } from "@/schemas/quiz-attempt";
 import { studentProgress } from "@/schemas/student-progress";
+import { tenant } from "@/schemas/tenant";
 import { user } from "@/schemas/user";
 
 export const api = createBuilder({
@@ -34,5 +35,6 @@ export const api = createBuilder({
   quiz,
   quizAttempt,
   studentProgress,
+  tenant,
   user,
 });

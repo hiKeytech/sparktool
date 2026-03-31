@@ -3,12 +3,12 @@ import type { CourseLesson, CourseSection } from "@/types";
 
 import { Button, Card, Group, Progress, Stack, Text } from "@mantine/core";
 import {
-    IconCheck,
-    IconChevronLeft,
-    IconChevronRight,
-    IconLock,
+  IconCheck,
+  IconChevronLeft,
+  IconChevronRight,
+  IconLock,
 } from "@tabler/icons-react";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 
 import React from "react";
 
@@ -17,6 +17,7 @@ interface LessonNavigationProps {
   course: CourseWithStructure;
   currentLesson?: CourseLesson;
   currentSection?: CourseSection;
+  tenantId?: string;
 }
 
 interface NavigationLesson {
@@ -31,9 +32,9 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
   course,
   currentLesson,
   currentSection,
+  tenantId,
 }) => {
   const navigate = useNavigate();
-  const searchParams = useSearch({ strict: false });
 
   // Create flat list of all lessons with their sections
   const allLessons: NavigationLesson[] = [];
@@ -62,7 +63,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
 
   // Find current lesson index
   const currentLessonIndex = allLessons.findIndex(
-    (item) => item.lesson.id === currentLesson?.id
+    (item) => item.lesson.id === currentLesson?.id,
   );
 
   const previousLesson =
@@ -73,9 +74,12 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
       : null;
 
   const handleNavigateToLesson = (lesson: CourseLesson) => {
+    if (!course.id || !tenantId) return;
+
     navigate({
-      to: `/student/courses/${course.id}`,
-      search: { ...searchParams, lesson: lesson.id },
+      params: { courseId: course.id, tenant: tenantId },
+      search: { lesson: lesson.id },
+      to: "/$tenant/student/courses/$courseId",
     });
   };
 
@@ -131,7 +135,8 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
             disabled={!previousLesson}
             leftSection={<IconChevronLeft size={16} />}
             onClick={() =>
-              previousLesson && handleNavigateToLesson(previousLesson.lesson)}
+              previousLesson && handleNavigateToLesson(previousLesson.lesson)
+            }
             size="sm"
             variant="light"
           >
@@ -192,24 +197,30 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
         {!nextLesson &&
           currentLesson &&
           completedLessons.has(currentLesson.id) && (
-          <div style={{ textAlign: "center" }}>
-            <Text c="fun-green" fw={600} mb="xs" size="sm">
-              🎉 Course Completed!
-            </Text>
-            <Text c="dimmed" size="xs">
-              You've finished all lessons in this course.
-            </Text>
-            <Button
-              color="fun-green"
-              mt="sm"
-              onClick={() => navigate({ to: "/student/courses" })}
-              size="sm"
-              variant="light"
-            >
-              Browse More Courses
-            </Button>
-          </div>
-        )}
+            <div style={{ textAlign: "center" }}>
+              <Text c="fun-green" fw={600} mb="xs" size="sm">
+                🎉 Course Completed!
+              </Text>
+              <Text c="dimmed" size="xs">
+                You've finished all lessons in this course.
+              </Text>
+              <Button
+                color="fun-green"
+                mt="sm"
+                onClick={() =>
+                  tenantId &&
+                  navigate({
+                    params: { tenant: tenantId },
+                    to: "/$tenant/student/courses",
+                  })
+                }
+                size="sm"
+                variant="light"
+              >
+                Browse More Courses
+              </Button>
+            </div>
+          )}
       </Stack>
     </Card>
   );

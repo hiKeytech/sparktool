@@ -1,0 +1,36 @@
+{
+  "id": "ncs-live-session-readiness",
+  "title": "Live Session Readiness Drill",
+  "description": "A lightweight course used to validate live-session scheduling and student join flow.",
+  "shortDescription": "Fixture course for live-session testing.",
+  "category": "Operations",
+  "difficulty": "beginner",
+  "featured": false,
+  "hasCertificate": false,
+  "instructors": [
+    {
+      "name": "NCS Training Control",
+      "title": "Training Coordinator",
+      "email": "admin@corrections.gov.ng",
+      "biography": "Coordinates live training readiness and operational drills."
+    }
+  ],
+  "language": "en",
+  "learningObjectives": [
+    "Confirm tenant admin can schedule a live session",
+    "Confirm tenant student can see and join the session",
+    "Confirm Jitsi session launches inside the tenant context"
+  ],
+  "level": "beginner",
+  "prerequisites": [],
+  "previewVideoUrl": null,
+  "price": 0,
+  "published": true,
+  "publishedAt": 0,
+  "sections": [],
+  "tags": ["live-session", "testing", "ncs"],
+  "tenantId": "nigerian-correctional-service",
+  "thumbnailUrl": "/nigerian-correctional-service-staff.jpg",
+  "totalLessons": 0,
+  "totalQuizzes": 0
+}

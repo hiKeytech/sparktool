@@ -6,6 +6,7 @@ import type { StudentProgress } from "@/schemas/student-progress";
 export type { ActivityLog } from "@/schemas/activity-log";
 export type { Certificate, CertificateData } from "@/schemas/certificates";
 export type { Course } from "@/schemas/course";
+export type { Tenant, TenantConfig } from "@/schemas/tenant-contract";
 export type { CourseSection } from "@/schemas/course-section";
 export type {
   Assignment,
@@ -56,7 +57,6 @@ export interface Announcement {
   updatedAt: Timestamp;
 }
 
-
 export interface AuthContextType {
   loading: boolean;
   logout: () => Promise<void>;
@@ -99,8 +99,6 @@ export interface CourseCardProps {
   showProgress?: boolean;
 }
 
-
-
 // Enhanced Quiz Types for Multi-Level Placement
 export interface CourseQuiz extends Omit<Quiz, "courseId"> {
   courseId: string;
@@ -116,9 +114,6 @@ export interface CourseQuiz extends Omit<Quiz, "courseId"> {
   };
 }
 
-
-
-
 export interface CreateQuiz extends Omit<Quiz, "updatedAt"> {
   createdAt: number;
 }
@@ -133,8 +128,6 @@ export interface CreateQuizForm {
   title: string;
 }
 
-
-
 export type CreateSection = Pick<
   CourseSection,
   | "courseId"
@@ -145,8 +138,7 @@ export type CreateSection = Pick<
   | "title"
 >;
 
-export interface CreateUser
-{
+export interface CreateUser {
   department?: null | string;
   displayName: string;
   email: string;
@@ -352,8 +344,6 @@ export interface LearningPath {
   prerequisites?: string[];
 }
 
-
-
 export interface LessonProgress {
   completedAt?: Timestamp;
   courseId: string;
@@ -379,10 +369,6 @@ export interface LessonProgress {
   watchPercentage: number; // percentage watched
 }
 
-
-
-
-
 export interface LoginFormData {
   password: string;
   studentId: string;
@@ -395,6 +381,7 @@ export interface EmailPasswordCredentials {
   mode?: "sign-in" | "sign-up";
   password: string;
   restrictedDomains?: string[];
+  tenantId?: string;
 }
 
 // Notification System
@@ -485,7 +472,6 @@ export interface SearchFilters {
   status?: string;
 }
 
-
 export type Timestamp = number;
 
 export type CreateCourse = Pick<
@@ -513,28 +499,23 @@ export type UpdateCourse = Partial<CreateCourse> & {
   updatedAt: Timestamp;
 };
 
-
-
-
-
 export interface UpdateProfileForm {
   department: string;
   displayName: string;
   location: string;
 }
 
-export interface UpdateQuiz
-  extends Partial<
-    Pick<
-      Quiz,
-      | "description"
-      | "maxAttempts"
-      | "passingScore"
-      | "questions"
-      | "timeLimit"
-      | "title"
-    >
-  > {
+export interface UpdateQuiz extends Partial<
+  Pick<
+    Quiz,
+    | "description"
+    | "maxAttempts"
+    | "passingScore"
+    | "questions"
+    | "timeLimit"
+    | "title"
+  >
+> {
   updatedAt: number;
 }
 
@@ -546,8 +527,6 @@ export type UpdateQuizAttempt = Pick<
 export type UpdateSection = Partial<Omit<CreateSection, "courseId">> & {
   updatedAt: Timestamp;
 };
-
-
 
 export type UpdateUser = Partial<
   Pick<
@@ -561,8 +540,6 @@ export type UpdateUser = Partial<
     | "studentId"
   >
 >;
-
-
 
 export interface VideoPlayerProps {
   autoPlay?: boolean;

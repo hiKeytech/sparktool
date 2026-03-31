@@ -1,0 +1,66 @@
+{
+  "id": "platform",
+  "auth": {
+    "allowSignup": false,
+    "domains": [],
+    "restrictedDomains": [],
+    "strategies": [
+      {
+        "config": {},
+        "label": "Platform Sign In",
+        "type": "email-password"
+      }
+    ]
+  },
+  "branding": {
+    "faviconUrl": "/logo.png",
+    "fontFamily": "Inter, sans-serif",
+    "loginPage": {
+      "features": [
+        {
+          "title": "Tenant Provisioning",
+          "description": "Create and configure tenant workspaces without exposing platform controls to tenant users.",
+          "icon": "IconBuilding"
+        },
+        {
+          "title": "Access Governance",
+          "description": "Review platform-wide access and keep operator workflows separate from tenant authentication.",
+          "icon": "IconShieldCheck"
+        }
+      ],
+      "footnote": "Tenant admins and learners should sign in from their tenant URL.",
+      "formDescription": "Use your super-admin account to create tenants, manage domains, and oversee platform access.",
+      "formTitle": "Platform Admin Sign In",
+      "heading": "Platform Operations",
+      "subheading": "A dedicated control surface for Sparktool operators"
+    },
+    "logoUrl": "/logo.png",
+    "portalName": "Sparktool Platform",
+    "primaryColor": "#1b7339",
+    "secondaryColor": "#ffffff"
+  },
+  "marketing": {
+    "eyebrow": "Platform workspace",
+    "heroTitle": "Operate Sparktool without leaking tenant concerns into the platform surface.",
+    "heroDescription": "Platform branding, auth rules, and operator messaging are resolved from persisted configuration so the platform can evolve independently from tenant experiences.",
+    "highlights": [
+      {
+        "title": "Separated access",
+        "description": "Platform operators sign in here. Tenant admins and learners continue from tenant-specific routes.",
+        "icon": "IconShieldCheck"
+      },
+      {
+        "title": "DB-backed rendering",
+        "description": "Branding, login copy, and surface messaging come from stored configuration and are applied through CSS variables.",
+        "icon": "IconDatabase"
+      },
+      {
+        "title": "Route-owned theming",
+        "description": "Platform and tenant entry points set their own CSS variables so each surface stays isolated and predictable.",
+        "icon": "IconPalette"
+      }
+    ],
+    "primaryCtaLabel": "Platform Sign In",
+    "secondaryCtaLabel": "Review access"
+  }
+}

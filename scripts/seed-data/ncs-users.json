@@ -1,0 +1,16 @@
+[
+  {
+    "displayName": "NCS Tenant Admin",
+    "email": "admin@corrections.gov.ng",
+    "password": "AdminPass123!",
+    "role": "admin",
+    "tenantIds": ["nigerian-correctional-service"]
+  },
+  {
+    "displayName": "NCS Student Tester",
+    "email": "student@corrections.gov.ng",
+    "password": "StudentPass123!",
+    "role": "student",
+    "tenantIds": ["nigerian-correctional-service"]
+  }
+]

@@ -1,0 +1,125 @@
+{
+  "id": "nigerian-correctional-service",
+  "name": "Nigerian Correctional Service",
+  "domain": "nigerian-correctional-service.sparktool.local",
+  "subscriptionStatus": "active",
+  "config": {
+    "auth": {
+      "allowSignup": false,
+      "domains": ["corrections.gov.ng"],
+      "restrictedDomains": ["corrections.gov.ng"],
+      "strategies": [
+        {
+          "config": {},
+          "label": "Sign in",
+          "type": "email-password"
+        }
+      ]
+    },
+    "branding": {
+      "faviconUrl": "/nigerian-coat-of-arms.svg",
+      "fontFamily": "Inter, sans-serif",
+      "loginPage": {
+        "footnote": "Use your official Nigerian Correctional Service tenant URL to sign in.",
+        "formDescription": "Enter your official credentials to access the Nigerian Correctional Service learning platform.",
+        "formTitle": "Sign In",
+        "heading": "Renewed Hope Agenda",
+        "subheading": "Empowering Correctional Excellence Through Digital Skills Development",
+        "features": [
+          {
+            "title": "Digital Transformation",
+            "description": "Comprehensive technology courses aligned with the Renewed Hope Agenda for correctional excellence.",
+            "icon": "IconUsers"
+          },
+          {
+            "title": "Official Accreditation",
+            "description": "Government-recognized certifications that advance careers and support national development goals.",
+            "icon": "IconCertificate"
+          },
+          {
+            "title": "Live Training Ready",
+            "description": "Purpose-built live sessions for real-time instruction, briefings, and cohort training.",
+            "icon": "IconVideo"
+          }
+        ]
+      },
+      "logoUrl": "/nigerian-correctional-service-badge.png",
+      "portalName": "Nigerian Correctional Service",
+      "primaryColor": "#1b7339",
+      "secondaryColor": "#f4f8f2"
+    },
+    "dashboard": {
+      "layout": "modern",
+      "widgets": [
+        {
+          "id": "recent-courses",
+          "position": { "h": 4, "w": 6, "x": 0, "y": 0 },
+          "visibility": ["student", "admin"]
+        },
+        {
+          "id": "learning-progress",
+          "position": { "h": 4, "w": 6, "x": 6, "y": 0 },
+          "visibility": ["student"]
+        },
+        {
+          "id": "upcoming-live-sessions",
+          "position": { "h": 4, "w": 12, "x": 0, "y": 4 },
+          "visibility": ["student", "admin"]
+        }
+      ]
+    },
+    "liveSessions": {
+      "appName": "Nigerian Correctional Service Live Session",
+      "joinWindowMinutes": 15,
+      "supportEmail": "support@ncs.gov.ng"
+    },
+    "modules": {
+      "certificates": true,
+      "gamification": false,
+      "liveClasses": true,
+      "messaging": false,
+      "reports": true
+    },
+    "publicSite": {
+      "categorySectionTitle": "Explore The Renewed Hope Agenda Correctional Courses",
+      "categories": [
+        { "icon": "briefcase", "name": "Business" },
+        { "icon": "brain", "name": "Artificial Intelligence" },
+        { "icon": "chart-line", "name": "Data Science" },
+        { "icon": "cpu", "name": "Computer Science" },
+        { "icon": "device-desktop", "name": "Information Technology" },
+        { "icon": "heart", "name": "Personal Development" },
+        { "icon": "heart", "name": "Healthcare" },
+        { "icon": "globe", "name": "Language Learning" },
+        { "icon": "users", "name": "Social Sciences" },
+        { "icon": "palette", "name": "Arts and Humanities" },
+        { "icon": "atom", "name": "Physical Science and Engineering" },
+        { "icon": "math", "name": "Math and Logic" }
+      ],
+      "copyright": "© 2024 Federal Republic of Nigeria. All rights reserved.",
+      "featuredCoursesCtaLabel": "View All",
+      "featuredCoursesTitle": "Hot new releases",
+      "footerLogoAlt": "Nigerian Coat of Arms",
+      "footerLogoUrl": "/nigerian-coat-of-arms.svg",
+      "footerTagline": "Renewed Hope Agenda • Technology Education Platform",
+      "heroBackgroundImageUrl": "/nigerian-correctional-service-staff.jpg",
+      "heroDescription": "The Renewed Hope Agenda brings comprehensive technology education to the Nigerian Correctional Service. This platform is built to enable and assist those in correctional centres to learn technology skills with our comprehensive e-learning platform.",
+      "heroLogoAlt": "Nigerian Coat of Arms",
+      "heroLogoUrl": "/nigerian-coat-of-arms.svg",
+      "heroPrimaryCtaLabel": "Start Learning Today",
+      "heroSecondaryCtaLabel": "Explore Courses",
+      "heroTitle": "Nigerian Correctional Service",
+      "missionCtaLabel": "Learn More About Our Mission",
+      "missionDescription": "Under the Renewed Hope Agenda, we are committed to transforming the Nigerian Correctional Service through cutting-edge technology education. Our platform ensures that every correctional officer has access to world-class digital skills training, supporting rehabilitation programs and modernizing correctional practices across Nigeria.",
+      "missionImageAlt": "Nigerian Correctional Service Office",
+      "missionImageUrl": "/nigerian-correctional-service-office.webp",
+      "missionTitle": "Empowering Correctional Excellence Through Technology",
+      "stats": [
+        { "label": "Active Students", "value": "3,500+" },
+        { "label": "Completed Courses", "value": "12,000+" },
+        { "label": "Expert Instructors", "value": "150+" },
+        { "label": "Success Rate", "value": "96%" }
+      ]
+    }
+  }
+}

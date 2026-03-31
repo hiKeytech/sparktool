@@ -48,7 +48,6 @@ import {
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useRef, useState } from "react";
 
-import { useAuthContext } from "@/providers/auth-provider";
 import {
   changePasswordSchema,
   updateProfileSchema,
@@ -59,13 +58,10 @@ import {
   useUpdateUser,
   useUserProgress,
 } from "@/services/hooks";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 import { formatDate } from "@/utils/date-utils";
 
-interface UserProfileProps {}
-
-export function UserProfile(_props: UserProfileProps) {
-  const { tenant, user } = useAuthContext();
-
+export function UserProfile({ tenant, user }: TenantUserPageProps) {
   const [activeTab, setActiveTab] = useState<null | string>("profile");
   const resetRef = useRef<() => void>(null);
 

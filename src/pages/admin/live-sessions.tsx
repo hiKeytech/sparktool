@@ -1,43 +1,42 @@
 import type { LiveSession } from "@/types";
 
 import {
-    Button,
-    Center,
-    Container,
-    Grid,
-    Group,
-    Loader,
-    Paper,
-    Stack,
-    Text,
-    ThemeIcon,
-    Title,
+  Button,
+  Center,
+  Container,
+  Grid,
+  Group,
+  Loader,
+  Paper,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import {
-    IconCalendar,
-    IconPlus,
-    IconUsers,
-    IconVideo,
+  IconCalendar,
+  IconPlus,
+  IconUsers,
+  IconVideo,
 } from "@tabler/icons-react";
 
 import { CreateLiveSessionModal } from "@/components/modals/create-live-session-modal";
 import { EditLiveSessionModal } from "@/components/modals/edit-live-session-modal";
 import { DataTable } from "@/components/shared/data-table";
 import {
-    createLiveSessionColumns,
-    createLiveSessionTableFilters,
-    type LiveSessionTableActions,
+  createLiveSessionColumns,
+  createLiveSessionTableFilters,
+  type LiveSessionTableActions,
 } from "@/components/shared/data-table/live-session-table-config";
 import {
-    useDeleteLiveSession,
-    useListCourses,
-    useListLiveSessions
+  useDeleteLiveSession,
+  useListCourses,
+  useListLiveSessions,
 } from "@/services/hooks";
-import { useAuthContext } from "@/providers/auth-provider";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 
-export function AdminLiveSessions() {
-  const { tenant } = useAuthContext();
+export function AdminLiveSessions({ tenant, user }: TenantUserPageProps) {
   const { data: sessions = [], isLoading } = useListLiveSessions();
   const { data: courses = [] } = useListCourses(tenant?.id);
 
@@ -70,9 +69,9 @@ export function AdminLiveSessions() {
     },
     onEdit: (sessionId: string) => {
       const session = sessions.find((s) => s.id === sessionId);
-      if (session) {
+      if (session && tenant) {
         modals.open({
-          children: <EditLiveSessionModal session={session} />,
+          children: <EditLiveSessionModal session={session} tenant={tenant} />,
           modalId: "edit-live-session",
           size: "lg",
           title: "Edit Live Session",
@@ -87,8 +86,12 @@ export function AdminLiveSessions() {
   };
 
   const handleCreateSession = () => {
+    if (!tenant || !user) {
+      return;
+    }
+
     modals.open({
-      children: <CreateLiveSessionModal />,
+      children: <CreateLiveSessionModal tenant={tenant} user={user} />,
       modalId: "create-live-session",
       size: "lg",
       title: "Create New Live Session",
@@ -177,7 +180,7 @@ export function AdminLiveSessions() {
                   <Text className="text-orange-800" fw={600} size="lg">
                     {sessions.reduce(
                       (acc, { participants }) => acc + participants.length,
-                      0
+                      0,
                     )}
                   </Text>
                 </div>

@@ -1,22 +1,22 @@
 import {
-    Button,
-    Card,
-    Container,
-    Grid,
-    Group,
-    Stack,
-    Text,
-    ThemeIcon,
-    Title,
+  Button,
+  Card,
+  Container,
+  Grid,
+  Group,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
 } from "@mantine/core";
 import {
-    IconBook,
-    IconDownload,
-    IconPlayerPlay,
-    IconPlus,
-    IconStar,
-    IconUpload,
-    IconUsers,
+  IconBook,
+  IconDownload,
+  IconPlayerPlay,
+  IconPlus,
+  IconStar,
+  IconUpload,
+  IconUsers,
 } from "@tabler/icons-react";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -26,22 +26,17 @@ import { openDuplicateCourseModal } from "@/components/modals/duplicate-course-m
 import { openEditCourseModal } from "@/components/modals/edit-course-modal";
 import { DataTable } from "@/components/shared/data-table";
 import {
-    courseTableFilters,
-    createCourseColumns,
+  courseTableFilters,
+  createCourseColumns,
 } from "@/components/shared/data-table/course-table-config";
-import { useAuthContext } from "@/providers/auth-provider";
 import { useListCourses, useUpdateCourse } from "@/services/hooks";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 
-interface CourseManagementProps {}
-
-export function CourseManagement(_props: CourseManagementProps) {
+export function CourseManagement({ tenant, user }: TenantUserPageProps) {
   const navigate = useNavigate();
-  const { tenant } = useAuthContext();
 
   // Fetch courses using TanStack Query
-  const { data: courses = [], isLoading } = useListCourses(
-    tenant?.id
-  );
+  const { data: courses = [], isLoading } = useListCourses(tenant?.id);
   const updateCourse = useUpdateCourse();
 
   // Combine existing categories from courses with predefined common categories
@@ -63,11 +58,13 @@ export function CourseManagement(_props: CourseManagementProps) {
   ];
 
   const existingCategories = Array.from(
-    new Set(courses.map((course) => course.category).filter((c): c is string => !!c))
+    new Set(
+      courses.map((course) => course.category).filter((c): c is string => !!c),
+    ),
   );
 
   const categories = Array.from(
-    new Set([...existingCategories, ...predefinedCategories])
+    new Set([...existingCategories, ...predefinedCategories]),
   ).sort();
 
   // Table handlers
@@ -84,8 +81,8 @@ export function CourseManagement(_props: CourseManagementProps) {
     },
     onDuplicate: (courseId: string) => {
       const course = courses.find((c) => c.id === courseId);
-      if (course) {
-        openDuplicateCourseModal(course);
+      if (course && user) {
+        openDuplicateCourseModal(course, user);
       }
     },
     onEdit: (courseId: string) => {
@@ -95,9 +92,11 @@ export function CourseManagement(_props: CourseManagementProps) {
       }
     },
     onEditStructure: (courseId: string) => {
+      if (!tenant?.id) return;
+
       navigate({
-        to: "/admin/courses/$courseId/edit",
-        params: { courseId },
+        params: { courseId, tenant: tenant.id },
+        to: "/$tenant/admin/courses/$courseId/edit",
       });
     },
     onTogglePublished: (courseId: string) => {
@@ -143,7 +142,13 @@ export function CourseManagement(_props: CourseManagementProps) {
               <Button
                 className="bg-fun-green-600 hover:bg-fun-green-700"
                 leftSection={<IconPlus size={16} />}
-                onClick={() => openCreateCourseModal(categories)}
+                onClick={() => {
+                  if (!tenant || !user) {
+                    return;
+                  }
+
+                  openCreateCourseModal(categories, tenant, user);
+                }}
               >
                 Create Course
               </Button>
@@ -196,9 +201,8 @@ export function CourseManagement(_props: CourseManagementProps) {
                     <Text className="text-orange-600" fw={700} size="xl">
                       {courses
                         .reduce(
-                          (sum, course) =>
-                            sum + (course.enrollmentCount || 0),
-                          0
+                          (sum, course) => sum + (course.enrollmentCount || 0),
+                          0,
                         )
                         .toLocaleString()}
                     </Text>
@@ -218,15 +222,15 @@ export function CourseManagement(_props: CourseManagementProps) {
                     </Text>
                     <Text className="text-yellow-600" fw={700} size="xl">
                       {courses.length > 0 &&
-                        courses.some((c) => (c.averageRating || 0) > 0)
+                      courses.some((c) => (c.averageRating || 0) > 0)
                         ? (
                             courses.reduce(
                               (sum, course) =>
                                 sum + (course.averageRating || 0),
-                              0
+                              0,
                             ) /
                             courses.filter(
-                              (course) => (course.averageRating || 0) > 0
+                              (course) => (course.averageRating || 0) > 0,
                             ).length
                           ).toFixed(1)
                         : "N/A"}

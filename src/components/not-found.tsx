@@ -1,22 +1,20 @@
 import { Navigate } from "@tanstack/react-router";
 
-import { useAuthContext } from "@/providers/auth-provider";
+import { useResolvedAuthState } from "@/providers/auth-provider";
+import {
+  extractTenantIdFromPath,
+  resolveRoleHomeTarget,
+} from "@/utils/tenant-paths";
 
 export function NotFound() {
-  const { loading, user } = useAuthContext();
+  const { loading, session, user } = useResolvedAuthState();
+  const tenantId =
+    typeof window === "undefined"
+      ? session?.tenantIds?.[0]
+      : (extractTenantIdFromPath(window.location.pathname) ??
+        session?.tenantIds?.[0]);
 
   if (loading) return null;
 
-  if (!user) return <Navigate replace to="/login" />;
-
-  switch (user.role) {
-    case "admin":
-      return <Navigate replace to="/admin" />;
-    case "student":
-      return <Navigate replace to="/student" />;
-    case "super-admin":
-      return <Navigate replace to="/super-admin" />;
-    default:
-      return <Navigate replace to="/login" />;
-  }
+  return <Navigate replace {...resolveRoleHomeTarget(user?.role, tenantId)} />;
 }

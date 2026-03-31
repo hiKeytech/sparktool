@@ -5,6 +5,12 @@ import { activityLogs } from "@/schemas/activity-log";
 import type { Certificate } from "@/schemas/certificates";
 import { certificateRepository } from "@/server/repositories/certificate-repository";
 import { userRepository } from "@/server/repositories/user-repository";
+import {
+  assertTenantAdminAccess,
+  requireTenantScopedActorWithTenant,
+  resolveTenantFromCurrentRequest,
+  userHasTenantAccess,
+} from "@/server/tenant-context";
 
 const logEntrySchema = z.object({
   at: z.number().nullable(),
@@ -44,21 +50,36 @@ const updateCertificateInputSchema = z.object({
 export const createCertificateFn = createServerFn({ method: "POST" })
   .inputValidator(createCertificateInputSchema)
   .handler(async ({ data }) => {
-    const actor = await userRepository.getById(data.userId);
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.data.tenantId,
+    });
+
+    assertTenantAdminAccess(actor);
+
+    if (
+      !userHasTenantAccess(
+        await userRepository.getById(data.data.studentId),
+        tenantId,
+      )
+    ) {
+      throw new Error("Student does not belong to the current tenant.");
+    }
+
     const createdCertificate = await certificateRepository.create({
       ...data.data,
       issued: {
         at: Date.now(),
-        by: data.userId,
+        by: actor.id,
         name: actor?.displayName ?? data.data.issued?.name ?? null,
         photoUrl: actor?.photoURL ?? data.data.issued?.photoUrl ?? null,
       },
       modified: {
         at: Date.now(),
-        by: data.userId,
+        by: actor.id,
         name: actor?.displayName ?? data.data.modified?.name ?? null,
         photoUrl: actor?.photoURL ?? data.data.modified?.photoUrl ?? null,
       },
+      tenantId: tenantId!,
     } satisfies Certificate);
 
     if (!createdCertificate) {
@@ -70,8 +91,8 @@ export const createCertificateFn = createServerFn({ method: "POST" })
       certificateId: createdCertificate.id,
       courseId: data.data.courseId,
       studentId: data.data.studentId,
-      tenantId: data.data.tenantId,
-      userId: data.userId,
+      tenantId: tenantId!,
+      userId: actor.id,
     });
 
     return createdCertificate.id;
@@ -80,7 +101,20 @@ export const createCertificateFn = createServerFn({ method: "POST" })
 export const findCertificateFn = createServerFn({ method: "GET" })
   .inputValidator((certificateId: string | undefined) => certificateId)
   .handler(async ({ data }) => {
-    return certificateRepository.getById(data);
+    const [tenant, certificate] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      certificateRepository.getById(data),
+    ]);
+
+    if (!certificate) {
+      return null;
+    }
+
+    if (tenant && certificate.tenantId !== tenant.id) {
+      return null;
+    }
+
+    return certificate;
   });
 
 export const getStudentCertificatesFn = createServerFn({ method: "GET" })
@@ -91,26 +125,62 @@ export const getStudentCertificatesFn = createServerFn({ method: "GET" })
     }),
   )
   .handler(async ({ data }) => {
-    return certificateRepository.list(data);
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.tenantId,
+    });
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      actor.id !== data.studentId
+    ) {
+      throw new Error("You do not have permission to view these certificates.");
+    }
+
+    return certificateRepository.list({
+      studentId: data.studentId,
+      tenantId: tenantId!,
+    });
   });
 
 export const listCertificatesFn = createServerFn({ method: "GET" })
   .inputValidator((tenantId: string | undefined) => tenantId)
   .handler(async ({ data }) => {
-    return certificateRepository.list({ tenantId: data });
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data,
+    });
+
+    assertTenantAdminAccess(actor);
+
+    return certificateRepository.list({ tenantId: tenantId! });
   });
 
 export const updateCertificateFn = createServerFn({ method: "POST" })
   .inputValidator(updateCertificateInputSchema)
   .handler(async ({ data }) => {
-    const actor = await userRepository.getById(data.userId);
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+
+    assertTenantAdminAccess(actor);
+
+    const existingCertificate = await certificateRepository.getById(
+      data.certificateId,
+    );
+
+    if (!existingCertificate) {
+      throw new Error("Certificate not found.");
+    }
+
+    if (existingCertificate.tenantId !== tenantId) {
+      throw new Error("Certificate does not belong to the current tenant.");
+    }
+
     const updatedCertificate = await certificateRepository.update(
       data.certificateId,
       {
         downloadCount: data.updates.downloadCount,
         modified: {
           at: Date.now(),
-          by: data.userId,
+          by: actor.id,
           name: actor?.displayName ?? null,
           photoUrl: actor?.photoURL ?? null,
         },
@@ -126,7 +196,7 @@ export const updateCertificateFn = createServerFn({ method: "POST" })
       action: "certificate_modified",
       certificateId: data.certificateId,
       tenantId: updatedCertificate.tenantId,
-      userId: data.userId,
+      userId: actor.id,
     });
 
     return updatedCertificate.id;

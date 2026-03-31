@@ -1,47 +1,47 @@
 import type { QuizAnswer, QuizAttempt, UpdateQuizAttempt } from "@/types";
 
 import {
-    ActionIcon,
-    Alert,
-    Badge,
-    Button,
-    Card,
-    Center,
-    Container,
-    Divider,
-    Grid,
-    Group,
-    Loader,
-    Modal,
-    Paper,
-    Progress,
-    Radio,
-    RingProgress,
-    Stack,
-    Text,
-    Textarea,
-    Title,
+  ActionIcon,
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Center,
+  Container,
+  Divider,
+  Grid,
+  Group,
+  Loader,
+  Modal,
+  Paper,
+  Progress,
+  Radio,
+  RingProgress,
+  Stack,
+  Text,
+  Textarea,
+  Title,
 } from "@mantine/core";
 import {
-    IconAlertCircle,
-    IconArrowLeft,
-    IconArrowRight,
-    IconClock,
-    IconFlag,
-    IconRefresh,
-    IconTrophy,
-    IconX,
+  IconAlertCircle,
+  IconArrowLeft,
+  IconArrowRight,
+  IconClock,
+  IconFlag,
+  IconRefresh,
+  IconTrophy,
+  IconX,
 } from "@tabler/icons-react";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
 
 import { PendingOverlay } from "@/components/shared/pending-overlay";
-import { useAuthContext } from "@/providers/auth-provider";
 import {
-    useCreateQuizAttempt,
-    useQuiz,
-    useUpdateQuizAttempt,
+  useCreateQuizAttempt,
+  useQuiz,
+  useUpdateQuizAttempt,
 } from "@/services/hooks";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 import { formatTime } from "@/utils/date-utils";
 
 interface QuizState {
@@ -52,12 +52,11 @@ interface QuizState {
   timeRemaining: number;
 }
 
-export function QuizAssessment() {
+export function QuizAssessment({ tenant, user }: TenantUserPageProps) {
   const { courseId, quizId } = useParams({ strict: false }) as {
     courseId: string;
     quizId: string;
   };
-  const { user } = useAuthContext();
 
   const navigate = useNavigate();
 
@@ -114,14 +113,14 @@ export function QuizAssessment() {
             if (!attempt) return;
             setQuizState((prev) => ({ ...prev, attempt }));
           },
-        }
+        },
       );
     }
   }, [quiz, user, quizState.attempt]);
 
   const handleAnswerChange = (
     questionIndex: number,
-    answer: number | string
+    answer: number | string,
   ) => {
     setQuizState((prev) => ({
       ...prev,
@@ -222,7 +221,7 @@ export function QuizAssessment() {
           setShowResults(true);
           setConfirmSubmitModal(false);
         },
-      }
+      },
     );
   };
 
@@ -310,7 +309,13 @@ export function QuizAssessment() {
                 <Button
                   color="fun-green"
                   leftSection={<IconArrowLeft size={16} />}
-                  onClick={() => navigate({ to: `/student/courses/${courseId}` })}
+                  onClick={() =>
+                    tenant?.id &&
+                    navigate({
+                      params: { courseId, tenant: tenant.id },
+                      to: "/$tenant/student/courses/$courseId",
+                    })
+                  }
                   variant="filled"
                 >
                   Back to Course
@@ -452,59 +457,61 @@ export function QuizAssessment() {
                   <div>
                     {currentQuestion.type === "multiple-choice" &&
                       currentQuestion.options && (
-                      <Radio.Group
-                        onChange={(value) =>
-                          handleAnswerChange(
-                            quizState.currentQuestionIndex,
-                            parseInt(value)
-                          )}
-                        value={
-                          quizState.answers[
-                            quizState.currentQuestionIndex
-                          ]?.toString() || ""
-                        }
-                      >
-                        <Stack gap="md">
-                          {currentQuestion.options.map((option, index) => (
-                            <Radio
-                              className="p-3 transition-colors border rounded-lg border-stone-200 hover:bg-stone-50"
-                              key={index}
-                              label={option}
-                              size="md"
-                              value={index.toString()}
-                            />
-                          ))}
-                        </Stack>
-                      </Radio.Group>
-                    )}
+                        <Radio.Group
+                          onChange={(value) =>
+                            handleAnswerChange(
+                              quizState.currentQuestionIndex,
+                              parseInt(value),
+                            )
+                          }
+                          value={
+                            quizState.answers[
+                              quizState.currentQuestionIndex
+                            ]?.toString() || ""
+                          }
+                        >
+                          <Stack gap="md">
+                            {currentQuestion.options.map((option, index) => (
+                              <Radio
+                                className="p-3 transition-colors border rounded-lg border-stone-200 hover:bg-stone-50"
+                                key={index}
+                                label={option}
+                                size="md"
+                                value={index.toString()}
+                              />
+                            ))}
+                          </Stack>
+                        </Radio.Group>
+                      )}
 
                     {currentQuestion.type === "true-false" &&
                       currentQuestion.options && (
-                      <Radio.Group
-                        onChange={(value) =>
-                          handleAnswerChange(
-                            quizState.currentQuestionIndex,
-                            parseInt(value)
-                          )}
-                        value={
-                          quizState.answers[
-                            quizState.currentQuestionIndex
-                          ]?.toString() || ""
-                        }
-                      >
-                        <Group gap="xl">
-                          {currentQuestion.options.map((option, index) => (
-                            <Radio
-                              className="p-4 transition-colors border rounded-lg border-stone-200 hover:bg-stone-50"
-                              key={index}
-                              label={option}
-                              size="lg"
-                              value={index.toString()}
-                            />
-                          ))}
-                        </Group>
-                      </Radio.Group>
-                    )}
+                        <Radio.Group
+                          onChange={(value) =>
+                            handleAnswerChange(
+                              quizState.currentQuestionIndex,
+                              parseInt(value),
+                            )
+                          }
+                          value={
+                            quizState.answers[
+                              quizState.currentQuestionIndex
+                            ]?.toString() || ""
+                          }
+                        >
+                          <Group gap="xl">
+                            {currentQuestion.options.map((option, index) => (
+                              <Radio
+                                className="p-4 transition-colors border rounded-lg border-stone-200 hover:bg-stone-50"
+                                key={index}
+                                label={option}
+                                size="lg"
+                                value={index.toString()}
+                              />
+                            ))}
+                          </Group>
+                        </Radio.Group>
+                      )}
 
                     {currentQuestion.type === "essay" && (
                       <Textarea
@@ -512,8 +519,9 @@ export function QuizAssessment() {
                         onChange={(event) =>
                           handleAnswerChange(
                             quizState.currentQuestionIndex,
-                            event.currentTarget.value
-                          )}
+                            event.currentTarget.value,
+                          )
+                        }
                         placeholder="Enter your answer here..."
                         radius="md"
                         value={
@@ -540,24 +548,24 @@ export function QuizAssessment() {
 
                     <Group>
                       {quizState.currentQuestionIndex ===
-                        quiz.questions.length - 1 ? (
-                            <Button
-                              color="fun-green"
-                              disabled={answeredQuestions === 0}
-                              onClick={() => setConfirmSubmitModal(true)}
-                              rightSection={<IconFlag size={16} />}
-                            >
-                              Submit Quiz
-                            </Button>
-                          ) : (
-                            <Button
-                              color="fun-green"
-                              onClick={handleNextQuestion}
-                              rightSection={<IconArrowRight size={16} />}
-                            >
-                              Next
-                            </Button>
-                          )}
+                      quiz.questions.length - 1 ? (
+                        <Button
+                          color="fun-green"
+                          disabled={answeredQuestions === 0}
+                          onClick={() => setConfirmSubmitModal(true)}
+                          rightSection={<IconFlag size={16} />}
+                        >
+                          Submit Quiz
+                        </Button>
+                      ) : (
+                        <Button
+                          color="fun-green"
+                          onClick={handleNextQuestion}
+                          rightSection={<IconArrowRight size={16} />}
+                        >
+                          Next
+                        </Button>
+                      )}
                     </Group>
                   </Group>
                 </Stack>

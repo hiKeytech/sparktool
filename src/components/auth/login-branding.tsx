@@ -9,21 +9,21 @@ interface LoginBrandingProps {
 
 export function LoginBranding({ branding }: LoginBrandingProps) {
   return (
-    <div className="text-left w-full h-full flex flex-col justify-center">
+    <div className="flex flex-col justify-center w-full h-full text-left">
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 20 }}
         transition={{ delay: 0.2, duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
       >
-        <h2 className="font-display font-bold text-accent-cream text-5xl md:text-6xl tracking-tight leading-[1.1]">
+        <h2 className="font-sans text-5xl font-semibold leading-[1.1] tracking-tight text-white md:text-6xl">
           {branding.heading}
         </h2>
 
-        <p className="font-sans text-xl text-accent-cream/80 mt-6 max-w-lg font-light leading-relaxed">
+        <p className="max-w-lg mt-6 font-sans text-xl font-normal leading-relaxed text-white/80">
           {branding.subheading}
         </p>
-        
-        <div className="w-12 h-[2px] mt-10 bg-accent-cream/30"></div>
+
+        <div className="mt-10 h-0.5 w-12 bg-white/30"></div>
       </motion.div>
     </div>
   );

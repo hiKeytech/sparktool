@@ -10,7 +10,7 @@ interface LoginHeaderProps {
 
 export function LoginHeader({ branding }: LoginHeaderProps) {
   return (
-    <div className="fixed top-0 left-0 right-0 z-10 p-4 text-white bg-primary">
+    <div className="fixed top-0 left-0 right-0 z-10 bg-fun-green-800 p-4 text-white">
       <Container size="xl">
         <Group justify="space-between">
           <Group>

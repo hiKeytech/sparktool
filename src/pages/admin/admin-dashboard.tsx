@@ -1,16 +1,16 @@
 import type { User } from "@/types";
 
 import {
-    Button,
-    Card,
-    Center,
-    Container,
-    Grid,
-    Group,
-    RingProgress,
-    Stack,
-    Text,
-    Title,
+  Button,
+  Card,
+  Center,
+  Container,
+  Grid,
+  Group,
+  RingProgress,
+  Stack,
+  Text,
+  Title,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconDownload, IconPlus } from "@tabler/icons-react";
@@ -20,17 +20,14 @@ import { AdminHeaderStats } from "@/components/admin/admin-header-stats";
 import { DataTable } from "@/components/shared/data-table";
 import { createAdminDashboardTableColumns } from "@/components/shared/data-table/admin-dashboard-table-config";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
-import { useAuthContext } from "@/providers/auth-provider";
 import { useDashboardMetrics, useDeleteUser, useUsers } from "@/services/hooks";
+import type { TenantPageProps } from "@/types/route-page-props";
 
-export function AdminDashboard() {
-  const { tenant } = useAuthContext();
+export function AdminDashboard({ tenant }: TenantPageProps) {
   const navigate = useNavigate();
   const { data: dashboardData, isLoading: isDashboardLoading } =
     useDashboardMetrics(tenant?.id || "");
-  const { data: users = [], isLoading: isUsersLoading } = useUsers(
-    tenant?.id
-  );
+  const { data: users = [], isLoading: isUsersLoading } = useUsers(tenant?.id);
   const deleteUserMutation = useDeleteUser();
 
   function handleEditUser(user: User) {
@@ -51,7 +48,9 @@ export function AdminDashboard() {
   }
 
   function handleCreateUser() {
-    navigate({ to: "/admin/users/new" });
+    if (!tenant?.id) return;
+
+    navigate({ params: { tenant: tenant.id }, to: "/$tenant/admin/users/new" });
   }
 
   function handleExportData() {

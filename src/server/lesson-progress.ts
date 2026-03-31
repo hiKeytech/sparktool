@@ -7,6 +7,7 @@ import { courseLessonRepository } from "@/server/repositories/course-lesson-repo
 import { courseRepository } from "@/server/repositories/course-repository";
 import { lessonProgressRepository } from "@/server/repositories/lesson-progress-repository";
 import { studentProgressRepository } from "@/server/repositories/student-progress-repository";
+import { requireTenantScopedActorWithTenant } from "@/server/tenant-context";
 
 const lessonProgressInputSchema = z.object({
   progressData: z.record(z.string(), z.any()),
@@ -99,9 +100,29 @@ async function syncStudentSectionProgress(input: {
 export const createLessonProgressFn = createServerFn({ method: "POST" })
   .inputValidator(lessonProgressInputSchema)
   .handler(async ({ data }) => {
-    const createdProgress = await lessonProgressRepository.create(
-      data.progressData as any,
-    );
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+    const progressData = data.progressData as any;
+
+    if (
+      progressData.studentId &&
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      progressData.studentId !== actor.id
+    ) {
+      throw new Error(
+        "You do not have permission to create lesson progress for another student.",
+      );
+    }
+
+    if (progressData.courseId) {
+      const course = await courseRepository.getById(progressData.courseId);
+
+      if (!course || course.tenantId !== tenantId) {
+        throw new Error("Course does not belong to the current tenant.");
+      }
+    }
+
+    const createdProgress = await lessonProgressRepository.create(progressData);
 
     if (!createdProgress) {
       throw new Error("Failed to create lesson progress.");
@@ -113,18 +134,67 @@ export const createLessonProgressFn = createServerFn({ method: "POST" })
 export const getLessonProgressFn = createServerFn({ method: "GET" })
   .inputValidator(lessonProgressGetInputSchema)
   .handler(async ({ data }) => {
+    const { actor } = await requireTenantScopedActorWithTenant();
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      data.studentId !== actor.id
+    ) {
+      throw new Error(
+        "You do not have permission to view another student's lesson progress.",
+      );
+    }
+
     return lessonProgressRepository.getByStudentAndLesson(data);
   });
 
 export const listLessonProgressByStudentFn = createServerFn({ method: "GET" })
   .inputValidator((studentId: string) => studentId)
   .handler(async ({ data }) => {
+    const { actor } = await requireTenantScopedActorWithTenant();
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      data !== actor.id
+    ) {
+      throw new Error(
+        "You do not have permission to view another student's lesson progress.",
+      );
+    }
+
     return lessonProgressRepository.listByStudent(data);
   });
 
 export const updateLessonProgressFn = createServerFn({ method: "POST" })
   .inputValidator(lessonProgressUpdateInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+    const existingProgress = await lessonProgressRepository.getById(
+      data.progressId,
+    );
+
+    if (!existingProgress) {
+      throw new Error("Lesson progress not found.");
+    }
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      existingProgress.studentId !== actor.id
+    ) {
+      throw new Error(
+        "You do not have permission to update another student's lesson progress.",
+      );
+    }
+
+    const course = await courseRepository.getById(existingProgress.courseId);
+
+    if (!course || course.tenantId !== tenantId) {
+      throw new Error("Lesson progress does not belong to the current tenant.");
+    }
+
     const updatedProgress = await lessonProgressRepository.update(
       data.progressId,
       data.progressData as any,
@@ -140,6 +210,18 @@ export const updateLessonProgressFn = createServerFn({ method: "POST" })
 export const markLessonCompleteFn = createServerFn({ method: "POST" })
   .inputValidator(markCompleteInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      actor.id !== data.studentId
+    ) {
+      throw new Error(
+        "You do not have permission to complete a lesson for another student.",
+      );
+    }
+
     const existingProgress =
       await lessonProgressRepository.getByStudentAndLesson({
         lessonId: data.lessonId,
@@ -177,6 +259,10 @@ export const markLessonCompleteFn = createServerFn({ method: "POST" })
       throw new Error("Course tenant not found.");
     }
 
+    if (course.tenantId !== tenantId) {
+      throw new Error("Course does not belong to the current tenant.");
+    }
+
     await syncStudentSectionProgress({
       courseId: data.courseId,
       lessonId: data.lessonId,
@@ -195,6 +281,7 @@ export const markLessonCompleteFn = createServerFn({ method: "POST" })
       action: "lesson_completed",
       courseId: data.courseId,
       lessonId: data.lessonId,
+      tenantId: tenantId!,
       userId: data.studentId,
     });
 

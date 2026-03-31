@@ -1,32 +1,32 @@
 import type {
-    JitsiMeetInterfaceConfig,
-    LiveSession,
-    LiveSessionStatus,
+  JitsiMeetInterfaceConfig,
+  LiveSession,
+  LiveSessionStatus,
 } from "@/types";
 
 import { JitsiMeeting } from "@jitsi/react-sdk";
 import {
-    Badge,
-    Button,
-    Card,
-    Container,
-    Group,
-    Paper,
-    SimpleGrid,
-    Stack,
-    Text,
-    Title,
+  Badge,
+  Button,
+  Card,
+  Container,
+  Group,
+  Paper,
+  SimpleGrid,
+  Stack,
+  Text,
+  Title,
 } from "@mantine/core";
 import {
-    IconCalendar,
-    IconClock,
-    IconUsers,
-    IconVideo,
+  IconCalendar,
+  IconClock,
+  IconUsers,
+  IconVideo,
 } from "@tabler/icons-react";
 import { addMinutes, format, isAfter, isBefore, subMinutes } from "date-fns";
 import { useState } from "react";
 
-import { useAuthContext } from "@/providers/auth-provider";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 import { useJoinLiveSession, useListLiveSessions } from "@/services/hooks";
 
 const statusColors: Record<LiveSessionStatus, string> = {
@@ -36,22 +36,20 @@ const statusColors: Record<LiveSessionStatus, string> = {
   scheduled: "blue",
 };
 
-export function StudentLiveSessionsPage() {
+export function StudentLiveSessionsPage({ tenant, user }: TenantUserPageProps) {
   const [activeSession, setActiveSession] = useState<LiveSession | null>(null);
-  const { user } = useAuthContext();
 
   const { data: sessions = [], isLoading } = useListLiveSessions();
   const joinLiveSession = useJoinLiveSession();
-
-  const handleIframeRef = (container: HTMLDivElement) => {
-    if (container) container.style.height = "100%";
-  };
-
-  const ncsInterfaceConfig: Partial<JitsiMeetInterfaceConfig> = {
-    APP_NAME: "NCS E-Learning Live Session",
+  const joinWindowMinutes =
+    tenant?.config.liveSessions?.joinWindowMinutes ?? 10;
+  const portalName = tenant?.config.branding.portalName ?? "Sparktool";
+  const interfaceConfig: Partial<JitsiMeetInterfaceConfig> = {
+    APP_NAME:
+      tenant?.config.liveSessions?.appName ?? `${portalName} Live Session`,
     BRAND_WATERMARK_LINK: "",
     CLOSE_PAGE_GUEST_HINT: false,
-    DEFAULT_BACKGROUND: "#1b7339",
+    DEFAULT_BACKGROUND: tenant?.config.branding.primaryColor ?? "#1b7339",
     DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
     GENERATE_ROOMNAMES_ON_WELCOME_PAGE: false,
     JITSI_WATERMARK_LINK: "",
@@ -64,9 +62,15 @@ export function StudentLiveSessionsPage() {
     SHOW_JITSI_WATERMARK: false,
     SHOW_POWERED_BY: false,
     SHOW_PROMOTIONAL_CLOSE_PAGE: false,
-    SUPPORT_URL: "mailto:support@ncs.gov.ng",
+    SUPPORT_URL: tenant?.config.liveSessions?.supportEmail
+      ? `mailto:${tenant.config.liveSessions.supportEmail}`
+      : "",
     TILE_VIEW_MAX_COLUMNS: 4,
     VERTICAL_FILMSTRIP: true,
+  };
+
+  const handleIframeRef = (container: HTMLDivElement) => {
+    if (container) container.style.height = "100%";
   };
 
   // Filter sessions for current student
@@ -117,7 +121,7 @@ export function StudentLiveSessionsPage() {
     const now = new Date();
     const sessionStart = new Date(session.scheduledAt);
     const sessionEnd = addMinutes(sessionStart, session.duration);
-    const timeMinutesBeforeStart = subMinutes(sessionStart, 10);
+    const timeMinutesBeforeStart = subMinutes(sessionStart, joinWindowMinutes);
 
     const isWithinScheduledTime =
       session.status === "scheduled" &&
@@ -220,7 +224,7 @@ export function StudentLiveSessionsPage() {
                 },
               }}
               getIFrameRef={handleIframeRef}
-              interfaceConfigOverwrite={ncsInterfaceConfig}
+              interfaceConfigOverwrite={interfaceConfig}
               roomName={activeSession.meetingId}
               userInfo={{
                 displayName: user?.displayName || "Student",
@@ -239,10 +243,10 @@ export function StudentLiveSessionsPage() {
         {/* Header */}
         <div>
           <Title mb={4} order={2}>
-            Live Sessions
+            {portalName} Live Sessions
           </Title>
           <Text c="dimmed" size="sm">
-            Join live teaching sessions and interact with instructors
+            Join scheduled live training sessions and interact with instructors
           </Text>
         </div>
 
@@ -254,7 +258,7 @@ export function StudentLiveSessionsPage() {
             </Title>
             <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
               {activeSessions.map((session) =>
-                renderSessionCard(session, true)
+                renderSessionCard(session, true),
               )}
             </SimpleGrid>
           </div>
@@ -268,7 +272,7 @@ export function StudentLiveSessionsPage() {
             </Title>
             <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">
               {upcomingSessions.map((session) =>
-                renderSessionCard(session, true)
+                renderSessionCard(session, true),
               )}
             </SimpleGrid>
           </div>

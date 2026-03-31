@@ -1,84 +1,125 @@
 import type { User } from "@/types";
 
-import { createContext, use, useEffect, useState } from "react";
-
-import { type Tenant } from "@/schemas/tenant";
 import {
-    useCreateActivityLog,
-    useCurrentUser,
-    useSessionData,
-} from "@/services/hooks";
+  createContext,
+  use,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-interface AuthContextType {
-  isAuthenticated: boolean;
+import { type Tenant } from "@/schemas/tenant-contract";
+import type { SessionData } from "@/server/session";
+import { createActivityLogFn } from "@/server/activity-logs";
+import { useCurrentUser, useSessionData } from "@/services/hooks";
+
+interface AuthBootstrapContextType {
   loading: boolean;
+  session: null | SessionData;
   sessionStartTime?: number;
-  tenant?: Tenant;
   user: null | User;
 }
 
-const AuthContext = createContext<AuthContextType>(null!);
-
-interface AuthProviderProps {
-  children: React.ReactNode;
+interface AuthContextType extends AuthBootstrapContextType {
+  hasTenantAccess: boolean;
+  isAuthenticated: boolean;
   tenant?: Tenant;
 }
 
-export function AuthProvider({ children, tenant }: AuthProviderProps) {
-  // Pre-fetch the securely authenticated user context from the HTTP session cookie
+export type ResolvedAuthState = AuthContextType;
+
+const AuthContext = createContext<null | AuthContextType>(null);
+
+interface AuthScopeProps {
+  children: React.ReactNode;
+  value: AuthContextType;
+}
+
+function useBootstrappedAuthState(): AuthBootstrapContextType {
   const { data: sessionData, isLoading: sessionLoading } = useSessionData();
-
   const [sessionStartTime, setSessionStartTime] = useState<number>();
+  const loggedSessionUidRef = useRef<null | string>(null);
 
-  const currentUid = sessionData?.uid || "";
-
-  // The actual user profile document from Mongo-backed current-user lookup
-  const { data: user, isLoading: userDataLoading } = useCurrentUser(currentUid);
-
-  const createActivityLog = useCreateActivityLog();
+  const session = sessionData ?? null;
+  const sessionUid = session?.uid ?? null;
+  const { data: user, isLoading: userDataLoading } = useCurrentUser(sessionUid);
 
   useEffect(() => {
-    if (!sessionData?.uid) {
+    if (!sessionUid) {
+      loggedSessionUidRef.current = null;
+      setSessionStartTime(undefined);
       return;
     }
 
+    if (loggedSessionUidRef.current === sessionUid) {
+      return;
+    }
+
+    loggedSessionUidRef.current = sessionUid;
     setSessionStartTime(Date.now());
 
-    void (async () => {
-      try {
-        await createActivityLog.mutateAsync({
-          action: "login",
-          method: "session_restore",
-          userId: sessionData.uid,
-        });
-      } catch (error) {
-        console.error("Failed to log activity", error);
-      }
-    })();
-  }, [createActivityLog, sessionData?.uid, tenant]);
+    void createActivityLogFn({
+      data: {
+        action: "login",
+        method: "session_restore",
+        userId: sessionUid,
+      },
+    }).catch((error) => {
+      console.error("Failed to log activity", error);
+      loggedSessionUidRef.current = null;
+    });
+  }, [sessionUid]);
 
-  const isAuthenticated = !!sessionData?.uid && !!user;
-  const contextLoading = sessionLoading || (!!sessionData?.uid && userDataLoading);
-
-  return (
-    <AuthContext
-      value={{
-        isAuthenticated,
-        loading: contextLoading,
-        sessionStartTime,
-        tenant,
-        user: user || null,
-      }}
-    >
-      {children}
-    </AuthContext>
+  return useMemo(
+    () => ({
+      loading: sessionLoading || (!!sessionUid && userDataLoading),
+      session,
+      sessionStartTime,
+      user: user || null,
+    }),
+    [
+      session,
+      sessionLoading,
+      sessionStartTime,
+      sessionUid,
+      user,
+      userDataLoading,
+    ],
   );
+}
+
+export function useResolvedAuthState(tenant?: Tenant): AuthContextType {
+  const bootstrapState = useBootstrappedAuthState();
+  const tenantId = tenant?.id;
+  const memberTenantIds =
+    bootstrapState.user?.tenantIds ?? bootstrapState.session?.tenantIds ?? [];
+  const hasTenantAccess =
+    !tenantId ||
+    bootstrapState.user?.role === "super-admin" ||
+    memberTenantIds.includes(tenantId);
+
+  return useMemo(
+    () => ({
+      ...bootstrapState,
+      hasTenantAccess,
+      isAuthenticated: Boolean(
+        bootstrapState.session?.uid && bootstrapState.user,
+      ),
+      tenant,
+    }),
+    [bootstrapState, hasTenantAccess, tenant],
+  );
+}
+
+export function AuthScope({ children, value }: AuthScopeProps) {
+  return <AuthContext value={value}>{children}</AuthContext>;
 }
 
 export function useAuthContext() {
   const context = use(AuthContext);
 
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useAuthContext must be used within an AuthProvider");
   }
 

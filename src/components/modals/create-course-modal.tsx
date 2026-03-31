@@ -1,18 +1,18 @@
 import {
-    ActionIcon,
-    Autocomplete,
-    Box,
-    Button,
-    Fieldset,
-    Grid,
-    Group,
-    NumberInput,
-    Select,
-    Stack,
-    Switch,
-    Text,
-    Textarea,
-    TextInput,
+  ActionIcon,
+  Autocomplete,
+  Box,
+  Button,
+  Fieldset,
+  Grid,
+  Group,
+  NumberInput,
+  Select,
+  Stack,
+  Switch,
+  Text,
+  Textarea,
+  TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
@@ -20,7 +20,8 @@ import { IconPlus, IconTrash } from "@tabler/icons-react";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useNavigate } from "@tanstack/react-router";
 
-import { useAuthContext } from "@/providers/auth-provider";
+import type { User } from "@/types";
+import type { Tenant } from "@/schemas/tenant-contract";
 import type { CreateCourseFormData } from "@/schemas";
 import { createCourseSchema } from "@/schemas";
 import { useCreateCourse } from "@/services/hooks";
@@ -28,13 +29,16 @@ import { useCreateCourse } from "@/services/hooks";
 interface CreateCourseModalProps {
   categories: string[];
   onSuccess?: () => void;
+  tenant: Tenant;
+  user: User;
 }
 
 export function CreateCourseModal({
   categories,
   onSuccess,
+  tenant,
+  user,
 }: CreateCourseModalProps) {
-  const { user, tenant } = useAuthContext();
   const createCourse = useCreateCourse();
   const navigate = useNavigate();
 
@@ -60,42 +64,40 @@ export function CreateCourseModal({
   });
 
   const handleSubmit = (values: CreateCourseFormData) => {
-    if (user) {
-      const submissionData = {
-        ...values,
-        instructors: values.instructors.map((i) => ({
-          ...i,
-          biography: i.biography || null,
-          email: i.email || null,
-          title: i.title || null,
-        })),
-        shortDescription: values.shortDescription || null,
-        thumbnailUrl: values.thumbnailUrl || null,
-        language: "en",
-        level: "beginner" as const,
-      };
+    const submissionData = {
+      ...values,
+      instructors: values.instructors.map((i) => ({
+        ...i,
+        biography: i.biography || null,
+        email: i.email || null,
+        title: i.title || null,
+      })),
+      shortDescription: values.shortDescription || null,
+      thumbnailUrl: values.thumbnailUrl || null,
+      language: "en",
+      level: "beginner" as const,
+    };
 
-      createCourse.mutate(
-        {
-          courseData: submissionData,
-          tenantId: tenant?.id || "",
-          userId: user.uid,
+    createCourse.mutate(
+      {
+        courseData: submissionData,
+        tenantId: tenant.id,
+        userId: user.uid,
+      },
+      {
+        onSuccess: (courseId) => {
+          modals.closeAll();
+          form.reset();
+          onSuccess?.();
+          if (courseId) {
+            navigate({
+              params: { courseId, tenant: tenant.id },
+              to: "/$tenant/admin/courses/$courseId/edit",
+            });
+          }
         },
-        {
-          onSuccess: (courseId) => {
-            modals.closeAll();
-            form.reset();
-            onSuccess?.();
-            if (courseId) {
-              navigate({
-                to: "/admin/courses/$courseId/edit",
-                params: { courseId },
-              });
-            }
-          },
-        }
-      );
-    }
+      },
+    );
   };
 
   return (
@@ -167,7 +169,8 @@ export function CreateCourseModal({
                       email: "",
                       name: "",
                       title: "",
-                    })}
+                    })
+                  }
                   size="xs"
                   variant="light"
                 >
@@ -188,7 +191,8 @@ export function CreateCourseModal({
                           <ActionIcon
                             color="red"
                             onClick={() =>
-                              form.removeListItem("instructors", index)}
+                              form.removeListItem("instructors", index)
+                            }
                             size="sm"
                             variant="light"
                           >
@@ -212,7 +216,9 @@ export function CreateCourseModal({
                           label="Bio (optional)"
                           minRows={2}
                           placeholder="Enter instructor bio"
-                          {...form.getInputProps(`instructors.${index}.biography`)}
+                          {...form.getInputProps(
+                            `instructors.${index}.biography`,
+                          )}
                         />
                       </Grid.Col>
                     </Grid>
@@ -256,11 +262,18 @@ export function CreateCourseModal({
 
 export const openCreateCourseModal = (
   categories: string[],
-  onSuccess?: () => void
+  tenant: Tenant,
+  user: User,
+  onSuccess?: () => void,
 ) => {
   modals.open({
     children: (
-      <CreateCourseModal categories={categories} onSuccess={onSuccess} />
+      <CreateCourseModal
+        categories={categories}
+        onSuccess={onSuccess}
+        tenant={tenant}
+        user={user}
+      />
     ),
     size: "lg",
     title: "Create New Course",

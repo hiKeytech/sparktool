@@ -10,6 +10,7 @@
     "lint": "eslint . --report-unused-disable-directives",
     "typecheck": "tsc --noEmit",
     "lint:fix": "eslint . --fix",
+    "seed:ncs": "node scripts/seed-ncs-tenant.mjs",
     "ci": "npm run lint"
   },
   "dependencies": {

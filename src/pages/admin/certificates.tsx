@@ -1,20 +1,20 @@
 import {
-    Button,
-    Card,
-    Container,
-    Group,
-    Select,
-    Stack,
-    Text,
-    TextInput,
-    Title,
+  Button,
+  Card,
+  Container,
+  Group,
+  Select,
+  Stack,
+  Text,
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import {
-    IconCertificate,
-    IconFilter,
-    IconPlus,
-    IconSearch,
+  IconCertificate,
+  IconFilter,
+  IconPlus,
+  IconSearch,
 } from "@tabler/icons-react";
 import { useState } from "react";
 
@@ -24,14 +24,16 @@ import { DataTable } from "@/components/shared/data-table";
 import { createCertificatesTableColumns } from "@/components/shared/data-table/certificates-table-config";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
 import {
-    useListCertificates,
-    useListCourses,
-    useUpdateCertificate
+  useListCertificates,
+  useListCourses,
+  useUpdateCertificate,
 } from "@/services/hooks";
-import { useAuthContext } from "@/providers/auth-provider";
-export function AdminCertificates() {
-  const { user, tenant } = useAuthContext();
-  const { data: courses, isLoading: coursesLoading } = useListCourses(tenant?.id);
+import type { TenantUserPageProps } from "@/types/route-page-props";
+
+export function AdminCertificates({ tenant, user }: TenantUserPageProps) {
+  const { data: courses, isLoading: coursesLoading } = useListCourses(
+    tenant?.id,
+  );
   const { data: certificates = [], isLoading: certificatesLoading } =
     useListCertificates(tenant?.id);
   const updateCertificate = useUpdateCertificate();
@@ -42,8 +44,12 @@ export function AdminCertificates() {
 
   const filteredCertificates = certificates.filter((cert) => {
     const matchesSearch =
-      (cert.studentName || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (cert.courseName || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (cert.studentName || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      (cert.courseName || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
       cert.id.toLowerCase().includes(searchQuery.toLowerCase());
 
     const matchesStatus =
@@ -55,6 +61,10 @@ export function AdminCertificates() {
   });
 
   function handleGenerateCertificate() {
+    if (!tenant || !user) {
+      return;
+    }
+
     modals.open({
       children: (
         <CertificateGenerator
@@ -63,6 +73,8 @@ export function AdminCertificates() {
           onGenerated={() => {
             modals.close("certificate-generator");
           }}
+          tenant={tenant}
+          user={user}
         />
       ),
       modalId: "certificate-generator",
@@ -119,9 +131,9 @@ export function AdminCertificates() {
 
         updateCertificate.mutate({
           certificateId,
-          updates: { 
+          updates: {
             status: "revoked",
-            downloadCount: cert.downloadCount || 0 
+            downloadCount: cert.downloadCount || 0,
           },
           userId: user.uid,
         });
@@ -132,10 +144,10 @@ export function AdminCertificates() {
 
   const totalCertificates = certificates.length;
   const issuedCertificates = certificates.filter(
-    (c) => c.status === "issued"
+    (c) => c.status === "issued",
   ).length;
   const pendingCertificates = certificates.filter(
-    (c) => c.status === "pending"
+    (c) => c.status === "pending",
   ).length;
 
   const isLoading = coursesLoading || certificatesLoading;
@@ -256,21 +268,7 @@ export function AdminCertificates() {
                 <Button
                   color="fun-green"
                   leftSection={<IconPlus size={16} />}
-                  onClick={() =>
-                    modals.open({
-                      children: (
-                        <CertificateGenerator
-                          certificate={null}
-                          onClose={() => modals.close("certificate-generator")}
-                          onGenerated={() => {
-                            modals.close("certificate-generator");
-                          }}
-                        />
-                      ),
-                      modalId: "certificate-generator",
-                      size: "lg",
-                      title: "Generate Certificate",
-                    })}
+                  onClick={handleGenerateCertificate}
                 >
                   Generate Certificate
                 </Button>

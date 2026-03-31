@@ -21,6 +21,10 @@ import { courseRepository } from "@/server/repositories/course-repository";
 import { quizAttemptRepository } from "@/server/repositories/quiz-attempt-repository";
 import { studentProgressRepository } from "@/server/repositories/student-progress-repository";
 import { userRepository } from "@/server/repositories/user-repository";
+import {
+  assertTenantAdminAccess,
+  requireTenantScopedActorWithTenant,
+} from "@/server/tenant-context";
 
 import type { DashboardMetrics } from "@/types";
 
@@ -36,11 +40,17 @@ const dashboardMetricsInputSchema = z.object({
 export const getDashboardAnalyticsFn = createServerFn({ method: "GET" })
   .inputValidator(dashboardAnalyticsInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.tenantId,
+    });
+
+    assertTenantAdminAccess(actor);
+
     const startDate = getTimeframeStartDate(data.timeframe).getTime();
     const [activities, progressData, users, courses] = await Promise.all([
       activityLogRepository
         .list({
-          tenantId: data.tenantId,
+          tenantId: tenantId!,
           userId: "*",
         })
         .then((logs) =>
@@ -51,11 +61,11 @@ export const getDashboardAnalyticsFn = createServerFn({ method: "GET" })
               log.timestamp >= startDate,
           ),
         ),
-      studentProgressRepository.listByTenant(data.tenantId, {
+      studentProgressRepository.listByTenant(tenantId!, {
         enrolledAfter: startDate,
       }),
-      userRepository.list(data.tenantId),
-      courseRepository.list(data.tenantId),
+      userRepository.list(tenantId!),
+      courseRepository.list(tenantId!),
     ]);
 
     const activeUsers = computeActiveUsers(activities);
@@ -77,6 +87,12 @@ export const getDashboardAnalyticsFn = createServerFn({ method: "GET" })
 export const getDashboardMetricsFn = createServerFn({ method: "GET" })
   .inputValidator(dashboardMetricsInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.tenantId,
+    });
+
+    assertTenantAdminAccess(actor);
+
     const [
       users,
       courses,
@@ -85,12 +101,12 @@ export const getDashboardMetricsFn = createServerFn({ method: "GET" })
       activityLogs,
       quizAttempts,
     ] = await Promise.all([
-      userRepository.list(data.tenantId),
-      courseRepository.list(data.tenantId),
-      studentProgressRepository.listByTenant(data.tenantId),
-      certificateRepository.list({ tenantId: data.tenantId }),
+      userRepository.list(tenantId!),
+      courseRepository.list(tenantId!),
+      studentProgressRepository.listByTenant(tenantId!),
+      certificateRepository.list({ tenantId: tenantId! }),
       activityLogRepository
-        .list({ tenantId: data.tenantId, userId: "*" })
+        .list({ tenantId: tenantId!, userId: "*" })
         .then((logs) => logs.filter((log) => log.userId !== "*")),
       quizAttemptRepository.list().then((attempts) => {
         const tenantCourseIds = new Set(

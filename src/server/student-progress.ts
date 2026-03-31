@@ -4,6 +4,10 @@ import { z } from "zod";
 import { courseRepository } from "@/server/repositories/course-repository";
 import { studentProgressRepository } from "@/server/repositories/student-progress-repository";
 import { userRepository } from "@/server/repositories/user-repository";
+import {
+  requireTenantScopedActorWithTenant,
+  resolveTenantFromCurrentRequest,
+} from "@/server/tenant-context";
 
 const createStudentProgressInputSchema = z.object({
   averageQuizScore: z.number().optional(),
@@ -85,6 +89,20 @@ async function syncCompletedCoursesForUser(input: {
 export const createStudentProgressFn = createServerFn({ method: "POST" })
   .inputValidator(createStudentProgressInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.tenantId,
+    });
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      actor.id !== data.studentId
+    ) {
+      throw new Error(
+        "You do not have permission to create progress for another student.",
+      );
+    }
+
     const createdProgress = await studentProgressRepository.create({
       averageQuizScore: data.averageQuizScore ?? 0,
       completedAt: data.completedAt ?? null,
@@ -101,7 +119,7 @@ export const createStudentProgressFn = createServerFn({ method: "POST" })
       startedAt: data.startedAt,
       status: data.status ?? "enrolled",
       studentId: data.studentId,
-      tenantId: data.tenantId,
+      tenantId: tenantId!,
       timeSpentMinutes: data.timeSpentMinutes ?? 0,
       totalLessonsCompleted: data.totalLessonsCompleted ?? 0,
       totalOptionalLessonsCompleted: data.totalOptionalLessonsCompleted ?? 0,
@@ -123,30 +141,74 @@ export const getStudentProgressFn = createServerFn({ method: "GET" })
       return null;
     }
 
+    const tenant = await resolveTenantFromCurrentRequest();
+    const course = await courseRepository.getById(data.courseId);
+
+    if (!course) {
+      return null;
+    }
+
+    if (tenant && course.tenantId !== tenant.id) {
+      return null;
+    }
+
+    const tenantId = tenant?.id ?? course.tenantId ?? undefined;
+
+    if (!tenantId) {
+      return null;
+    }
+
     return studentProgressRepository.getByStudentAndCourse({
       courseId: data.courseId,
       studentId: data.studentId,
+      tenantId,
     });
   });
 
 export const listStudentProgressFn = createServerFn({ method: "GET" })
   .inputValidator(listStudentProgressInputSchema)
   .handler(async ({ data }) => {
-    return studentProgressRepository.listByStudent(
-      data.studentId,
-      data.tenantId ?? undefined,
-    );
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.tenantId,
+    });
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      actor.id !== data.studentId
+    ) {
+      throw new Error(
+        "You do not have permission to view another student's progress.",
+      );
+    }
+
+    return studentProgressRepository.listByStudent(data.studentId, tenantId!);
   });
 
 export const updateStudentProgressFn = createServerFn({ method: "POST" })
   .inputValidator(updateStudentProgressInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
     const existingProgress = await studentProgressRepository.getById(
       data.progressId,
     );
 
     if (!existingProgress) {
       throw new Error("Student progress record not found.");
+    }
+
+    if (existingProgress.tenantId !== tenantId) {
+      throw new Error("Progress record does not belong to the current tenant.");
+    }
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      actor.id !== existingProgress.studentId
+    ) {
+      throw new Error(
+        "You do not have permission to update another student's progress.",
+      );
     }
 
     const nextStatus =
@@ -191,11 +253,25 @@ export const updateStudentProgressFn = createServerFn({ method: "POST" })
 export const upsertCourseProgressSummaryFn = createServerFn({ method: "POST" })
   .inputValidator(upsertCourseProgressSummaryInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.tenantId,
+    });
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      actor.id !== data.calculatedProgress.studentId
+    ) {
+      throw new Error(
+        "You do not have permission to update another student's course progress.",
+      );
+    }
+
     const existingProgress =
       await studentProgressRepository.getByStudentAndCourse({
         courseId: data.calculatedProgress.courseId,
         studentId: data.calculatedProgress.studentId,
-        tenantId: data.tenantId,
+        tenantId: tenantId!,
       });
     const nextStatus = data.calculatedProgress.isCompleted
       ? "completed"
@@ -260,7 +336,7 @@ export const upsertCourseProgressSummaryFn = createServerFn({ method: "POST" })
           : undefined,
       status: nextStatus,
       studentId: data.calculatedProgress.studentId,
-      tenantId: data.tenantId,
+      tenantId: tenantId!,
       timeSpentMinutes: data.calculatedProgress.totalTimeSpent,
       totalLessonsCompleted: data.calculatedProgress.totalLessonsCompleted,
       totalOptionalLessonsCompleted:

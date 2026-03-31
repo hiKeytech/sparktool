@@ -1,7 +1,7 @@
 import type { EmailPasswordCredentials, UpdateUser } from "@/types";
 import {
   changePasswordFn,
-  getCurrentUserFn,
+  getSessionDataFn,
   getUserByIdFn,
   resetUserPasswordFn,
   signInWithPasswordFn,
@@ -10,7 +10,7 @@ import {
 } from "@/server/auth";
 
 export const authService = {
-  session: async () => await getCurrentUserFn(),
+  session: async () => await getSessionDataFn(),
   getCurrentUser: async (userId: null | string) => {
     return getUserByIdFn({ data: userId });
   },

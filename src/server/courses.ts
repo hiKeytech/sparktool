@@ -7,6 +7,12 @@ import { courseSchema } from "@/schemas/course";
 import { courseRepository } from "@/server/repositories/course-repository";
 import { studentProgressRepository } from "@/server/repositories/student-progress-repository";
 import { userRepository } from "@/server/repositories/user-repository";
+import {
+  assertTenantAdminAccess,
+  requireTenantScopedActorWithTenant,
+  resolveTenantFromCurrentRequest,
+  userHasTenantAccess,
+} from "@/server/tenant-context";
 
 const createCourseInputSchema = z.object({
   courseData: courseSchema.pick({
@@ -75,7 +81,12 @@ async function logCourseEnrollment(input: {
 export const createCourseFn = createServerFn({ method: "POST" })
   .inputValidator(createCourseInputSchema)
   .handler(async ({ data }) => {
-    const actor = await userRepository.getById(data.userId);
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.tenantId,
+    });
+
+    assertTenantAdminAccess(actor);
+
     const courseId = randomUUID();
     const publishedAt = data.courseData.published ? Date.now() : null;
     const course = await courseRepository.create({
@@ -85,7 +96,7 @@ export const createCourseFn = createServerFn({ method: "POST" })
       completionCount: 0,
       completionRate: 0,
       createdAt: Date.now(),
-      createdBy: data.userId,
+      createdBy: actor.id,
       createdByMeta: actor
         ? {
             name: actor.displayName,
@@ -101,7 +112,7 @@ export const createCourseFn = createServerFn({ method: "POST" })
       id: courseId,
       instructors: data.courseData.instructors,
       language: data.courseData.language,
-      lastModifiedBy: data.userId,
+      lastModifiedBy: actor.id,
       learningObjectives: data.courseData.learningObjectives,
       level: data.courseData.level,
       prerequisites: data.courseData.prerequisites,
@@ -112,7 +123,7 @@ export const createCourseFn = createServerFn({ method: "POST" })
       sections: [],
       shortDescription: data.courseData.shortDescription,
       tags: data.courseData.tags,
-      tenantId: data.tenantId,
+      tenantId: tenantId!,
       thumbnailUrl: data.courseData.thumbnailUrl,
       title: data.courseData.title,
       totalLessons: 0,
@@ -131,8 +142,23 @@ export const createCourseFn = createServerFn({ method: "POST" })
 export const enrollInCourseFn = createServerFn({ method: "POST" })
   .inputValidator(enrollCourseInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant({
+      requestedTenantId: data.tenantId,
+    });
+
+    if (
+      actor.role !== "super-admin" &&
+      actor.role !== "admin" &&
+      actor.id !== data.studentId
+    ) {
+      throw new Error("You can only enroll yourself in a course.");
+    }
+
     const existingProgress =
-      await studentProgressRepository.getByStudentAndCourse(data);
+      await studentProgressRepository.getByStudentAndCourse({
+        ...data,
+        tenantId: tenantId!,
+      });
 
     if (existingProgress) {
       throw new Error("Student is already enrolled in this course");
@@ -144,10 +170,18 @@ export const enrollInCourseFn = createServerFn({ method: "POST" })
       throw new Error("Course not found.");
     }
 
+    if (course.tenantId !== tenantId) {
+      throw new Error("Course does not belong to the current tenant.");
+    }
+
     const user = await userRepository.getById(data.studentId);
 
     if (!user) {
       throw new Error("Student account not found.");
+    }
+
+    if (!userHasTenantAccess(user, tenantId)) {
+      throw new Error("Student does not belong to the current tenant.");
     }
 
     await studentProgressRepository.create({
@@ -161,7 +195,7 @@ export const enrollInCourseFn = createServerFn({ method: "POST" })
       sectionProgress: [],
       status: "enrolled",
       studentId: data.studentId,
-      tenantId: data.tenantId,
+      tenantId: tenantId!,
       timeSpentMinutes: 0,
       totalLessonsCompleted: 0,
       totalOptionalLessonsCompleted: 0,
@@ -176,7 +210,7 @@ export const enrollInCourseFn = createServerFn({ method: "POST" })
           new Set([...(user.enrolledCourses || []), data.courseId]),
         ),
       }),
-      logCourseEnrollment(data),
+      logCourseEnrollment({ ...data, tenantId: tenantId! }),
     ]);
 
     return { success: true };
@@ -185,21 +219,52 @@ export const enrollInCourseFn = createServerFn({ method: "POST" })
 export const getCourseFn = createServerFn({ method: "GET" })
   .inputValidator((courseId: string) => courseId)
   .handler(async ({ data }) => {
-    return courseRepository.getById(data);
+    const [tenant, course] = await Promise.all([
+      resolveTenantFromCurrentRequest(),
+      courseRepository.getById(data),
+    ]);
+
+    if (!course) {
+      return null;
+    }
+
+    if (tenant && course.tenantId !== tenant.id) {
+      return null;
+    }
+
+    return course;
   });
 
 export const listCoursesFn = createServerFn({ method: "GET" })
   .inputValidator(listCoursesInputSchema)
   .handler(async ({ data }) => {
-    return courseRepository.list(
-      data.tenantId ?? undefined,
-      data.filters || {},
-    );
+    const tenant = await resolveTenantFromCurrentRequest();
+    const tenantId = tenant?.id ?? data.tenantId ?? undefined;
+
+    if (tenant && data.tenantId && data.tenantId !== tenant.id) {
+      throw new Error("Tenant mismatch for the current request.");
+    }
+
+    return courseRepository.list(tenantId, data.filters || {});
   });
 
 export const removeCourseFn = createServerFn({ method: "POST" })
   .inputValidator(removeCourseInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+
+    assertTenantAdminAccess(actor);
+
+    const course = await courseRepository.getById(data.courseId);
+
+    if (!course) {
+      throw new Error("Course not found.");
+    }
+
+    if (course.tenantId !== tenantId) {
+      throw new Error("Course does not belong to the current tenant.");
+    }
+
     const progressRecords = await studentProgressRepository.listByCourse(
       data.courseId,
     );
@@ -234,10 +299,18 @@ export const removeCourseFn = createServerFn({ method: "POST" })
 export const updateCourseFn = createServerFn({ method: "POST" })
   .inputValidator(updateCourseInputSchema)
   .handler(async ({ data }) => {
+    const { actor, tenantId } = await requireTenantScopedActorWithTenant();
+
+    assertTenantAdminAccess(actor);
+
     const existingCourse = await courseRepository.getById(data.courseId);
 
     if (!existingCourse) {
       throw new Error("Course not found.");
+    }
+
+    if (existingCourse.tenantId !== tenantId) {
+      throw new Error("Course does not belong to the current tenant.");
     }
 
     const publishedAt =
@@ -249,6 +322,7 @@ export const updateCourseFn = createServerFn({ method: "POST" })
 
     const updatedCourse = await courseRepository.update(data.courseId, {
       ...data.courseData,
+      lastModifiedBy: actor.id,
       publishedAt,
     });
 

@@ -6,6 +6,7 @@ import { z } from "zod";
 import { serverEnv } from "@/server/env";
 
 export const sessionDataSchema = z.object({
+  activeTenantId: z.string().optional(),
   email: z.string().optional(),
   role: z.string().nullable().optional(),
   tenantIds: z.array(z.string()).optional(),

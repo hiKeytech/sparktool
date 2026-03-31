@@ -1,13 +1,13 @@
 import {
-    Alert,
-    Button,
-    Grid,
-    Group,
-    NumberInput,
-    Select,
-    Stack,
-    Textarea,
-    TextInput,
+  Alert,
+  Button,
+  Grid,
+  Group,
+  NumberInput,
+  Select,
+  Stack,
+  Textarea,
+  TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
@@ -15,7 +15,7 @@ import { notifications } from "@mantine/notifications";
 import { IconAlertCircle, IconCheck } from "@tabler/icons-react";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 
-import { useAuthContext } from "@/providers/auth-provider";
+import type { User } from "@/types";
 import { type CreateQuizFormData, createQuizSchema } from "@/schemas";
 import { useCreateQuiz } from "@/services/hooks";
 
@@ -23,18 +23,18 @@ type CourseWithId = { id: string; title: string };
 
 interface CreateQuizModalProps {
   courses: CourseWithId[];
+  user: User;
 }
 
-export function openCreateQuizModal(courses: CourseWithId[]) {
+export function openCreateQuizModal(courses: CourseWithId[], user: User) {
   modals.open({
-    children: <CreateQuizModal courses={courses} />,
+    children: <CreateQuizModal courses={courses} user={user} />,
     size: "lg",
     title: "Create New Quiz",
   });
 }
 
-function CreateQuizModal({ courses }: CreateQuizModalProps) {
-  const { user } = useAuthContext();
+function CreateQuizModal({ courses, user }: CreateQuizModalProps) {
   const createQuiz = useCreateQuiz();
 
   const form = useForm<CreateQuizFormData>({
@@ -50,16 +50,6 @@ function CreateQuizModal({ courses }: CreateQuizModalProps) {
   });
 
   const handleSubmit = (values: CreateQuizFormData) => {
-    if (!user?.uid) {
-      notifications.show({
-        color: "red",
-        icon: <IconAlertCircle size={16} />,
-        message: "You must be logged in to create a quiz",
-        title: "Error",
-      });
-      return;
-    }
-
     createQuiz.mutate(
       {
         ...values,
@@ -86,7 +76,7 @@ function CreateQuizModal({ courses }: CreateQuizModalProps) {
           });
           modals.closeAll();
         },
-      }
+      },
     );
   };
 

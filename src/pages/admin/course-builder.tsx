@@ -1,59 +1,59 @@
 import type { CourseLesson, CreateLesson, CreateSection } from "@/types";
 
 import {
-    closestCenter,
-    DndContext,
-    type DragEndEvent,
-    KeyboardSensor,
-    PointerSensor,
-    useSensor,
-    useSensors,
+  closestCenter,
+  DndContext,
+  type DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import {
-    arrayMove,
-    SortableContext,
-    sortableKeyboardCoordinates,
-    verticalListSortingStrategy,
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
-    ActionIcon,
-    Badge,
-    Button,
-    Card,
-    Collapse,
-    Container,
-    Group,
-    Menu,
-    Modal,
-    NumberInput,
-    Select,
-    Stack,
-    Switch,
-    TagsInput,
-    Text,
-    Textarea,
-    TextInput,
-    Title,
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  Collapse,
+  Container,
+  Group,
+  Menu,
+  Modal,
+  NumberInput,
+  Select,
+  Stack,
+  Switch,
+  TagsInput,
+  Text,
+  Textarea,
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import {
-    IconChevronDown,
-    IconChevronRight,
-    IconClipboardCheck,
-    IconDotsVertical,
-    IconEdit,
-    IconFiles,
-    IconFileText,
-    IconGripVertical,
-    IconPlus,
-    IconPresentation,
-    IconQuestionMark,
-    IconSettings,
-    IconTrash,
-    IconVideo,
+  IconChevronDown,
+  IconChevronRight,
+  IconClipboardCheck,
+  IconDotsVertical,
+  IconEdit,
+  IconFiles,
+  IconFileText,
+  IconGripVertical,
+  IconPlus,
+  IconPresentation,
+  IconQuestionMark,
+  IconSettings,
+  IconTrash,
+  IconVideo,
 } from "@tabler/icons-react";
 import { useNavigate, useParams } from "@tanstack/react-router";
 import { useCallback, useMemo, useState } from "react";
@@ -63,19 +63,18 @@ import { ResourceManager } from "@/components/resources/resource-manager";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
 import { useCourseQuizzes } from "@/hooks/use-course-quiz";
 import {
-    useCourseWithStructure,
-    useCreateLesson,
-    useCreateSection,
-    useDeleteLesson,
-    useDeleteSection,
-    useReorderSections,
-    useUpdateCourse,
-    useUpdateLesson,
-    useUpdateSection,
+  useCourseWithStructure,
+  useCreateLesson,
+  useCreateSection,
+  useDeleteLesson,
+  useDeleteSection,
+  useReorderSections,
+  useUpdateCourse,
+  useUpdateLesson,
+  useUpdateSection,
 } from "@/services/hooks";
 import type { CourseSectionData } from "@/schemas/course-section";
-
-interface CourseBuilderProps {}
+import type { TenantPageProps } from "@/types/route-page-props";
 
 // Sortable Section Component
 interface SortableSectionProps {
@@ -90,10 +89,10 @@ interface SortableSectionProps {
   section: CourseSectionData & { lessons: CourseLesson[] };
 }
 
-export function CourseBuilder(_props: CourseBuilderProps) {
-  const { courseId: courseIdParam } = useParams({
-    from: "/_tenant/admin/courses/$courseId/edit",
-  });
+export function CourseBuilder({ tenant }: TenantPageProps) {
+  const { courseId: courseIdParam } = useParams({ strict: false }) as {
+    courseId?: string;
+  };
   const courseId = String(courseIdParam);
   const navigate = useNavigate();
 
@@ -128,9 +127,8 @@ export function CourseBuilder(_props: CourseBuilderProps) {
   ] = useDisclosure(false);
   const [quizModalOpen, { close: closeQuizModal, open: openQuizModal }] =
     useDisclosure(false);
-  const [editingSection, setEditingSection] = useState<CourseSectionData | null>(
-    null
-  );
+  const [editingSection, setEditingSection] =
+    useState<CourseSectionData | null>(null);
   const [editingLesson, setEditingLesson] = useState<CourseLesson | null>(null);
   const [resourceLessonId, setResourceLessonId] = useState<string>("");
   const [resourceSectionId, setResourceSectionId] = useState<string>("");
@@ -194,7 +192,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = useCallback(
@@ -209,7 +207,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
       if (activeId !== overId) {
         const sections = [...course.sections];
         const oldIndex = sections.findIndex(
-          (section) => section.id === activeId
+          (section) => section.id === activeId,
         );
         const newIndex = sections.findIndex((section) => section.id === overId);
 
@@ -222,7 +220,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
               itemId: section.id,
               newOrder: index,
               type: "section" as const,
-            })
+            }),
           );
 
           reorderSections.mutate({
@@ -232,7 +230,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
         }
       }
     },
-    [course, courseId, reorderSections]
+    [course, courseId, reorderSections],
   );
 
   const handleOpenSettings = () => {
@@ -249,12 +247,15 @@ export function CourseBuilder(_props: CourseBuilderProps) {
   };
 
   const handleSettingsSubmit = (values: typeof settingsForm.values) => {
-    updateCourse.mutate({
-      courseId: courseId!,
-      courseData: values,
-    }, {
-      onSuccess: () => closeSettingsModal()
-    });
+    updateCourse.mutate(
+      {
+        courseId: courseId!,
+        courseData: values,
+      },
+      {
+        onSuccess: () => closeSettingsModal(),
+      },
+    );
   };
 
   // Section handlers
@@ -286,7 +287,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
         },
         {
           onSuccess: () => closeSectionModal(),
-        }
+        },
       );
     } else {
       createSection.mutate(
@@ -296,7 +297,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
         },
         {
           onSuccess: () => closeSectionModal(),
-        }
+        },
       );
     }
   };
@@ -304,7 +305,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
   const handleDeleteSection = (sectionId: string) => {
     if (
       window.confirm(
-        "Are you sure you want to delete this section? All lessons in this section will also be deleted."
+        "Are you sure you want to delete this section? All lessons in this section will also be deleted.",
       )
     ) {
       deleteSection.mutate(sectionId);
@@ -339,7 +340,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
         },
         {
           onSuccess: () => closeLessonModal(),
-        }
+        },
       );
     } else {
       createLesson.mutate(
@@ -349,7 +350,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
         },
         {
           onSuccess: () => closeLessonModal(),
-        }
+        },
       );
     }
   };
@@ -402,7 +403,15 @@ export function CourseBuilder(_props: CourseBuilderProps) {
           Failed to load course. Please try again.
         </Text>
         <Group justify="center" mt="md">
-          <Button onClick={() => navigate({ to: "/admin/courses" })}>
+          <Button
+            onClick={() =>
+              tenant?.id &&
+              navigate({
+                params: { tenant: tenant.id },
+                to: "/$tenant/admin/courses",
+              })
+            }
+          >
             Back to Courses
           </Button>
         </Group>
@@ -443,7 +452,15 @@ export function CourseBuilder(_props: CourseBuilderProps) {
             >
               Course Settings
             </Button>
-            <Button onClick={() => navigate({ to: "/admin/courses" })}>
+            <Button
+              onClick={() =>
+                tenant?.id &&
+                navigate({
+                  params: { tenant: tenant.id },
+                  to: "/$tenant/admin/courses",
+                })
+              }
+            >
               Done
             </Button>
           </Group>
@@ -562,9 +579,11 @@ export function CourseBuilder(_props: CourseBuilderProps) {
               <Switch
                 label="Enable Certificate"
                 description="Students will receive a certificate upon course completion"
-                {...settingsForm.getInputProps("hasCertificate", { type: "checkbox" })}
+                {...settingsForm.getInputProps("hasCertificate", {
+                  type: "checkbox",
+                })}
               />
-              
+
               {settingsForm.values.hasCertificate && (
                 <TextInput
                   label="Certificate Template ID"
@@ -598,11 +617,15 @@ export function CourseBuilder(_props: CourseBuilderProps) {
                 <Button onClick={closeSettingsModal} variant="outline">
                   Cancel
                 </Button>
-                <Button loading={updateCourse.isPending} type="submit" className="bg-fun-green-800 hover:bg-fun-green-700">
+                <Button
+                  loading={updateCourse.isPending}
+                  type="submit"
+                  className="bg-fun-green-800 hover:bg-fun-green-700"
+                >
                   Save Settings
                 </Button>
               </Group>
-             </Stack>
+            </Stack>
           </form>
         </Modal>
 
@@ -665,7 +688,7 @@ export function CourseBuilder(_props: CourseBuilderProps) {
                       const url = e.currentTarget.value;
                       lessonForm.setFieldValue(
                         "content.subtitles",
-                        url ? [{ label: "English", language: "en", url }] : []
+                        url ? [{ label: "English", language: "en", url }] : [],
                       );
                     }}
                   />
@@ -877,7 +900,7 @@ function SortableSection({
               </Badge>
               {section.lessons.reduce(
                 (acc, obj) => acc + (obj.resources?.length || 0),
-                0
+                0,
               ) > 0 && (
                 <Badge
                   color="grape"
@@ -886,7 +909,7 @@ function SortableSection({
                 >
                   {section.lessons.reduce(
                     (acc, obj) => acc + (obj.resources?.length || 0),
-                    0
+                    0,
                   )}{" "}
                   resources
                 </Badge>
