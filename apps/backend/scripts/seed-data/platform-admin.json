@@ -1,0 +1,7 @@
+{
+  "displayName": "Sparktool Platform Admin",
+  "email": "admin@sparktool.local",
+  "password": "PlatformAdmin123!",
+  "role": "super-admin",
+  "tenantIds": []
+}

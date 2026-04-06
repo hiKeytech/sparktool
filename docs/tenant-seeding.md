@@ -4,10 +4,10 @@ Use the Nigerian Correctional Service configuration as a seed tenant for end-to-
 
 **Run It**
 
-From [hikey-learn/apps/sparktool](hikey-learn/apps/sparktool):
+From the repo root:
 
 ```bash
-pnpm seed:ncs
+pnpm --filter sparktool-backend seed:ncs
 ```
 
 Required environment variables:
@@ -15,7 +15,7 @@ Required environment variables:
 - `MONGODB_URI`
 - `MONGODB_DB_NAME` optional, defaults to `sparktool`
 
-The seed data lives in [hikey-learn/apps/sparktool/scripts/seed-data/ncs-tenant.json](hikey-learn/apps/sparktool/scripts/seed-data/ncs-tenant.json).
+The seed data lives in [apps/backend/scripts/seed-data/ncs-tenant.json](/Users/ibnlanre/Desktop/workspace/sparktool/apps/backend/scripts/seed-data/ncs-tenant.json).
 
 **What It Creates**
 

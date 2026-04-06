@@ -1,0 +1,25 @@
+{
+  "name": "sparktool-contracts",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./activity-log": "./src/activity-log.ts",
+    "./certificate": "./src/certificate.ts",
+    "./common": "./src/common.ts",
+    "./course": "./src/course.ts",
+    "./course-lesson": "./src/course-lesson.ts",
+    "./course-section": "./src/course-section.ts",
+    "./live-session": "./src/live-session.ts",
+    "./platform-config": "./src/platform-config.ts",
+    "./quiz": "./src/quiz.ts",
+    "./session": "./src/session.ts",
+    "./student-progress": "./src/student-progress.ts",
+    "./tenant-contract": "./src/tenant-contract.ts",
+    "./user": "./src/user.ts"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  }
+}
