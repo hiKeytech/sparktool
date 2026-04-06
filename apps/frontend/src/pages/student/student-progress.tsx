@@ -15,11 +15,12 @@ import { IconBook, IconClock } from "@tabler/icons-react";
 
 import { PendingOverlay } from "@/components/shared/pending-overlay";
 import { useListStudentProgress } from "@/services/hooks";
-import type { UserPageProps } from "@/types/route-page-props";
+import type { TenantUserPageProps } from "@/types/route-page-props";
 
-export function StudentProgress({ user }: UserPageProps) {
+export function StudentProgress({ tenant, user }: TenantUserPageProps) {
   const { data: progressData, isLoading } = useListStudentProgress(
-    user?.uid || "",
+    tenant?.id,
+    user?.uid,
   );
 
   const completedCourses =

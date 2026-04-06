@@ -70,7 +70,7 @@ const activityLogListInputSchema = z.object({
 export const createActivityLogFn = createServerFn({ method: "POST" })
   .inputValidator(activityLogCreateInputSchema)
   .handler(async ({ data }) => {
-    return api.post<ApiIdResponse>("/api/activity-logs", data);
+    return api.post<ApiIdResponse>("/api/activity-logs", { logData: data });
   });
 
 export const listActivityLogsFn = createServerFn({ method: "GET" })

@@ -39,7 +39,7 @@ const statusColors: Record<LiveSessionStatus, string> = {
 export function StudentLiveSessionsPage({ tenant, user }: TenantUserPageProps) {
   const [activeSession, setActiveSession] = useState<LiveSession | null>(null);
 
-  const { data: sessions = [], isLoading } = useListLiveSessions();
+  const { data: sessions = [], isLoading } = useListLiveSessions(tenant?.id);
   const joinLiveSession = useJoinLiveSession();
   const joinWindowMinutes =
     tenant?.config.liveSessions?.joinWindowMinutes ?? 10;

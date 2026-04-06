@@ -8,9 +8,20 @@ import {
   getActorFromSession,
   httpError,
 } from "../lib/request-helpers.js";
+import { buildMeetingSlug } from "../lib/live-session.js";
 import { requireSession, requireTenantSession } from "../middleware/session.js";
 
 export const liveSessionsRouter = Router();
+
+function getSessionIdParam(sessionId: string | string[] | undefined) {
+  const resolvedSessionId = Array.isArray(sessionId) ? sessionId[0] : sessionId;
+
+  if (!resolvedSessionId) {
+    throw httpError(400, "Live session ID is required.");
+  }
+
+  return resolvedSessionId;
+}
 
 /** GET /api/live-sessions */
 liveSessionsRouter.get("/", requireSession, async (request, response) => {
@@ -48,10 +59,14 @@ liveSessionsRouter.post(
 
     const created = await liveSessionRepository.create({
       ...sessionData,
-      attendees: [],
       createdAt: Date.now(),
       instructorId: actor.id,
+      jitsiMeetUrl: `https://meet.jit.si/${buildMeetingSlug(`${tenantId}-${sessionData.title}`)}`,
+      meetingId: buildMeetingSlug(`${tenantId}-${sessionData.title}`),
+      participants: [],
+      status: "scheduled",
       tenantId,
+      updatedAt: Date.now(),
     });
     if (!created) throw httpError(500, "Failed to create live session.");
     response.status(201).json({ id: created.id });
@@ -63,9 +78,8 @@ liveSessionsRouter.get(
   "/:sessionId",
   requireSession,
   async (request, response) => {
-    const session = await liveSessionRepository.getById(
-      request.params.sessionId,
-    );
+    const sessionId = getSessionIdParam(request.params.sessionId);
+    const session = await liveSessionRepository.getById(sessionId);
     if (!session) return response.json(null);
     response.json(session);
   },
@@ -79,15 +93,14 @@ liveSessionsRouter.patch(
     const actor = await getActorFromSession(request);
     assertAdminAccess(actor);
     const tenantId = request.session.activeTenantId!;
+    const sessionId = getSessionIdParam(request.params.sessionId);
 
-    const session = await liveSessionRepository.getById(
-      request.params.sessionId,
-    );
+    const session = await liveSessionRepository.getById(sessionId);
     if (!session) throw httpError(404, "Live session not found.");
     if (session.tenantId !== tenantId) throw httpError(403, "Access denied.");
 
     const updated = await liveSessionRepository.update(
-      request.params.sessionId,
+      sessionId,
       request.body.sessionData ?? request.body,
     );
     if (!updated) throw httpError(500, "Failed to update live session.");
@@ -103,14 +116,13 @@ liveSessionsRouter.delete(
     const actor = await getActorFromSession(request);
     assertAdminAccess(actor);
     const tenantId = request.session.activeTenantId!;
+    const sessionId = getSessionIdParam(request.params.sessionId);
 
-    const session = await liveSessionRepository.getById(
-      request.params.sessionId,
-    );
+    const session = await liveSessionRepository.getById(sessionId);
     if (!session) throw httpError(404, "Live session not found.");
     if (session.tenantId !== tenantId) throw httpError(403, "Access denied.");
 
-    await liveSessionRepository.delete(request.params.sessionId);
+    await liveSessionRepository.delete(sessionId);
     response.json({ success: true });
   },
 );
@@ -122,22 +134,21 @@ liveSessionsRouter.post(
   async (request, response) => {
     const actor = await getActorFromSession(request);
     if (!actor) throw httpError(401, "Unauthorized");
+    const sessionId = getSessionIdParam(request.params.sessionId);
 
-    const session = await liveSessionRepository.getById(
-      request.params.sessionId,
-    );
+    const session = await liveSessionRepository.getById(sessionId);
     if (!session) throw httpError(404, "Live session not found.");
 
-    const attendees = session.attendees ?? [];
-    if (!attendees.includes(actor.id)) {
-      await liveSessionRepository.update(request.params.sessionId, {
-        attendees: [...attendees, actor.id],
+    const participants = session.participants ?? [];
+    if (!participants.includes(actor.id)) {
+      await liveSessionRepository.update(sessionId, {
+        participants: [...participants, actor.id],
       });
     }
 
     void activityLogRepository.create({
       action: "live_session_joined",
-      sessionId: request.params.sessionId,
+      sessionId,
       tenantId: session.tenantId,
       userId: actor.id,
     });
@@ -153,14 +164,15 @@ liveSessionsRouter.post(
   async (request, response) => {
     const actor = await getActorFromSession(request);
     if (!actor) throw httpError(401, "Unauthorized");
+    const sessionId = getSessionIdParam(request.params.sessionId);
 
-    const session = await liveSessionRepository.getById(
-      request.params.sessionId,
-    );
+    const session = await liveSessionRepository.getById(sessionId);
     if (!session) throw httpError(404, "Live session not found.");
 
-    await liveSessionRepository.update(request.params.sessionId, {
-      attendees: (session.attendees ?? []).filter((id) => id !== actor.id),
+    await liveSessionRepository.update(sessionId, {
+      participants: (session.participants ?? []).filter(
+        (id) => id !== actor.id,
+      ),
     });
 
     response.json({ success: true });

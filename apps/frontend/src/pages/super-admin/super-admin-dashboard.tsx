@@ -33,7 +33,7 @@ import {
   IconTrash,
   IconUserCheck,
 } from "@tabler/icons-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useDeferredValue, useMemo, useState } from "react";
 import { z } from "zod";
@@ -110,7 +110,6 @@ export function SuperAdminDashboard() {
   const [tenantModalOpen, setTenantModalOpen] = useState(false);
   const [tenantSearch, setTenantSearch] = useState("");
   const deferredTenantSearch = useDeferredValue(tenantSearch);
-  const queryClient = useQueryClient();
   const { data: tenants = [], isLoading: tenantsLoading } = useTenants();
   const createTenantMutation = useCreateTenant();
   const updateTenantMutation = useUpdateTenant();
@@ -144,7 +143,6 @@ export function SuperAdminDashboard() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries();
       notifications.show({
         color: "green",
         message: "User role has been updated successfully",
@@ -168,7 +166,6 @@ export function SuperAdminDashboard() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries();
       notifications.show({
         color: "green",
         message: "User has been deactivated successfully",

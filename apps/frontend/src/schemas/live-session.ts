@@ -23,6 +23,7 @@ export const liveSessionSchema = z.object({
   recordingUrl: z.string().optional(),
   scheduledAt: z.string(),
   status: liveSessionStatusSchema.default("scheduled"),
+  tenantId: z.string(),
   title: z.string(),
   updatedAt: z.number().default(() => Date.now()),
 });
@@ -88,6 +89,7 @@ export const liveSessions = {
       courseId: string;
       instructorId: string;
       status: string;
+      tenantId: string;
     }> = {},
   ) => {
     const { listLiveSessionsFn } = await import("@/server/live-sessions");

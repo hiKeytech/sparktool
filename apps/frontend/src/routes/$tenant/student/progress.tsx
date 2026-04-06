@@ -8,11 +8,9 @@ export const Route = createFileRoute("/$tenant/student/progress")({
 });
 
 function StudentProgressRoute() {
-  const { user } = useAuthContext();
+  const { tenant, user } = useAuthContext();
 
-  if (!user) {
-    return null;
-  }
+  if (!tenant || !user) return null;
 
-  return <StudentProgress user={user} />;
+  return <StudentProgress tenant={tenant} user={user} />;
 }

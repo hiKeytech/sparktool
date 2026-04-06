@@ -6,9 +6,33 @@ import {
   type LiveSession,
 } from "sparktool-contracts/live-session";
 import { getMongoDb } from "../db/mongo.js";
+import { buildMeetingSlug } from "../lib/live-session.js";
 
-type LiveSessionDocument = Omit<LiveSession, "id"> & { _id: string };
+type LiveSessionDocument = Partial<Omit<LiveSession, "id">> & {
+  _id: string;
+  attendees?: string[];
+};
 export type StoredLiveSession = LiveSession;
+
+function normalizeStoredLiveSession(document: LiveSessionDocument) {
+  const meetingSlugSource = [document.tenantId, document.title]
+    .filter((value): value is string => Boolean(value))
+    .join("-");
+  const meetingSlug = meetingSlugSource
+    ? buildMeetingSlug(meetingSlugSource)
+    : undefined;
+
+  return {
+    ...document,
+    id: document._id,
+    jitsiMeetUrl:
+      document.jitsiMeetUrl ??
+      (meetingSlug ? `https://meet.jit.si/${meetingSlug}` : undefined),
+    meetingId: document.meetingId ?? meetingSlug,
+    participants: document.participants ?? document.attendees ?? [],
+    status: document.status ?? "scheduled",
+  };
+}
 
 function parseStoredLiveSession(
   document: LiveSessionDocument | null,
@@ -17,10 +41,7 @@ function parseStoredLiveSession(
     return null;
   }
 
-  const result = liveSessionSchema.safeParse({
-    ...document,
-    id: document._id,
-  });
+  const result = liveSessionSchema.safeParse(normalizeStoredLiveSession(document));
 
   if (!result.success) {
     console.error("Invalid live session document", result.error);

@@ -23,6 +23,7 @@ export const liveSessionSchema = z.object({
   recordingUrl: z.string().optional(),
   scheduledAt: z.string(),
   status: liveSessionStatusSchema.default("scheduled"),
+  tenantId: z.string(),
   title: z.string(),
   updatedAt: z.number().default(() => Date.now()),
 });

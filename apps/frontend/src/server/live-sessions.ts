@@ -28,6 +28,7 @@ const liveSessionListInputSchema = z
     courseId: z.string().optional(),
     instructorId: z.string().optional(),
     status: z.string().optional(),
+    tenantId: z.string().optional(),
   })
   .optional();
 
@@ -96,6 +97,7 @@ export const listLiveSessionsFn = createServerFn({ method: "GET" })
     if (data?.courseId) params.set("courseId", data.courseId);
     if (data?.instructorId) params.set("instructorId", data.instructorId);
     if (data?.status) params.set("status", data.status);
+    if (data?.tenantId) params.set("tenantId", data.tenantId);
     return api.get<LiveSession[]>(`/api/live-sessions?${params}`);
   });
 

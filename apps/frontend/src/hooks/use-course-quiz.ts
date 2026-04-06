@@ -1,5 +1,5 @@
 import { notifications } from "@mantine/notifications";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { api } from "@/services/api";
 
@@ -40,8 +40,6 @@ export const useCourseQuiz = (quizId?: string) => {
 };
 
 export const useCreateCourseQuiz = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: api.$use.courseQuiz.create,
     onError: (error) => {
@@ -53,8 +51,6 @@ export const useCreateCourseQuiz = () => {
       console.error("Create quiz error:", error);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: courseQuizKeys.all });
-      queryClient.invalidateQueries({ queryKey: ["dashboard", "metrics"] });
       notifications.show({
         color: "green",
         message: "Quiz created successfully",
@@ -65,8 +61,6 @@ export const useCreateCourseQuiz = () => {
 };
 
 export const useUpdateCourseQuiz = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: api.$use.courseQuiz.update,
     onError: (error) => {
@@ -78,11 +72,6 @@ export const useUpdateCourseQuiz = () => {
       console.error("Update quiz error:", error);
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: courseQuizKeys.all });
-      queryClient.invalidateQueries({
-        queryKey: api.courseQuiz.get.$use(variables.quizId),
-      });
-      queryClient.invalidateQueries({ queryKey: ["dashboard", "metrics"] });
       notifications.show({
         color: "green",
         message: "Quiz updated successfully",
@@ -93,8 +82,6 @@ export const useUpdateCourseQuiz = () => {
 };
 
 export const useDeleteCourseQuiz = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: api.$use.courseQuiz.delete,
     onError: (error) => {
@@ -106,8 +93,6 @@ export const useDeleteCourseQuiz = () => {
       console.error("Delete quiz error:", error);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: courseQuizKeys.all });
-      queryClient.invalidateQueries({ queryKey: ["dashboard", "metrics"] });
       notifications.show({
         color: "green",
         message: "Quiz deleted successfully",
@@ -118,8 +103,6 @@ export const useDeleteCourseQuiz = () => {
 };
 
 export const useReorderCourseQuizzes = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: api.$use.courseQuiz.reorder,
     onError: (error) => {
@@ -131,8 +114,6 @@ export const useReorderCourseQuizzes = () => {
       console.error("Reorder quizzes error:", error);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: courseQuizKeys.all });
-      queryClient.invalidateQueries({ queryKey: ["dashboard", "metrics"] });
       notifications.show({
         color: "green",
         message: "Quizzes reordered successfully",

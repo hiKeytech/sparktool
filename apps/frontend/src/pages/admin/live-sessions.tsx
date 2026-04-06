@@ -37,7 +37,7 @@ import {
 import type { TenantUserPageProps } from "@/types/route-page-props";
 
 export function AdminLiveSessions({ tenant, user }: TenantUserPageProps) {
-  const { data: sessions = [], isLoading } = useListLiveSessions();
+  const { data: sessions = [], isLoading } = useListLiveSessions(tenant?.id);
   const { data: courses = [] } = useListCourses(tenant?.id);
 
   const deleteLiveSession = useDeleteLiveSession();

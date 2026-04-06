@@ -109,9 +109,9 @@ export const signInWithPasswordFn = createServerFn({ method: "POST" })
     const user = result.userData;
 
     await session.update({
-      activeTenantId: resolvedTenant?.id ?? user.activeTenantId,
+      activeTenantId: data.tenantId ?? resolvedTenant?.id,
       email: user.email,
-      role: user.role as never,
+      role: user.role,
       tenantIds: user.tenantIds ?? [],
       uid: user.id,
     });
