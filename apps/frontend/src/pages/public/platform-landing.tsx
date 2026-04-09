@@ -1,16 +1,4 @@
-import {
-  Badge,
-  Button,
-  Container,
-  Divider,
-  Group,
-  Paper,
-  SimpleGrid,
-  Stack,
-  Text,
-  ThemeIcon,
-  Title,
-} from "@mantine/core";
+import { Button } from "@mantine/core";
 import {
   ArrowRight,
   BookOpen,
@@ -22,6 +10,7 @@ import {
   ShieldCheck,
   Users,
   Waypoints,
+  Activity
 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -56,420 +45,295 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
   const loginFeatures = platform.branding.loginPage.features;
   const authRouteCount = platform.auth.strategies.length;
   const accessModel = platform.auth.allowSignup
-    ? "Managed self-service"
-    : "Admin-approved access";
-  const operationalSignals = [
-    {
-      label: "Access model",
-      value: accessModel,
-    },
-    {
-      label: "Authentication",
-      value: `${authRouteCount} configured sign-in route${authRouteCount === 1 ? "" : "s"}`,
-    },
-    {
-      label: "Platform focus",
-      value: `${highlights.length} highlighted ${highlights.length === 1 ? "capability" : "capabilities"}`,
-    },
-    {
-      label: "Guided entry",
-      value: `${loginFeatures.length} onboarding cue${loginFeatures.length === 1 ? "" : "s"}`,
-    },
+    ? "Self-Service"
+    : "Internal Admin";
+
+  const metrics = [
+    { label: "ACCESS MODEL", value: accessModel },
+    { label: "AUTH ROUTES", value: authRouteCount.toString().padStart(2, "0") },
+    { label: "CAPABILITIES", value: highlights.length.toString().padStart(2, "0") },
+    { label: "UPTIME TARGET", value: "99.9%" },
   ];
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900">
-      <section
-        className="overflow-hidden text-white"
-        style={{
-          background:
-            "radial-gradient(circle at top left, rgba(255,255,255,0.18), transparent 32%), linear-gradient(135deg, var(--color-primary) 0%, #184f2c 58%, #0f2f1d 100%)",
-        }}
-      >
-        <Container className="py-6 sm:py-8 lg:py-10" size="xl">
-          <header className="flex flex-col gap-4 pb-6 mb-10 border-b border-white/10 sm:flex-row sm:items-center sm:justify-between lg:mb-16">
-            <Group align="center" gap="md" wrap="nowrap">
-              <div className="flex items-center justify-center p-2 border rounded-lg shadow-sm h-14 w-14 border-white/20 bg-white/10 backdrop-blur-sm">
+    <div className="min-h-screen bg-[#070b09] text-stone-900 font-sans selection:bg-fun-green-500/30">
+      {/* 
+        ========================================================================
+        HERO SECTION (DARK, COMMAND SUITE STYLE)
+        ========================================================================
+      */}
+      <section className="relative overflow-hidden border-b border-white/5">
+        {/* Subtle glowing radial background */}
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_70%_0%,_var(--tw-gradient-stops))] from-fun-green-900/40 via-[#070b09] to-[#070b09] opacity-80" />
+        
+        {/* Grid pattern overlay */}
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+
+        <div className="relative z-10 px-6 pt-8 pb-24 mx-auto max-w-7xl lg:px-8 lg:pt-10 lg:pb-32">
+          {/* Navigation */}
+          <nav className="flex items-center justify-between pb-12 sm:pb-20">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center p-2 rounded-xl h-11 w-11 bg-white/5 border border-white/10 backdrop-blur-md">
                 <img
                   alt={platform.branding.portalName}
-                  className="object-contain w-full h-full"
+                  className="w-full h-full object-contain"
                   src={platform.branding.logoUrl}
                 />
               </div>
               <div>
-                <Text className="text-[11px] font-semibold uppercase tracking-[0.28em] text-white/70">
-                  Official Learning Platform
-                </Text>
-                <Text className="font-sans text-lg font-semibold text-white sm:text-xl">
+                <h2 className="text-white text-sm font-semibold tracking-wide">
                   {platform.branding.portalName}
-                </Text>
+                </h2>
+                <p className="text-white/50 text-[10px] uppercase tracking-[0.2em] font-medium hidden sm:block">
+                  Infrastructure
+                </p>
               </div>
-            </Group>
+            </div>
+            
+            <div className="flex items-center gap-4">
+              <a href="mailto:support@correctional.gov.ng" className="hidden sm:block text-xs font-semibold text-white/60 hover:text-white transition-colors tracking-widest uppercase">
+                Support
+              </a>
+              <Button
+                className="bg-white text-stone-900 hover:bg-stone-200 h-10 px-5 rounded-lg text-xs tracking-wider uppercase font-bold transition-all"
+                onClick={() => navigate({ to: "/login" })}
+              >
+                Enter Platform
+              </Button>
+            </div>
+          </nav>
 
-            <Button
-              className="bg-white min-h-11 text-fun-green-800 hover:bg-stone-100"
-              onClick={() => navigate({ to: "/login" })}
-              rightSection={<ArrowRight size={18} />}
-              size="md"
-            >
-              Portal Access
-            </Button>
-          </header>
-
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:items-start lg:gap-8">
-            <Stack className="max-w-3xl" gap="xl" data-aos="fade-up">
-              <div>
-                <Badge
-                  className="mb-5 text-white border-white/20 bg-white/10 backdrop-blur-sm"
-                  radius="md"
-                  size="lg"
-                  variant="outline"
-                >
-                  {hero.eyebrow}
-                </Badge>
-                <Title
-                  className="max-w-4xl font-sans text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl"
-                  order={1}
-                >
-                  {hero.heroTitle}
-                </Title>
-              </div>
-
-              <Text className="max-w-2xl text-base leading-8 text-white/86 sm:text-lg">
-                {hero.heroDescription}
-              </Text>
-
-              <Group gap="md">
-                <Button
-                  className="px-6 bg-white min-h-12 text-fun-green-800 hover:bg-stone-100"
-                  onClick={() => navigate({ to: "/login" })}
-                  rightSection={<ArrowRight size={18} />}
-                  size="lg"
-                >
-                  {hero.primaryCtaLabel}
-                </Button>
-                <Button
-                  className="px-6 text-white min-h-12 border-white/25 hover:bg-white/10"
-                  onClick={() => navigate({ to: "/login" })}
-                  size="lg"
-                  variant="outline"
-                >
-                  {hero.secondaryCtaLabel}
-                </Button>
-              </Group>
-
-              <Group gap="sm">
-                <Badge className="text-white bg-white/10" radius="md" size="lg">
-                  Role-based access
-                </Badge>
-                <Badge className="text-white bg-white/10" radius="md" size="lg">
-                  Secure authentication
-                </Badge>
-                <Badge className="text-white bg-white/10" radius="md" size="lg">
-                  Structured progress tracking
-                </Badge>
-              </Group>
-            </Stack>
-
-            <Paper
-              className="border shadow-2xl border-white/15 bg-white/96 text-stone-900 backdrop-blur-sm"
-              data-aos="fade-left"
-              p="xl"
-              radius="lg"
-            >
-              <Stack gap="lg">
-                <div>
-                  <Text className="text-xs font-semibold uppercase tracking-[0.22em] text-fun-green-800">
-                    Operational Snapshot
-                  </Text>
-                  <Title
-                    className="mt-2 font-sans text-2xl font-semibold text-stone-900"
-                    order={2}
-                  >
-                    Authoritative access with guided learning pathways.
-                  </Title>
-                </div>
-
-                <SimpleGrid cols={{ base: 1, xs: 2 }} spacing="md">
-                  {operationalSignals.map((signal) => (
-                    <Paper
-                      className="h-full border border-stone-200 bg-stone-50"
-                      key={signal.label}
-                      p="md"
-                      radius="lg"
-                    >
-                      <Text className="text-xs font-medium uppercase tracking-[0.18em] text-stone-600">
-                        {signal.label}
-                      </Text>
-                      <Text className="mt-2 text-sm font-semibold leading-6 text-stone-900">
-                        {signal.value}
-                      </Text>
-                    </Paper>
-                  ))}
-                </SimpleGrid>
-
-                <Divider color="var(--mantine-color-stone-2)" />
-
-                <Stack gap="sm">
-                  <Text className="text-xs font-semibold uppercase tracking-[0.22em] text-stone-600">
-                    Priority Areas
-                  </Text>
-                  {highlights.slice(0, 3).map((highlight, index) => {
-                    const HighlightIcon =
-                      highlightIconCycle[index % highlightIconCycle.length];
-
-                    return (
-                      <Group
-                        align="flex-start"
-                        gap="sm"
-                        key={highlight.title}
-                        wrap="nowrap"
-                      >
-                        <ThemeIcon
-                          className="mt-1 bg-fun-green-100 text-fun-green-800"
-                          radius="md"
-                          size={40}
-                          variant="light"
-                        >
-                          <HighlightIcon size={18} />
-                        </ThemeIcon>
-                        <div>
-                          <Text className="text-sm font-semibold text-stone-900">
-                            {highlight.title}
-                          </Text>
-                          <Text className="text-sm leading-6 text-stone-600">
-                            {highlight.description}
-                          </Text>
-                        </div>
-                      </Group>
-                    );
-                  })}
-                </Stack>
-              </Stack>
-            </Paper>
+          {/* Hero Content */}
+          <div className="max-w-4xl" data-aos="fade-up">
+            <p className="text-fun-green-400 text-xs sm:text-sm font-bold uppercase tracking-[0.3em] mb-6 flex items-center gap-3">
+              <Activity size={16} />
+              <span>{hero.eyebrow}</span>
+            </p>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tighter leading-[1.05] mb-8">
+              {hero.heroTitle.replace(".", "")}
+              <span className="text-fun-green-500">.</span>
+            </h1>
+            <p className="text-lg sm:text-xl text-white/50 leading-relaxed max-w-2xl mb-12 font-light">
+              {hero.heroDescription}
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              <Button
+                className="bg-fun-green-600 hover:bg-fun-green-500 text-white h-14 px-8 rounded-lg text-sm tracking-wider uppercase font-bold border border-fun-green-500 transition-all w-full sm:w-auto"
+                onClick={() => navigate({ to: "/login" })}
+                rightSection={<ArrowRight size={18} className="opacity-70" />}
+              >
+                {hero.primaryCtaLabel}
+              </Button>
+              <Button
+                className="bg-transparent hover:bg-white/5 text-white h-14 px-8 rounded-lg text-sm tracking-wider uppercase font-bold border border-white/15 transition-all w-full sm:w-auto"
+                onClick={() => navigate({ to: "/login" })}
+              >
+                {hero.secondaryCtaLabel}
+              </Button>
+            </div>
           </div>
-        </Container>
+        </div>
+
+        {/* High-End Metrics Ticker */}
+        <div className="border-t border-white/10 bg-white/[0.02] backdrop-blur-xl relative z-10">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 divide-y divide-white/10 border-x border-white/10 lg:divide-y-0 lg:divide-x">
+              {metrics.map((metric, i) => (
+                <div key={metric.label} className="py-6 px-6" data-aos="fade-up" data-aos-delay={i * 100}>
+                  <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.25em] mb-2">
+                    {metric.label}
+                  </p>
+                  <p className="text-white text-3xl font-medium tracking-tight">
+                    {metric.value}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
       </section>
 
-      {highlights.length > 0 ? (
-        <section>
-          <Container className="py-16 sm:py-20" size="xl">
-            <div className="max-w-2xl mb-10" data-aos="fade-up">
-              <Text className="text-xs font-semibold uppercase tracking-[0.22em] text-fun-green-800">
+      {/* 
+        ========================================================================
+        BENTO GRID (STARK WHITE, INSTITUTIONAL)
+        ========================================================================
+      */}
+      {highlights.length > 0 && (
+        <section className="bg-white py-24 sm:py-32 border-b border-stone-200" id="features">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mb-16 max-w-2xl" data-aos="fade-up">
+              <p className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4">
                 Platform Capabilities
-              </Text>
-              <Title
-                className="mt-3 font-sans text-3xl font-semibold text-stone-900 sm:text-4xl"
-                order={2}
-              >
-                A stronger front door for secure learning operations.
-              </Title>
-              <Text className="mt-4 text-base leading-7 text-stone-600">
-                The platform is positioned as an official gateway: clear entry,
-                visible accountability, and a direct path from sign-in to
-                programme participation.
-              </Text>
+              </p>
+              <h2 className="text-4xl sm:text-5xl font-semibold text-stone-950 tracking-tight leading-tight">
+                Institutional Grade Infrastructure.
+              </h2>
+              <p className="mt-6 text-lg text-stone-600 leading-relaxed font-light">
+                Professional-grade environment to onboard, configure, and operate learning mandates securely — with absolute confidence.
+              </p>
             </div>
 
-            <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {highlights.map((highlight, index) => {
-                const HighlightIcon =
-                  highlightIconCycle[index % highlightIconCycle.length];
-
+                const HighlightIcon = highlightIconCycle[index % highlightIconCycle.length];
+                
                 return (
-                  <Paper
-                    className="h-full transition-transform duration-200 ease-out bg-white border shadow-sm border-stone-200 hover:-translate-y-1"
-                    data-aos="fade-up"
-                    data-aos-delay={index * 50}
+                  <div
                     key={highlight.title}
-                    p="xl"
-                    radius="lg"
+                    className="group relative p-8 bg-stone-50 rounded-2xl border border-stone-200/60 hover:bg-stone-100 hover:border-stone-300 transition-colors duration-300 ease-out"
+                    data-aos="fade-up"
+                    data-aos-delay={index * 100}
                   >
-                    <Stack gap="md">
-                      <ThemeIcon
-                        className="bg-fun-green-100 text-fun-green-800"
-                        radius="md"
-                        size={48}
-                        variant="light"
-                      >
-                        <HighlightIcon size={22} />
-                      </ThemeIcon>
-                      <Title
-                        className="font-sans text-xl font-semibold text-stone-900"
-                        order={3}
-                      >
-                        {highlight.title}
-                      </Title>
-                      <Text className="text-sm leading-7 text-stone-600">
-                        {highlight.description}
-                      </Text>
-                    </Stack>
-                  </Paper>
+                    <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white border border-stone-200 text-fun-green-700 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                      <HighlightIcon size={20} strokeWidth={1.5} />
+                    </div>
+                    <h3 className="text-lg font-semibold text-stone-950 mb-3 tracking-tight">
+                      {highlight.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-stone-600">
+                      {highlight.description}
+                    </p>
+                  </div>
                 );
               })}
-            </SimpleGrid>
-          </Container>
-        </section>
-      ) : null}
-
-      <section className="bg-white">
-        <Container className="py-16 sm:py-20" size="xl">
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-start">
-            <Paper
-              className="border border-stone-200 bg-stone-50"
-              data-aos="fade-right"
-              p="xl"
-              radius="lg"
-            >
-              <Stack gap="xl">
-                <div>
-                  <Text className="text-xs font-semibold uppercase tracking-[0.22em] text-fun-green-800">
-                    Platform Journey
-                  </Text>
-                  <Title
-                    className="mt-3 font-sans text-3xl font-semibold text-stone-900"
-                    order={2}
-                  >
-                    Built for orderly access and visible progression.
-                  </Title>
-                </div>
-
-                <Stack gap="lg">
-                  {[
-                    {
-                      body: "Users enter through a controlled authentication route aligned to the platform's approved access model.",
-                      step: "01",
-                      title: "Authenticate with approved credentials",
-                    },
-                    {
-                      body: "Highlighted priorities and guided entry cues point each user toward the right learning pathway immediately.",
-                      step: "02",
-                      title: "Move directly into the right programme area",
-                    },
-                    {
-                      body: "The experience reinforces completion, oversight, and institutional clarity instead of leaving the next action ambiguous.",
-                      step: "03",
-                      title: "Track engagement through a structured experience",
-                    },
-                  ].map((item) => (
-                    <Group
-                      align="flex-start"
-                      gap="md"
-                      key={item.step}
-                      wrap="nowrap"
-                    >
-                      <div className="flex items-center justify-center w-12 h-12 text-sm font-semibold text-white rounded-full shrink-0 bg-fun-green-800">
-                        {item.step}
-                      </div>
-                      <div>
-                        <Text className="text-base font-semibold text-stone-900">
-                          {item.title}
-                        </Text>
-                        <Text className="mt-1 text-sm leading-7 text-stone-600">
-                          {item.body}
-                        </Text>
-                      </div>
-                    </Group>
-                  ))}
-                </Stack>
-              </Stack>
-            </Paper>
-
-            <div>
-              <div className="max-w-2xl mb-8" data-aos="fade-up">
-                <Text className="text-xs font-semibold uppercase tracking-[0.22em] text-fun-green-800">
-                  Guided Entry Cues
-                </Text>
-                <Title
-                  className="mt-3 font-sans text-3xl font-semibold text-stone-900"
-                  order={2}
-                >
-                  The supporting details now carry more weight.
-                </Title>
-              </div>
-
-              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="lg">
-                {loginFeatures.map((feature, index) => {
-                  const FeatureIcon =
-                    featureIconCycle[index % featureIconCycle.length];
-
-                  return (
-                    <Paper
-                      className="h-full bg-white border shadow-sm border-stone-200"
-                      data-aos="fade-up"
-                      data-aos-delay={index * 50}
-                      key={feature.title}
-                      p="lg"
-                      radius="lg"
-                    >
-                      <Stack gap="sm">
-                        <ThemeIcon
-                          className="bg-fun-green-100 text-fun-green-800"
-                          radius="md"
-                          size={44}
-                          variant="light"
-                        >
-                          <FeatureIcon size={20} />
-                        </ThemeIcon>
-                        <Title
-                          className="font-sans text-lg font-semibold text-stone-900"
-                          order={3}
-                        >
-                          {feature.title}
-                        </Title>
-                        <Text className="text-sm leading-7 text-stone-600">
-                          {feature.description}
-                        </Text>
-                      </Stack>
-                    </Paper>
-                  );
-                })}
-              </SimpleGrid>
             </div>
           </div>
-        </Container>
-      </section>
+        </section>
+      )}
 
-      <section>
-        <Container className="pb-16 sm:pb-20" size="xl">
-          <Paper
-            className="overflow-hidden text-white border shadow-lg border-fun-green-900/10 bg-fun-green-800"
-            data-aos="fade-up"
-            p="xl"
-            radius="lg"
-          >
-            <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
-              <div>
-                <Text className="text-xs font-semibold uppercase tracking-[0.22em] text-white/70">
-                  Ready For Entry
-                </Text>
-                <Title
-                  className="mt-3 font-sans text-3xl font-semibold text-white sm:text-4xl"
-                  order={2}
-                >
-                  Access {platform.branding.portalName} through the authorised
-                  portal.
-                </Title>
-                <Text className="max-w-2xl mt-4 text-base leading-7 text-white/82">
-                  The homepage now establishes trust, direction, and platform
-                  readiness before the user reaches authentication.
-                </Text>
+      {/* 
+        ========================================================================
+        STEP-BY-STEP & GUIDED CUES (SLEEK GREY / WHITE CONTRAST)
+        ========================================================================
+      */}
+      <section className="bg-[#fbFAF9] py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+            
+            {/* Steps */}
+            <div>
+              <p className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4" data-aos="fade-right">
+                Deployment Flow
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-semibold text-stone-950 tracking-tight leading-tight mb-12" data-aos="fade-right">
+                From Authentication to Live Progress, Structurally Complete.
+              </h2>
+
+              <div className="space-y-12">
+                {[
+                  {
+                    step: "01",
+                    title: "AUTHENTICATE ACCESS",
+                    body: "Users enter through a controlled authentication route aligned to the platform's approved, secure access model.",
+                  },
+                  {
+                    step: "02",
+                    title: "SELECT LEARNING PATHWAY",
+                    body: "Highlighted priorities and guided entry cues point each user toward the correct organizational track immediately.",
+                  },
+                  {
+                    step: "03",
+                    title: "EXECUTE MODULES",
+                    body: "Track engagement through a heavily structured experience. Progress is logged, timestamped, and auditable.",
+                  },
+                ].map((item, i) => (
+                  <div key={item.step} className="flex gap-6" data-aos="fade-up" data-aos-delay={i * 100}>
+                    <div className="shrink-0 pt-1">
+                      <span className="text-fun-green-700/20 text-4xl font-semibold tracking-tighter">
+                        {item.step}
+                      </span>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-stone-950 uppercase tracking-widest mb-3">
+                        {item.title}
+                      </h4>
+                      <p className="text-stone-600 leading-relaxed text-sm">
+                        {item.body}
+                      </p>
+                    </div>
+                  </div>
+                ))}
               </div>
-
-              <Group gap="md">
-                <Button
-                  className="px-6 bg-white min-h-12 text-fun-green-800 hover:bg-stone-100"
-                  onClick={() => navigate({ to: "/login" })}
-                  rightSection={<ArrowRight size={18} />}
-                  size="lg"
-                >
-                  {hero.primaryCtaLabel}
-                </Button>
-              </Group>
             </div>
-          </Paper>
-        </Container>
+
+            {/* Guided Cues Bento subset */}
+            <div>
+              <p className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4" data-aos="fade-left">
+                Guided Variables
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-semibold text-stone-950 tracking-tight leading-tight mb-12" data-aos="fade-left">
+                Configuration Engine.
+              </h2>
+              
+              <div className="grid gap-4 sm:grid-cols-2">
+                {loginFeatures.map((feature, index) => {
+                  const FeatureIcon = featureIconCycle[index % featureIconCycle.length];
+                  return (
+                    <div
+                      key={feature.title}
+                      className="bg-white p-6 rounded-2xl border border-stone-200/70 shadow-sm"
+                      data-aos="fade-up"
+                      data-aos-delay={index * 100}
+                    >
+                      <FeatureIcon size={20} className="text-stone-400 mb-4" strokeWidth={1.5} />
+                      <h4 className="text-sm font-semibold text-stone-950 uppercase tracking-wider mb-2">
+                        {feature.title}
+                      </h4>
+                      <p className="text-xs leading-relaxed text-stone-500">
+                        {feature.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+          </div>
+        </div>
       </section>
+
+      {/* 
+        ========================================================================
+        FOOTER CTA
+        ========================================================================
+      */}
+      <section className="bg-[#070b09] py-24 border-t border-white/10 relative overflow-hidden">
+        {/* Subtle glow */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-fun-green-900/30 blur-[120px] rounded-full pointer-events-none" />
+        
+        <div className="relative z-10 mx-auto max-w-4xl px-6 lg:px-8 text-center" data-aos="fade-up">
+          <p className="text-white/40 text-xs font-bold uppercase tracking-[0.25em] mb-6">
+            ENTERPRISE DEPLOYMENT
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-semibold text-white tracking-tight leading-tight mb-10">
+            Scale Your Operational Network.
+          </h2>
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+             <Button
+                className="bg-white hover:bg-stone-200 text-stone-950 h-14 px-10 rounded-lg text-sm tracking-wider uppercase font-bold transition-all w-full sm:w-auto"
+                onClick={() => navigate({ to: "/login" })}
+              >
+                Access Platform
+              </Button>
+              <Button
+                className="bg-transparent hover:bg-white/5 text-white h-14 px-10 rounded-lg text-sm tracking-wider uppercase font-bold border border-white/15 transition-all w-full sm:w-auto"
+                onClick={() => navigate({ to: "/login" })}
+              >
+                Support Hub
+              </Button>
+          </div>
+          
+          <div className="mt-20 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest text-white/40 font-semibold">
+            <p>© {new Date().getFullYear()} {platform.branding.portalName} INFRASTRUCTURE. ALL RIGHTS RESERVED.</p>
+            <div className="flex items-center gap-2">
+               <span className="w-1.5 h-1.5 rounded-full bg-fun-green-500 animate-pulse" />
+               ALL SYSTEMS OPERATIONAL
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }
