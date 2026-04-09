@@ -71,7 +71,7 @@ export const useUpdateCourseQuiz = () => {
       });
       console.error("Update quiz error:", error);
     },
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       notifications.show({
         color: "green",
         message: "Quiz updated successfully",

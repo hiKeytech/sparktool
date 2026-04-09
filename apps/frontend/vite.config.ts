@@ -8,7 +8,8 @@ import tsconfigPaths from "vite-tsconfig-paths";
 /**
  * Vite configuration file
  * - Sets up plugins for React, Tailwind CSS, TypeScript path resolution, and TanStack Router
- * - Configures the development server to run on port 3000
+ * - Configures the development server to run on port 4317
+ * - Configures the preview server to run on port 4417
  * - Uses root index.html for development (Firebase-free)
  * - public/index.html is preserved for Firebase hosting deployment
  *
@@ -22,5 +23,15 @@ export default defineConfig({
     react(),
   ],
   root: ".",
-  server: { port: 3000 },
+  server: {
+    port: 4317,
+    strictPort: true,
+    allowedHosts: [".ngrok-free.dev"],
+  },
+  preview: {
+    port: 4417,
+    strictPort: true,
+    host: "0.0.0.0",
+    allowedHosts: [".ngrok-free.dev"],
+  },
 });
