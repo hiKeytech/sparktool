@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   Users,
   Waypoints,
-  Activity
+  Activity,
 } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -51,7 +51,10 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
   const metrics = [
     { label: "ACCESS MODEL", value: accessModel },
     { label: "AUTH ROUTES", value: authRouteCount.toString().padStart(2, "0") },
-    { label: "CAPABILITIES", value: highlights.length.toString().padStart(2, "0") },
+    {
+      label: "CAPABILITIES",
+      value: highlights.length.toString().padStart(2, "0"),
+    },
     { label: "UPTIME TARGET", value: "99.9%" },
   ];
 
@@ -62,10 +65,10 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
         HERO SECTION (DARK, COMMAND SUITE STYLE)
         ========================================================================
       */}
-      <section className="relative overflow-hidden border-b border-white/5">
-        {/* Subtle glowing radial background */}
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_70%_0%,_var(--tw-gradient-stops))] from-fun-green-900/40 via-[#070b09] to-[#070b09] opacity-80" />
-        
+      <section className="relative overflow-hidden border-b border-white/5 bg-[#070b09]">
+        {/* Deep Nigerian Green Gradient Background */}
+        <div className="absolute inset-0 z-0 transition-colors duration-1000 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_32%),linear-gradient(135deg,_#1d4f35_0%,_#113620_58%,_#070b09_100%)] opacity-100" />
+
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
@@ -74,11 +77,7 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
           <nav className="flex items-center justify-between pb-12 sm:pb-20">
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center p-2 rounded-xl h-11 w-11 bg-white/5 border border-white/10 backdrop-blur-md">
-                <img
-                  alt={platform.branding.portalName}
-                  className="w-full h-full object-contain"
-                  src={platform.branding.logoUrl}
-                />
+                <ShieldCheck size={24} className="text-fun-green-400" />
               </div>
               <div>
                 <h2 className="text-white text-sm font-semibold tracking-wide">
@@ -89,9 +88,12 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 </p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-4">
-              <a href="mailto:support@correctional.gov.ng" className="hidden sm:block text-xs font-semibold text-white/60 hover:text-white transition-colors tracking-widest uppercase">
+              <a
+                href="mailto:support@correctional.gov.ng"
+                className="hidden sm:block text-xs font-semibold text-white/60 hover:text-white transition-colors tracking-widest uppercase"
+              >
                 Support
               </a>
               <Button
@@ -116,7 +118,7 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
             <p className="text-lg sm:text-xl text-white/50 leading-relaxed max-w-2xl mb-12 font-light">
               {hero.heroDescription}
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
               <Button
                 className="bg-fun-green-600 hover:bg-fun-green-500 text-white h-14 px-8 rounded-lg text-sm tracking-wider uppercase font-bold border border-fun-green-500 transition-all w-full sm:w-auto"
@@ -140,7 +142,12 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="grid grid-cols-2 lg:grid-cols-4 divide-y divide-white/10 border-x border-white/10 lg:divide-y-0 lg:divide-x">
               {metrics.map((metric, i) => (
-                <div key={metric.label} className="py-6 px-6" data-aos="fade-up" data-aos-delay={i * 100}>
+                <div
+                  key={metric.label}
+                  className="py-6 px-6"
+                  data-aos="fade-up"
+                  data-aos-delay={i * 100}
+                >
                   <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.25em] mb-2">
                     {metric.label}
                   </p>
@@ -160,7 +167,10 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
         ========================================================================
       */}
       {highlights.length > 0 && (
-        <section className="bg-white py-24 sm:py-32 border-b border-stone-200" id="features">
+        <section
+          className="bg-white py-24 sm:py-32 border-b border-stone-200"
+          id="features"
+        >
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mb-16 max-w-2xl" data-aos="fade-up">
               <p className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4">
@@ -170,14 +180,16 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 Institutional Grade Infrastructure.
               </h2>
               <p className="mt-6 text-lg text-stone-600 leading-relaxed font-light">
-                Professional-grade environment to onboard, configure, and operate learning mandates securely — with absolute confidence.
+                Professional-grade environment to onboard, configure, and
+                operate learning mandates securely — with absolute confidence.
               </p>
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {highlights.map((highlight, index) => {
-                const HighlightIcon = highlightIconCycle[index % highlightIconCycle.length];
-                
+                const HighlightIcon =
+                  highlightIconCycle[index % highlightIconCycle.length];
+
                 return (
                   <div
                     key={highlight.title}
@@ -210,13 +222,18 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
       <section className="bg-[#fbFAF9] py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-            
             {/* Steps */}
             <div>
-              <p className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4" data-aos="fade-right">
+              <p
+                className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4"
+                data-aos="fade-right"
+              >
                 Deployment Flow
               </p>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-stone-950 tracking-tight leading-tight mb-12" data-aos="fade-right">
+              <h2
+                className="text-3xl sm:text-4xl font-semibold text-stone-950 tracking-tight leading-tight mb-12"
+                data-aos="fade-right"
+              >
                 From Authentication to Live Progress, Structurally Complete.
               </h2>
 
@@ -238,7 +255,12 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                     body: "Track engagement through a heavily structured experience. Progress is logged, timestamped, and auditable.",
                   },
                 ].map((item, i) => (
-                  <div key={item.step} className="flex gap-6" data-aos="fade-up" data-aos-delay={i * 100}>
+                  <div
+                    key={item.step}
+                    className="flex gap-6"
+                    data-aos="fade-up"
+                    data-aos-delay={i * 100}
+                  >
                     <div className="shrink-0 pt-1">
                       <span className="text-fun-green-700/20 text-4xl font-semibold tracking-tighter">
                         {item.step}
@@ -259,16 +281,23 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
 
             {/* Guided Cues Bento subset */}
             <div>
-              <p className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4" data-aos="fade-left">
+              <p
+                className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4"
+                data-aos="fade-left"
+              >
                 Guided Variables
               </p>
-              <h2 className="text-3xl sm:text-4xl font-semibold text-stone-950 tracking-tight leading-tight mb-12" data-aos="fade-left">
+              <h2
+                className="text-3xl sm:text-4xl font-semibold text-stone-950 tracking-tight leading-tight mb-12"
+                data-aos="fade-left"
+              >
                 Configuration Engine.
               </h2>
-              
+
               <div className="grid gap-4 sm:grid-cols-2">
                 {loginFeatures.map((feature, index) => {
-                  const FeatureIcon = featureIconCycle[index % featureIconCycle.length];
+                  const FeatureIcon =
+                    featureIconCycle[index % featureIconCycle.length];
                   return (
                     <div
                       key={feature.title}
@@ -276,7 +305,11 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                       data-aos="fade-up"
                       data-aos-delay={index * 100}
                     >
-                      <FeatureIcon size={20} className="text-stone-400 mb-4" strokeWidth={1.5} />
+                      <FeatureIcon
+                        size={20}
+                        className="text-stone-400 mb-4"
+                        strokeWidth={1.5}
+                      />
                       <h4 className="text-sm font-semibold text-stone-950 uppercase tracking-wider mb-2">
                         {feature.title}
                       </h4>
@@ -288,7 +321,6 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 })}
               </div>
             </div>
-
           </div>
         </div>
       </section>
@@ -301,8 +333,11 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
       <section className="bg-[#070b09] py-24 border-t border-white/10 relative overflow-hidden">
         {/* Subtle glow */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-fun-green-900/30 blur-[120px] rounded-full pointer-events-none" />
-        
-        <div className="relative z-10 mx-auto max-w-4xl px-6 lg:px-8 text-center" data-aos="fade-up">
+
+        <div
+          className="relative z-10 mx-auto max-w-4xl px-6 lg:px-8 text-center"
+          data-aos="fade-up"
+        >
           <p className="text-white/40 text-xs font-bold uppercase tracking-[0.25em] mb-6">
             ENTERPRISE DEPLOYMENT
           </p>
@@ -310,30 +345,32 @@ export function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
             Scale Your Operational Network.
           </h2>
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-             <Button
-                className="bg-white hover:bg-stone-200 text-stone-950 h-14 px-10 rounded-lg text-sm tracking-wider uppercase font-bold transition-all w-full sm:w-auto"
-                onClick={() => navigate({ to: "/login" })}
-              >
-                Access Platform
-              </Button>
-              <Button
-                className="bg-transparent hover:bg-white/5 text-white h-14 px-10 rounded-lg text-sm tracking-wider uppercase font-bold border border-white/15 transition-all w-full sm:w-auto"
-                onClick={() => navigate({ to: "/login" })}
-              >
-                Support Hub
-              </Button>
+            <Button
+              className="bg-white hover:bg-stone-200 text-stone-950 h-14 px-10 rounded-lg text-sm tracking-wider uppercase font-bold transition-all w-full sm:w-auto"
+              onClick={() => navigate({ to: "/login" })}
+            >
+              Access Platform
+            </Button>
+            <Button
+              className="bg-transparent hover:bg-white/5 text-white h-14 px-10 rounded-lg text-sm tracking-wider uppercase font-bold border border-white/15 transition-all w-full sm:w-auto"
+              onClick={() => navigate({ to: "/login" })}
+            >
+              Support Hub
+            </Button>
           </div>
-          
+
           <div className="mt-20 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4 text-[10px] uppercase tracking-widest text-white/40 font-semibold">
-            <p>© {new Date().getFullYear()} {platform.branding.portalName} INFRASTRUCTURE. ALL RIGHTS RESERVED.</p>
+            <p>
+              © {new Date().getFullYear()} {platform.branding.portalName}{" "}
+              INFRASTRUCTURE. ALL RIGHTS RESERVED.
+            </p>
             <div className="flex items-center gap-2">
-               <span className="w-1.5 h-1.5 rounded-full bg-fun-green-500 animate-pulse" />
-               ALL SYSTEMS OPERATIONAL
+              <span className="w-1.5 h-1.5 rounded-full bg-fun-green-500 animate-pulse" />
+              ALL SYSTEMS OPERATIONAL
             </div>
           </div>
         </div>
       </section>
-
     </div>
   );
 }
