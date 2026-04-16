@@ -1,4 +1,5 @@
-import type { Course, User } from "sparktool-contracts";
+import type { Course } from "sparktool-contracts/course";
+import type { User } from "sparktool-contracts/user";
 
 type CourseWithId = Course & { id: string };
 type UserWithId = User & { id: string };

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import type { QuizAnswer } from "sparktool-contracts";
+import type { QuizAnswer } from "sparktool-contracts/quiz";
 
 import { activityLogRepository } from "../repositories/activity-log-repository.js";
 import { quizAttemptRepository } from "../repositories/quiz-attempt-repository.js";

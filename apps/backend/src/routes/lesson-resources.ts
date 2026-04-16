@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import { Router } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
-import { lessonResourceSchema } from "sparktool-contracts";
+import { lessonResourceSchema } from "sparktool-contracts/course-lesson";
 import { courseRepository } from "../repositories/course-repository.js";
 import { courseLessonRepository } from "../repositories/course-lesson-repository.js";
 import { requireSession } from "../middleware/session.js";
