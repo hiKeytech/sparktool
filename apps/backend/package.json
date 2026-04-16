@@ -9,7 +9,8 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
-    "seed:ncs": "node scripts/seed-ncs-tenant.mjs"
+    "seed:ncs": "node scripts/seed-ncs-tenant.mjs",
+    "cleanup:quiz-attempts": "tsx scripts/cleanup-quiz-attempt-duplicates.ts"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

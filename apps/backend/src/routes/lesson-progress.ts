@@ -2,9 +2,7 @@ import { Router } from "express";
 
 import { activityLogRepository } from "../repositories/activity-log-repository.js";
 import { courseLessonRepository } from "../repositories/course-lesson-repository.js";
-import { courseRepository } from "../repositories/course-repository.js";
 import { lessonProgressRepository } from "../repositories/lesson-progress-repository.js";
-import { studentProgressRepository } from "../repositories/student-progress-repository.js";
 import { getActorFromSession, httpError } from "../lib/request-helpers.js";
 import { requireTenantSession } from "../middleware/session.js";
 import {
@@ -43,7 +41,9 @@ lessonProgressRouter.get(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      request.params.studentId === "me" ? actor.id : request.params.studentId;
+      (request.params.studentId as string) === "me"
+        ? actor.id
+        : (request.params.studentId as string);
 
     if (
       actor.id !== targetId &&
@@ -84,7 +84,7 @@ lessonProgressRouter.patch(
   requireTenantSession,
   async (request, response) => {
     const updated = await lessonProgressRepository.update(
-      request.params.progressId,
+      request.params.progressId as string,
       request.body,
     );
     if (!updated) throw httpError(500, "Failed to update lesson progress.");
@@ -100,8 +100,9 @@ lessonProgressRouter.post(
     const actor = await getActorFromSession(request);
     if (!actor) throw httpError(401, "Unauthorized");
 
-    const { courseId, lessonId, sectionId, studentId, tenantId, timeSpent } =
+    const { courseId, lessonId, sectionId, studentId, timeSpent } =
       request.body;
+    const tenantId = request.session.activeTenantId!;
 
     const lesson = await courseLessonRepository.getById(lessonId);
     if (!lesson) throw httpError(404, "Lesson not found.");
@@ -126,14 +127,20 @@ lessonProgressRouter.post(
       const created = await lessonProgressRepository.create({
         completedAt: Date.now(),
         courseId,
+        currentPosition: 0,
         isCompleted: true,
+        lastAccessedAt: Date.now(),
         lastWatchedAt: Date.now(),
         lessonId,
+        resourcesViewed: [],
         sectionId,
         studentId,
         tenantId,
         timeSpent: timeSpent ?? 0,
-        watchedPercentage: 100,
+        totalDuration: 0,
+        viewCount: 1,
+        watchedDuration: 0,
+        watchPercentage: 100,
       });
       if (!created) throw httpError(500, "Failed to create lesson progress.");
       progressId = created.id;

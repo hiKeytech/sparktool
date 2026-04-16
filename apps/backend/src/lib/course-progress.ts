@@ -39,21 +39,20 @@ export async function syncStudentSectionProgress(input: {
     (s) => s.sectionId !== input.sectionId,
   );
 
+  const isCompleted =
+    completedInSection.length === sectionLessonIds.length &&
+    sectionLessonIds.length > 0;
+
   remainingSections.push({
-    completedAt:
-      completedInSection.length === sectionLessonIds.length &&
-      sectionLessonIds.length > 0
-        ? Date.now()
-        : null,
-    completedLessons: completedInSection.length,
-    completionPercentage:
-      sectionLessonIds.length > 0
-        ? Math.round(
-            (completedInSection.length / sectionLessonIds.length) * 100,
-          )
-        : 0,
+    completedAt: isCompleted ? Date.now() : null,
+    completedLessons: completedInSection,
+    completedQuizzes: [],
+    courseId: input.courseId,
+    isCompleted,
+    lessonsCompleted: completedInSection,
+    quizzesCompleted: [],
     sectionId: input.sectionId,
-    totalLessons: sectionLessonIds.length,
+    timeSpent: 0,
   });
 
   await studentProgressRepository.update(existingStudentProgress.id, {
@@ -138,6 +137,12 @@ export async function updateCourseProgress(input: {
       );
     }
   } else {
+    await studentProgressRepository.deleteByStudentAndCourse({
+      courseId: input.courseId,
+      studentId: input.studentId,
+      tenantId: input.tenantId,
+    });
+
     await studentProgressRepository.create({
       averageQuizScore: 0,
       completedAt: isCompleted ? Date.now() : null,

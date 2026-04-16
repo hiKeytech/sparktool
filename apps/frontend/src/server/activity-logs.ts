@@ -67,6 +67,13 @@ const activityLogListInputSchema = z.object({
   userId: z.string().min(1),
 });
 
+const platformActivityLogListInputSchema = z.object({
+  action: activityLogActionSchema.optional(),
+  limit: z.number().int().min(1).max(50).optional(),
+  tenantId: z.string().optional(),
+  userId: z.string().min(1).optional(),
+});
+
 export const createActivityLogFn = createServerFn({ method: "POST" })
   .inputValidator(activityLogCreateInputSchema)
   .handler(async ({ data }) => {
@@ -78,5 +85,16 @@ export const listActivityLogsFn = createServerFn({ method: "GET" })
   .handler(async ({ data }) => {
     const params = new URLSearchParams({ userId: data.userId });
     if (data.tenantId) params.set("tenantId", data.tenantId);
+    return api.get<ActivityLog[]>(`/api/activity-logs?${params}`);
+  });
+
+export const listPlatformActivityLogsFn = createServerFn({ method: "GET" })
+  .inputValidator(platformActivityLogListInputSchema)
+  .handler(async ({ data }) => {
+    const params = new URLSearchParams();
+    if (data.action) params.set("action", data.action);
+    if (data.limit) params.set("limit", String(data.limit));
+    if (data.tenantId) params.set("tenantId", data.tenantId);
+    if (data.userId) params.set("userId", data.userId);
     return api.get<ActivityLog[]>(`/api/activity-logs?${params}`);
   });

@@ -6,12 +6,12 @@ import {
   getActorFromSession,
   httpError,
 } from "../lib/request-helpers.js";
-import { requireSession, requireTenantSession } from "../middleware/session.js";
+import { requireSession } from "../middleware/session.js";
 
 export const activityLogsRouter = Router();
 
 /** GET /api/activity-logs */
-activityLogsRouter.get("/", requireTenantSession, async (request, response) => {
+activityLogsRouter.get("/", requireSession, async (request, response) => {
   const actor = await getActorFromSession(request);
   assertAdminAccess(actor);
 
@@ -20,19 +20,29 @@ activityLogsRouter.get("/", requireTenantSession, async (request, response) => {
     courseId,
     action,
     tenantId: queryTenantId,
-    limit,
-    page,
+    limit: rawLimit,
   } = request.query as Record<string, string>;
-  const tenantId = queryTenantId ?? request.session.activeTenantId!;
+  const tenantId =
+    actor.role === "super-admin"
+      ? queryTenantId
+      : (queryTenantId ?? request.session.activeTenantId!);
 
-  const filters: Record<string, unknown> = { tenantId };
-  if (userId) filters.userId = userId;
-  if (courseId) filters.courseId = courseId;
-  if (action) filters.action = action;
-  if (limit) filters.limit = Number(limit);
-  if (page) filters.page = Number(page);
+  if (actor.role !== "super-admin" && !tenantId) {
+    throw httpError(403, "No active tenant");
+  }
 
-  response.json(await activityLogRepository.list(filters));
+  const logs = await activityLogRepository.list({
+    ...(action && { action }),
+    ...(courseId && { courseId }),
+    ...(userId && { userId }),
+    ...(tenantId && { tenantId }),
+  });
+
+  const limit = rawLimit ? Number.parseInt(rawLimit, 10) : undefined;
+
+  response.json(
+    Number.isFinite(limit) && (limit ?? 0) > 0 ? logs.slice(0, limit) : logs,
+  );
 });
 
 /** POST /api/activity-logs */

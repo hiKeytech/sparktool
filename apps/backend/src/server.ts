@@ -8,8 +8,10 @@ import express, {
 import helmet from "helmet";
 import { PlatformConfigService } from "./services/platform-config-service.js";
 import { TenantService } from "./services/tenant-service.js";
+import { getActorFromSession, httpError } from "./lib/request-helpers.js";
 
 import { sessionMiddleware } from "./middleware/session.js";
+import { requireSession } from "./middleware/session.js";
 import { authRouter } from "./routes/auth.js";
 import { usersRouter } from "./routes/users.js";
 import { coursesRouter } from "./routes/courses.js";
@@ -59,6 +61,28 @@ app.get("/api/platform-config", async (_request, response) => {
   }
 
   response.json(config);
+});
+
+app.patch("/api/platform-config", requireSession, async (request, response) => {
+  const actor = await getActorFromSession(request);
+
+  if (!actor || actor.role !== "super-admin") {
+    throw httpError(
+      403,
+      "Only platform administrators can update platform config.",
+    );
+  }
+
+  const updated = await PlatformConfigService.updatePlatformConfig({
+    ...request.body,
+    id: "platform",
+  });
+
+  if (!updated) {
+    throw httpError(500, "Failed to update platform config.");
+  }
+
+  response.json(updated);
 });
 
 app.get("/api/tenants/:tenantId", async (request, response) => {

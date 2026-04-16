@@ -207,7 +207,9 @@ export interface ActivityLogCreateInput {
 }
 
 export interface ListActivityLogVariables extends QueryFilters<ActivityLog> {
-  userId: string;
+  action?: string;
+  courseId?: string;
+  userId?: string;
 }
 
 export type CreateActivityLogVariables = DistributiveOmit<

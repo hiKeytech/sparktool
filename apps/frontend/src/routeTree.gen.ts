@@ -14,7 +14,12 @@ import { Route as SuperAdminRouteImport } from './routes/super-admin'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as TenantRouteImport } from './routes/$tenant'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SuperAdminIndexRouteImport } from './routes/super-admin/index'
 import { Route as TenantIndexRouteImport } from './routes/$tenant/index'
+import { Route as SuperAdminTenantsRouteImport } from './routes/super-admin/tenants'
+import { Route as SuperAdminTelemetryRouteImport } from './routes/super-admin/telemetry'
+import { Route as SuperAdminSettingsRouteImport } from './routes/super-admin/settings'
+import { Route as SuperAdminIdentitiesRouteImport } from './routes/super-admin/identities'
 import { Route as TenantStudentRouteImport } from './routes/$tenant/student'
 import { Route as TenantLoginRouteImport } from './routes/$tenant/login'
 import { Route as TenantAdminRouteImport } from './routes/$tenant/admin'
@@ -33,10 +38,17 @@ import { Route as TenantAdminLiveSessionsRouteImport } from './routes/$tenant/ad
 import { Route as TenantAdminCoursesRouteImport } from './routes/$tenant/admin/courses'
 import { Route as TenantAdminCertificatesRouteImport } from './routes/$tenant/admin/certificates'
 import { Route as TenantAdminAnalyticsRouteImport } from './routes/$tenant/admin/analytics'
+import { Route as TenantStudentCoursesIndexRouteImport } from './routes/$tenant/student/courses/index'
+import { Route as TenantAdminUsersIndexRouteImport } from './routes/$tenant/admin/users/index'
+import { Route as TenantAdminQuizzesIndexRouteImport } from './routes/$tenant/admin/quizzes/index'
+import { Route as TenantAdminCoursesIndexRouteImport } from './routes/$tenant/admin/courses/index'
 import { Route as TenantStudentCoursesCourseIdRouteImport } from './routes/$tenant/student/courses/$courseId'
 import { Route as TenantAdminUsersNewRouteImport } from './routes/$tenant/admin/users/new'
 import { Route as TenantAdminUsersStudentIdRouteImport } from './routes/$tenant/admin/users/$studentId'
 import { Route as TenantAdminQuizzesQuizIdRouteImport } from './routes/$tenant/admin/quizzes/$quizId'
+import { Route as TenantStudentCoursesCourseIdIndexRouteImport } from './routes/$tenant/student/courses/$courseId/index'
+import { Route as TenantAdminUsersStudentIdIndexRouteImport } from './routes/$tenant/admin/users/$studentId/index'
+import { Route as TenantAdminQuizzesQuizIdIndexRouteImport } from './routes/$tenant/admin/quizzes/$quizId/index'
 import { Route as TenantStudentCoursesCourseIdLearnRouteImport } from './routes/$tenant/student/courses/$courseId/learn'
 import { Route as TenantAdminUsersStudentIdProgressRouteImport } from './routes/$tenant/admin/users/$studentId/progress'
 import { Route as TenantAdminQuizzesQuizIdQuestionsRouteImport } from './routes/$tenant/admin/quizzes/$quizId/questions'
@@ -68,10 +80,35 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SuperAdminIndexRoute = SuperAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
 const TenantIndexRoute = TenantIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => TenantRoute,
+} as any)
+const SuperAdminTenantsRoute = SuperAdminTenantsRouteImport.update({
+  id: '/tenants',
+  path: '/tenants',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
+const SuperAdminTelemetryRoute = SuperAdminTelemetryRouteImport.update({
+  id: '/telemetry',
+  path: '/telemetry',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
+const SuperAdminSettingsRoute = SuperAdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
+const SuperAdminIdentitiesRoute = SuperAdminIdentitiesRouteImport.update({
+  id: '/identities',
+  path: '/identities',
+  getParentRoute: () => SuperAdminRoute,
 } as any)
 const TenantStudentRoute = TenantStudentRouteImport.update({
   id: '/student',
@@ -164,6 +201,27 @@ const TenantAdminAnalyticsRoute = TenantAdminAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => TenantAdminRoute,
 } as any)
+const TenantStudentCoursesIndexRoute =
+  TenantStudentCoursesIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => TenantStudentCoursesRoute,
+  } as any)
+const TenantAdminUsersIndexRoute = TenantAdminUsersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TenantAdminUsersRoute,
+} as any)
+const TenantAdminQuizzesIndexRoute = TenantAdminQuizzesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TenantAdminQuizzesRoute,
+} as any)
+const TenantAdminCoursesIndexRoute = TenantAdminCoursesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => TenantAdminCoursesRoute,
+} as any)
 const TenantStudentCoursesCourseIdRoute =
   TenantStudentCoursesCourseIdRouteImport.update({
     id: '/$courseId',
@@ -186,6 +244,24 @@ const TenantAdminQuizzesQuizIdRoute =
     id: '/$quizId',
     path: '/$quizId',
     getParentRoute: () => TenantAdminQuizzesRoute,
+  } as any)
+const TenantStudentCoursesCourseIdIndexRoute =
+  TenantStudentCoursesCourseIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => TenantStudentCoursesCourseIdRoute,
+  } as any)
+const TenantAdminUsersStudentIdIndexRoute =
+  TenantAdminUsersStudentIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => TenantAdminUsersStudentIdRoute,
+  } as any)
+const TenantAdminQuizzesQuizIdIndexRoute =
+  TenantAdminQuizzesQuizIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => TenantAdminQuizzesQuizIdRoute,
   } as any)
 const TenantStudentCoursesCourseIdLearnRoute =
   TenantStudentCoursesCourseIdLearnRouteImport.update({
@@ -222,12 +298,17 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$tenant': typeof TenantRouteWithChildren
   '/login': typeof LoginRoute
-  '/super-admin': typeof SuperAdminRoute
+  '/super-admin': typeof SuperAdminRouteWithChildren
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/admin': typeof TenantAdminRouteWithChildren
   '/$tenant/login': typeof TenantLoginRoute
   '/$tenant/student': typeof TenantStudentRouteWithChildren
+  '/super-admin/identities': typeof SuperAdminIdentitiesRoute
+  '/super-admin/settings': typeof SuperAdminSettingsRoute
+  '/super-admin/telemetry': typeof SuperAdminTelemetryRoute
+  '/super-admin/tenants': typeof SuperAdminTenantsRoute
   '/$tenant/': typeof TenantIndexRoute
+  '/super-admin/': typeof SuperAdminIndexRoute
   '/$tenant/admin/analytics': typeof TenantAdminAnalyticsRoute
   '/$tenant/admin/certificates': typeof TenantAdminCertificatesRoute
   '/$tenant/admin/courses': typeof TenantAdminCoursesRouteWithChildren
@@ -247,42 +328,53 @@ export interface FileRoutesByFullPath {
   '/$tenant/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
   '/$tenant/admin/users/new': typeof TenantAdminUsersNewRoute
   '/$tenant/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
+  '/$tenant/admin/courses/': typeof TenantAdminCoursesIndexRoute
+  '/$tenant/admin/quizzes/': typeof TenantAdminQuizzesIndexRoute
+  '/$tenant/admin/users/': typeof TenantAdminUsersIndexRoute
+  '/$tenant/student/courses/': typeof TenantStudentCoursesIndexRoute
   '/$tenant/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
   '/$tenant/admin/quizzes/$quizId/questions': typeof TenantAdminQuizzesQuizIdQuestionsRoute
   '/$tenant/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
   '/$tenant/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
+  '/$tenant/admin/quizzes/$quizId/': typeof TenantAdminQuizzesQuizIdIndexRoute
+  '/$tenant/admin/users/$studentId/': typeof TenantAdminUsersStudentIdIndexRoute
+  '/$tenant/student/courses/$courseId/': typeof TenantStudentCoursesCourseIdIndexRoute
   '/$tenant/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
-  '/super-admin': typeof SuperAdminRoute
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/login': typeof TenantLoginRoute
+  '/super-admin/identities': typeof SuperAdminIdentitiesRoute
+  '/super-admin/settings': typeof SuperAdminSettingsRoute
+  '/super-admin/telemetry': typeof SuperAdminTelemetryRoute
+  '/super-admin/tenants': typeof SuperAdminTenantsRoute
   '/$tenant': typeof TenantIndexRoute
+  '/super-admin': typeof SuperAdminIndexRoute
   '/$tenant/admin/analytics': typeof TenantAdminAnalyticsRoute
   '/$tenant/admin/certificates': typeof TenantAdminCertificatesRoute
-  '/$tenant/admin/courses': typeof TenantAdminCoursesRouteWithChildren
   '/$tenant/admin/live-sessions': typeof TenantAdminLiveSessionsRoute
   '/$tenant/admin/profile': typeof TenantAdminProfileRoute
-  '/$tenant/admin/quizzes': typeof TenantAdminQuizzesRouteWithChildren
   '/$tenant/admin/security': typeof TenantAdminSecurityRoute
   '/$tenant/admin/settings': typeof TenantAdminSettingsRoute
-  '/$tenant/admin/users': typeof TenantAdminUsersRouteWithChildren
-  '/$tenant/student/courses': typeof TenantStudentCoursesRouteWithChildren
   '/$tenant/student/live-sessions': typeof TenantStudentLiveSessionsRoute
   '/$tenant/student/profile': typeof TenantStudentProfileRoute
   '/$tenant/student/progress': typeof TenantStudentProgressRoute
   '/$tenant/admin': typeof TenantAdminIndexRoute
   '/$tenant/student': typeof TenantStudentIndexRoute
-  '/$tenant/admin/quizzes/$quizId': typeof TenantAdminQuizzesQuizIdRouteWithChildren
-  '/$tenant/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
   '/$tenant/admin/users/new': typeof TenantAdminUsersNewRoute
-  '/$tenant/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
+  '/$tenant/admin/courses': typeof TenantAdminCoursesIndexRoute
+  '/$tenant/admin/quizzes': typeof TenantAdminQuizzesIndexRoute
+  '/$tenant/admin/users': typeof TenantAdminUsersIndexRoute
+  '/$tenant/student/courses': typeof TenantStudentCoursesIndexRoute
   '/$tenant/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
   '/$tenant/admin/quizzes/$quizId/questions': typeof TenantAdminQuizzesQuizIdQuestionsRoute
   '/$tenant/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
   '/$tenant/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
+  '/$tenant/admin/quizzes/$quizId': typeof TenantAdminQuizzesQuizIdIndexRoute
+  '/$tenant/admin/users/$studentId': typeof TenantAdminUsersStudentIdIndexRoute
+  '/$tenant/student/courses/$courseId': typeof TenantStudentCoursesCourseIdIndexRoute
   '/$tenant/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
 }
 export interface FileRoutesById {
@@ -290,12 +382,17 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$tenant': typeof TenantRouteWithChildren
   '/login': typeof LoginRoute
-  '/super-admin': typeof SuperAdminRoute
+  '/super-admin': typeof SuperAdminRouteWithChildren
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/admin': typeof TenantAdminRouteWithChildren
   '/$tenant/login': typeof TenantLoginRoute
   '/$tenant/student': typeof TenantStudentRouteWithChildren
+  '/super-admin/identities': typeof SuperAdminIdentitiesRoute
+  '/super-admin/settings': typeof SuperAdminSettingsRoute
+  '/super-admin/telemetry': typeof SuperAdminTelemetryRoute
+  '/super-admin/tenants': typeof SuperAdminTenantsRoute
   '/$tenant/': typeof TenantIndexRoute
+  '/super-admin/': typeof SuperAdminIndexRoute
   '/$tenant/admin/analytics': typeof TenantAdminAnalyticsRoute
   '/$tenant/admin/certificates': typeof TenantAdminCertificatesRoute
   '/$tenant/admin/courses': typeof TenantAdminCoursesRouteWithChildren
@@ -315,10 +412,17 @@ export interface FileRoutesById {
   '/$tenant/admin/users/$studentId': typeof TenantAdminUsersStudentIdRouteWithChildren
   '/$tenant/admin/users/new': typeof TenantAdminUsersNewRoute
   '/$tenant/student/courses/$courseId': typeof TenantStudentCoursesCourseIdRouteWithChildren
+  '/$tenant/admin/courses/': typeof TenantAdminCoursesIndexRoute
+  '/$tenant/admin/quizzes/': typeof TenantAdminQuizzesIndexRoute
+  '/$tenant/admin/users/': typeof TenantAdminUsersIndexRoute
+  '/$tenant/student/courses/': typeof TenantStudentCoursesIndexRoute
   '/$tenant/admin/courses/$courseId/edit': typeof TenantAdminCoursesCourseIdEditRoute
   '/$tenant/admin/quizzes/$quizId/questions': typeof TenantAdminQuizzesQuizIdQuestionsRoute
   '/$tenant/admin/users/$studentId/progress': typeof TenantAdminUsersStudentIdProgressRoute
   '/$tenant/student/courses/$courseId/learn': typeof TenantStudentCoursesCourseIdLearnRoute
+  '/$tenant/admin/quizzes/$quizId/': typeof TenantAdminQuizzesQuizIdIndexRoute
+  '/$tenant/admin/users/$studentId/': typeof TenantAdminUsersStudentIdIndexRoute
+  '/$tenant/student/courses/$courseId/': typeof TenantStudentCoursesCourseIdIndexRoute
   '/$tenant/student/courses/$courseId/quiz/$quizId': typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
 }
 export interface FileRouteTypes {
@@ -332,7 +436,12 @@ export interface FileRouteTypes {
     | '/$tenant/admin'
     | '/$tenant/login'
     | '/$tenant/student'
+    | '/super-admin/identities'
+    | '/super-admin/settings'
+    | '/super-admin/telemetry'
+    | '/super-admin/tenants'
     | '/$tenant/'
+    | '/super-admin/'
     | '/$tenant/admin/analytics'
     | '/$tenant/admin/certificates'
     | '/$tenant/admin/courses'
@@ -352,42 +461,53 @@ export interface FileRouteTypes {
     | '/$tenant/admin/users/$studentId'
     | '/$tenant/admin/users/new'
     | '/$tenant/student/courses/$courseId'
+    | '/$tenant/admin/courses/'
+    | '/$tenant/admin/quizzes/'
+    | '/$tenant/admin/users/'
+    | '/$tenant/student/courses/'
     | '/$tenant/admin/courses/$courseId/edit'
     | '/$tenant/admin/quizzes/$quizId/questions'
     | '/$tenant/admin/users/$studentId/progress'
     | '/$tenant/student/courses/$courseId/learn'
+    | '/$tenant/admin/quizzes/$quizId/'
+    | '/$tenant/admin/users/$studentId/'
+    | '/$tenant/student/courses/$courseId/'
     | '/$tenant/student/courses/$courseId/quiz/$quizId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
-    | '/super-admin'
     | '/verify-certificate'
     | '/$tenant/login'
+    | '/super-admin/identities'
+    | '/super-admin/settings'
+    | '/super-admin/telemetry'
+    | '/super-admin/tenants'
     | '/$tenant'
+    | '/super-admin'
     | '/$tenant/admin/analytics'
     | '/$tenant/admin/certificates'
-    | '/$tenant/admin/courses'
     | '/$tenant/admin/live-sessions'
     | '/$tenant/admin/profile'
-    | '/$tenant/admin/quizzes'
     | '/$tenant/admin/security'
     | '/$tenant/admin/settings'
-    | '/$tenant/admin/users'
-    | '/$tenant/student/courses'
     | '/$tenant/student/live-sessions'
     | '/$tenant/student/profile'
     | '/$tenant/student/progress'
     | '/$tenant/admin'
     | '/$tenant/student'
-    | '/$tenant/admin/quizzes/$quizId'
-    | '/$tenant/admin/users/$studentId'
     | '/$tenant/admin/users/new'
-    | '/$tenant/student/courses/$courseId'
+    | '/$tenant/admin/courses'
+    | '/$tenant/admin/quizzes'
+    | '/$tenant/admin/users'
+    | '/$tenant/student/courses'
     | '/$tenant/admin/courses/$courseId/edit'
     | '/$tenant/admin/quizzes/$quizId/questions'
     | '/$tenant/admin/users/$studentId/progress'
     | '/$tenant/student/courses/$courseId/learn'
+    | '/$tenant/admin/quizzes/$quizId'
+    | '/$tenant/admin/users/$studentId'
+    | '/$tenant/student/courses/$courseId'
     | '/$tenant/student/courses/$courseId/quiz/$quizId'
   id:
     | '__root__'
@@ -399,7 +519,12 @@ export interface FileRouteTypes {
     | '/$tenant/admin'
     | '/$tenant/login'
     | '/$tenant/student'
+    | '/super-admin/identities'
+    | '/super-admin/settings'
+    | '/super-admin/telemetry'
+    | '/super-admin/tenants'
     | '/$tenant/'
+    | '/super-admin/'
     | '/$tenant/admin/analytics'
     | '/$tenant/admin/certificates'
     | '/$tenant/admin/courses'
@@ -419,10 +544,17 @@ export interface FileRouteTypes {
     | '/$tenant/admin/users/$studentId'
     | '/$tenant/admin/users/new'
     | '/$tenant/student/courses/$courseId'
+    | '/$tenant/admin/courses/'
+    | '/$tenant/admin/quizzes/'
+    | '/$tenant/admin/users/'
+    | '/$tenant/student/courses/'
     | '/$tenant/admin/courses/$courseId/edit'
     | '/$tenant/admin/quizzes/$quizId/questions'
     | '/$tenant/admin/users/$studentId/progress'
     | '/$tenant/student/courses/$courseId/learn'
+    | '/$tenant/admin/quizzes/$quizId/'
+    | '/$tenant/admin/users/$studentId/'
+    | '/$tenant/student/courses/$courseId/'
     | '/$tenant/student/courses/$courseId/quiz/$quizId'
   fileRoutesById: FileRoutesById
 }
@@ -430,7 +562,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   TenantRoute: typeof TenantRouteWithChildren
   LoginRoute: typeof LoginRoute
-  SuperAdminRoute: typeof SuperAdminRoute
+  SuperAdminRoute: typeof SuperAdminRouteWithChildren
   VerifyCertificateRoute: typeof VerifyCertificateRoute
 }
 
@@ -471,12 +603,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/super-admin/': {
+      id: '/super-admin/'
+      path: '/'
+      fullPath: '/super-admin/'
+      preLoaderRoute: typeof SuperAdminIndexRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
     '/$tenant/': {
       id: '/$tenant/'
       path: '/'
       fullPath: '/$tenant/'
       preLoaderRoute: typeof TenantIndexRouteImport
       parentRoute: typeof TenantRoute
+    }
+    '/super-admin/tenants': {
+      id: '/super-admin/tenants'
+      path: '/tenants'
+      fullPath: '/super-admin/tenants'
+      preLoaderRoute: typeof SuperAdminTenantsRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/telemetry': {
+      id: '/super-admin/telemetry'
+      path: '/telemetry'
+      fullPath: '/super-admin/telemetry'
+      preLoaderRoute: typeof SuperAdminTelemetryRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/settings': {
+      id: '/super-admin/settings'
+      path: '/settings'
+      fullPath: '/super-admin/settings'
+      preLoaderRoute: typeof SuperAdminSettingsRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/identities': {
+      id: '/super-admin/identities'
+      path: '/identities'
+      fullPath: '/super-admin/identities'
+      preLoaderRoute: typeof SuperAdminIdentitiesRouteImport
+      parentRoute: typeof SuperAdminRoute
     }
     '/$tenant/student': {
       id: '/$tenant/student'
@@ -604,6 +771,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TenantAdminAnalyticsRouteImport
       parentRoute: typeof TenantAdminRoute
     }
+    '/$tenant/student/courses/': {
+      id: '/$tenant/student/courses/'
+      path: '/'
+      fullPath: '/$tenant/student/courses/'
+      preLoaderRoute: typeof TenantStudentCoursesIndexRouteImport
+      parentRoute: typeof TenantStudentCoursesRoute
+    }
+    '/$tenant/admin/users/': {
+      id: '/$tenant/admin/users/'
+      path: '/'
+      fullPath: '/$tenant/admin/users/'
+      preLoaderRoute: typeof TenantAdminUsersIndexRouteImport
+      parentRoute: typeof TenantAdminUsersRoute
+    }
+    '/$tenant/admin/quizzes/': {
+      id: '/$tenant/admin/quizzes/'
+      path: '/'
+      fullPath: '/$tenant/admin/quizzes/'
+      preLoaderRoute: typeof TenantAdminQuizzesIndexRouteImport
+      parentRoute: typeof TenantAdminQuizzesRoute
+    }
+    '/$tenant/admin/courses/': {
+      id: '/$tenant/admin/courses/'
+      path: '/'
+      fullPath: '/$tenant/admin/courses/'
+      preLoaderRoute: typeof TenantAdminCoursesIndexRouteImport
+      parentRoute: typeof TenantAdminCoursesRoute
+    }
     '/$tenant/student/courses/$courseId': {
       id: '/$tenant/student/courses/$courseId'
       path: '/$courseId'
@@ -631,6 +826,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/$tenant/admin/quizzes/$quizId'
       preLoaderRoute: typeof TenantAdminQuizzesQuizIdRouteImport
       parentRoute: typeof TenantAdminQuizzesRoute
+    }
+    '/$tenant/student/courses/$courseId/': {
+      id: '/$tenant/student/courses/$courseId/'
+      path: '/'
+      fullPath: '/$tenant/student/courses/$courseId/'
+      preLoaderRoute: typeof TenantStudentCoursesCourseIdIndexRouteImport
+      parentRoute: typeof TenantStudentCoursesCourseIdRoute
+    }
+    '/$tenant/admin/users/$studentId/': {
+      id: '/$tenant/admin/users/$studentId/'
+      path: '/'
+      fullPath: '/$tenant/admin/users/$studentId/'
+      preLoaderRoute: typeof TenantAdminUsersStudentIdIndexRouteImport
+      parentRoute: typeof TenantAdminUsersStudentIdRoute
+    }
+    '/$tenant/admin/quizzes/$quizId/': {
+      id: '/$tenant/admin/quizzes/$quizId/'
+      path: '/'
+      fullPath: '/$tenant/admin/quizzes/$quizId/'
+      preLoaderRoute: typeof TenantAdminQuizzesQuizIdIndexRouteImport
+      parentRoute: typeof TenantAdminQuizzesQuizIdRoute
     }
     '/$tenant/student/courses/$courseId/learn': {
       id: '/$tenant/student/courses/$courseId/learn'
@@ -671,10 +887,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface TenantAdminCoursesRouteChildren {
+  TenantAdminCoursesIndexRoute: typeof TenantAdminCoursesIndexRoute
   TenantAdminCoursesCourseIdEditRoute: typeof TenantAdminCoursesCourseIdEditRoute
 }
 
 const TenantAdminCoursesRouteChildren: TenantAdminCoursesRouteChildren = {
+  TenantAdminCoursesIndexRoute: TenantAdminCoursesIndexRoute,
   TenantAdminCoursesCourseIdEditRoute: TenantAdminCoursesCourseIdEditRoute,
 }
 
@@ -683,12 +901,14 @@ const TenantAdminCoursesRouteWithChildren =
 
 interface TenantAdminQuizzesQuizIdRouteChildren {
   TenantAdminQuizzesQuizIdQuestionsRoute: typeof TenantAdminQuizzesQuizIdQuestionsRoute
+  TenantAdminQuizzesQuizIdIndexRoute: typeof TenantAdminQuizzesQuizIdIndexRoute
 }
 
 const TenantAdminQuizzesQuizIdRouteChildren: TenantAdminQuizzesQuizIdRouteChildren =
   {
     TenantAdminQuizzesQuizIdQuestionsRoute:
       TenantAdminQuizzesQuizIdQuestionsRoute,
+    TenantAdminQuizzesQuizIdIndexRoute: TenantAdminQuizzesQuizIdIndexRoute,
   }
 
 const TenantAdminQuizzesQuizIdRouteWithChildren =
@@ -698,10 +918,12 @@ const TenantAdminQuizzesQuizIdRouteWithChildren =
 
 interface TenantAdminQuizzesRouteChildren {
   TenantAdminQuizzesQuizIdRoute: typeof TenantAdminQuizzesQuizIdRouteWithChildren
+  TenantAdminQuizzesIndexRoute: typeof TenantAdminQuizzesIndexRoute
 }
 
 const TenantAdminQuizzesRouteChildren: TenantAdminQuizzesRouteChildren = {
   TenantAdminQuizzesQuizIdRoute: TenantAdminQuizzesQuizIdRouteWithChildren,
+  TenantAdminQuizzesIndexRoute: TenantAdminQuizzesIndexRoute,
 }
 
 const TenantAdminQuizzesRouteWithChildren =
@@ -709,12 +931,14 @@ const TenantAdminQuizzesRouteWithChildren =
 
 interface TenantAdminUsersStudentIdRouteChildren {
   TenantAdminUsersStudentIdProgressRoute: typeof TenantAdminUsersStudentIdProgressRoute
+  TenantAdminUsersStudentIdIndexRoute: typeof TenantAdminUsersStudentIdIndexRoute
 }
 
 const TenantAdminUsersStudentIdRouteChildren: TenantAdminUsersStudentIdRouteChildren =
   {
     TenantAdminUsersStudentIdProgressRoute:
       TenantAdminUsersStudentIdProgressRoute,
+    TenantAdminUsersStudentIdIndexRoute: TenantAdminUsersStudentIdIndexRoute,
   }
 
 const TenantAdminUsersStudentIdRouteWithChildren =
@@ -725,11 +949,13 @@ const TenantAdminUsersStudentIdRouteWithChildren =
 interface TenantAdminUsersRouteChildren {
   TenantAdminUsersStudentIdRoute: typeof TenantAdminUsersStudentIdRouteWithChildren
   TenantAdminUsersNewRoute: typeof TenantAdminUsersNewRoute
+  TenantAdminUsersIndexRoute: typeof TenantAdminUsersIndexRoute
 }
 
 const TenantAdminUsersRouteChildren: TenantAdminUsersRouteChildren = {
   TenantAdminUsersStudentIdRoute: TenantAdminUsersStudentIdRouteWithChildren,
   TenantAdminUsersNewRoute: TenantAdminUsersNewRoute,
+  TenantAdminUsersIndexRoute: TenantAdminUsersIndexRoute,
 }
 
 const TenantAdminUsersRouteWithChildren =
@@ -767,6 +993,7 @@ const TenantAdminRouteWithChildren = TenantAdminRoute._addFileChildren(
 
 interface TenantStudentCoursesCourseIdRouteChildren {
   TenantStudentCoursesCourseIdLearnRoute: typeof TenantStudentCoursesCourseIdLearnRoute
+  TenantStudentCoursesCourseIdIndexRoute: typeof TenantStudentCoursesCourseIdIndexRoute
   TenantStudentCoursesCourseIdQuizQuizIdRoute: typeof TenantStudentCoursesCourseIdQuizQuizIdRoute
 }
 
@@ -774,6 +1001,8 @@ const TenantStudentCoursesCourseIdRouteChildren: TenantStudentCoursesCourseIdRou
   {
     TenantStudentCoursesCourseIdLearnRoute:
       TenantStudentCoursesCourseIdLearnRoute,
+    TenantStudentCoursesCourseIdIndexRoute:
+      TenantStudentCoursesCourseIdIndexRoute,
     TenantStudentCoursesCourseIdQuizQuizIdRoute:
       TenantStudentCoursesCourseIdQuizQuizIdRoute,
   }
@@ -785,11 +1014,13 @@ const TenantStudentCoursesCourseIdRouteWithChildren =
 
 interface TenantStudentCoursesRouteChildren {
   TenantStudentCoursesCourseIdRoute: typeof TenantStudentCoursesCourseIdRouteWithChildren
+  TenantStudentCoursesIndexRoute: typeof TenantStudentCoursesIndexRoute
 }
 
 const TenantStudentCoursesRouteChildren: TenantStudentCoursesRouteChildren = {
   TenantStudentCoursesCourseIdRoute:
     TenantStudentCoursesCourseIdRouteWithChildren,
+  TenantStudentCoursesIndexRoute: TenantStudentCoursesIndexRoute,
 }
 
 const TenantStudentCoursesRouteWithChildren =
@@ -832,11 +1063,31 @@ const TenantRouteChildren: TenantRouteChildren = {
 const TenantRouteWithChildren =
   TenantRoute._addFileChildren(TenantRouteChildren)
 
+interface SuperAdminRouteChildren {
+  SuperAdminIdentitiesRoute: typeof SuperAdminIdentitiesRoute
+  SuperAdminSettingsRoute: typeof SuperAdminSettingsRoute
+  SuperAdminTelemetryRoute: typeof SuperAdminTelemetryRoute
+  SuperAdminTenantsRoute: typeof SuperAdminTenantsRoute
+  SuperAdminIndexRoute: typeof SuperAdminIndexRoute
+}
+
+const SuperAdminRouteChildren: SuperAdminRouteChildren = {
+  SuperAdminIdentitiesRoute: SuperAdminIdentitiesRoute,
+  SuperAdminSettingsRoute: SuperAdminSettingsRoute,
+  SuperAdminTelemetryRoute: SuperAdminTelemetryRoute,
+  SuperAdminTenantsRoute: SuperAdminTenantsRoute,
+  SuperAdminIndexRoute: SuperAdminIndexRoute,
+}
+
+const SuperAdminRouteWithChildren = SuperAdminRoute._addFileChildren(
+  SuperAdminRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   TenantRoute: TenantRouteWithChildren,
   LoginRoute: LoginRoute,
-  SuperAdminRoute: SuperAdminRoute,
+  SuperAdminRoute: SuperAdminRouteWithChildren,
   VerifyCertificateRoute: VerifyCertificateRoute,
 }
 export const routeTree = rootRouteImport

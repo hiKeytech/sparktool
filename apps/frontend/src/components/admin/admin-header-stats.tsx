@@ -38,7 +38,7 @@ export function AdminHeaderStats({
       color: "orange",
       icon: IconTrendingUp,
       label: "Completion Rate",
-      value: `${(completionRate * 100).toFixed(1)}%`,
+      value: `${completionRate.toFixed(1)}%`,
     },
     {
       color: "violet",

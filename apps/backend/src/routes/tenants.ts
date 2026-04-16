@@ -1,11 +1,7 @@
 import { Router } from "express";
 import { tenantRepository } from "../repositories/tenant-repository.js";
 
-import {
-  assertAdminAccess,
-  getActorFromSession,
-  httpError,
-} from "../lib/request-helpers.js";
+import { getActorFromSession, httpError } from "../lib/request-helpers.js";
 import { requireSession } from "../middleware/session.js";
 
 export const tenantsRouter = Router();
@@ -55,7 +51,9 @@ tenantsRouter.patch("/:tenantId", requireSession, async (request, response) => {
   const actor = await getActorFromSession(request);
   requireSuperAdmin(actor);
 
-  const existing = await tenantRepository.getById(request.params.tenantId);
+  const existing = await tenantRepository.getById(
+    request.params.tenantId as string,
+  );
   if (!existing) throw httpError(404, "Tenant not found.");
 
   const nextTenant = request.body;
@@ -68,7 +66,7 @@ tenantsRouter.patch("/:tenantId", requireSession, async (request, response) => {
   }
 
   const updated = await tenantRepository.update(
-    request.params.tenantId,
+    request.params.tenantId as string,
     nextTenant,
   );
   if (!updated) throw httpError(500, "Failed to update tenant.");

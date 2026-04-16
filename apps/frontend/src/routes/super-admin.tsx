@@ -1,7 +1,8 @@
-import { LoadingOverlay } from "@mantine/core";
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { SuperAdminSidebar } from "@/components/layout/super-admin-sidebar";
 
-import { SuperAdminDashboard } from "@/pages/super-admin/super-admin-dashboard";
+import { LoadingOverlay } from "@mantine/core";
+import { createFileRoute, Navigate, Outlet } from "@tanstack/react-router";
+
 import { useResolvedAuthState } from "@/providers/auth-provider";
 import { resolveRoleHomeTarget } from "@/utils/tenant-paths";
 
@@ -29,5 +30,12 @@ function SuperAdminRoute() {
     );
   }
 
-  return <SuperAdminDashboard />;
+  return (
+    <div className="flex bg-stone-50 min-h-screen">
+      <SuperAdminSidebar />
+      <main className="flex-1 w-full lg:ml-64 overflow-x-hidden">
+        <Outlet />
+      </main>
+    </div>
+  );
 }

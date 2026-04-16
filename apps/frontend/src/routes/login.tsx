@@ -1,12 +1,15 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
 import { useLayoutEffect } from "react";
-
 import { getPlatformConfig } from "@/actions/platform";
-import { PlatformLoginPage } from "@/pages/public/platform-login-page";
 import { useResolvedAuthState } from "@/providers/auth-provider";
 import type { PlatformConfig } from "@/schemas/platform-config";
 import { applyBrandingTheme } from "@/utils/branding-theme";
 import { resolveRoleHomeTarget } from "@/utils/tenant-paths";
+import { LoginShell } from "@/components/auth/login-shell";
+
+interface PlatformLoginPageProps {
+  platform: PlatformConfig;
+}
 
 export const Route = createFileRoute("/login")({
   beforeLoad: async () => {
@@ -42,4 +45,27 @@ function PlatformLoginRoute() {
   }
 
   return <PlatformLoginPage platform={platform} />;
+}
+
+interface PlatformLoginPageProps {
+  platform: PlatformConfig;
+}
+
+function PlatformLoginPage({ platform }: PlatformLoginPageProps) {
+  const branding = platform.branding;
+  const loginPage = branding.loginPage;
+
+  return (
+    <LoginShell
+      auth={platform.auth}
+      features={loginPage.features}
+      footnote={loginPage.footnote}
+      formDescription={loginPage.formDescription}
+      formTitle={loginPage.formTitle}
+      heroHeading={loginPage.heading}
+      heroSubheading={loginPage.subheading}
+      logoUrl={branding.logoUrl}
+      portalName={branding.portalName}
+    />
+  );
 }

@@ -30,6 +30,23 @@ function parseStoredStudentProgress(
   return result.data;
 }
 
+function dedupeProgress<T extends StoredStudentProgress>(
+  progressList: T[],
+  getKey: (progress: T) => string,
+): T[] {
+  const seen = new Set<string>();
+
+  return progressList.filter((progress) => {
+    const key = getKey(progress);
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+}
+
 async function getStudentProgressCollection(): Promise<
   Collection<StudentProgressDocument>
 > {
@@ -61,6 +78,24 @@ export const studentProgressRepository = {
     await progressCollection.deleteMany({ courseId });
   },
 
+  async deleteByStudentAndCourse(input: {
+    courseId: string;
+    studentId: string;
+    tenantId?: string;
+  }) {
+    const progressCollection = await getStudentProgressCollection();
+    const query: Filter<StudentProgressDocument> = {
+      courseId: input.courseId,
+      studentId: input.studentId,
+    };
+
+    if (input.tenantId) {
+      query.tenantId = input.tenantId;
+    }
+
+    await progressCollection.deleteMany(query);
+  },
+
   async getById(progressId: string) {
     const progressCollection = await getStudentProgressCollection();
     const progress = await progressCollection.findOne({ _id: progressId });
@@ -83,20 +118,35 @@ export const studentProgressRepository = {
       query.tenantId = input.tenantId;
     }
 
-    const progress = await progressCollection.findOne(query);
+    const sort: Sort = { enrolledAt: -1, lastAccessedAt: -1 };
+    const progressDocuments = await progressCollection
+      .find(query)
+      .sort(sort)
+      .toArray();
 
-    return parseStoredStudentProgress(progress);
+    for (const progress of progressDocuments) {
+      const parsed = parseStoredStudentProgress(progress);
+      if (parsed) {
+        return parsed;
+      }
+    }
+
+    return null;
   },
 
   async listByCourse(courseId: string) {
     const progressCollection = await getStudentProgressCollection();
-    const sort: Sort = { enrolledAt: -1 };
+    const sort: Sort = { enrolledAt: -1, lastAccessedAt: -1 };
 
-    return (await progressCollection.find({ courseId }).sort(sort).toArray())
+    const parsedProgress = (
+      await progressCollection.find({ courseId }).sort(sort).toArray()
+    )
       .map((document) => parseStoredStudentProgress(document))
       .filter(
         (progress): progress is StoredStudentProgress => progress !== null,
       );
+
+    return dedupeProgress(parsedProgress, (progress) => progress.studentId);
   },
 
   async listByStudent(studentId: string, tenantId?: string) {
@@ -107,13 +157,17 @@ export const studentProgressRepository = {
       query.tenantId = tenantId;
     }
 
-    const sort: Sort = { enrolledAt: -1 };
+    const sort: Sort = { enrolledAt: -1, lastAccessedAt: -1 };
 
-    return (await progressCollection.find(query).sort(sort).toArray())
+    const parsedProgress = (
+      await progressCollection.find(query).sort(sort).toArray()
+    )
       .map((document) => parseStoredStudentProgress(document))
       .filter(
         (progress): progress is StoredStudentProgress => progress !== null,
       );
+
+    return dedupeProgress(parsedProgress, (progress) => progress.courseId);
   },
 
   async listByTenant(tenantId: string, options?: { enrolledAfter?: number }) {
@@ -124,13 +178,20 @@ export const studentProgressRepository = {
       query.enrolledAt = { $gte: options.enrolledAfter };
     }
 
-    const sort: Sort = { enrolledAt: -1 };
+    const sort: Sort = { enrolledAt: -1, lastAccessedAt: -1 };
 
-    return (await progressCollection.find(query).sort(sort).toArray())
+    const parsedProgress = (
+      await progressCollection.find(query).sort(sort).toArray()
+    )
       .map((document) => parseStoredStudentProgress(document))
       .filter(
         (progress): progress is StoredStudentProgress => progress !== null,
       );
+
+    return dedupeProgress(
+      parsedProgress,
+      (progress) => `${progress.studentId}:${progress.courseId}`,
+    );
   },
 
   async update(progressId: string, progressData: Partial<StudentProgress>) {

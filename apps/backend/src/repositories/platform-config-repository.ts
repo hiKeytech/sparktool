@@ -63,4 +63,22 @@ export const platformConfigRepository = {
 
     return this.get();
   },
+
+  async update(data: PlatformConfig) {
+    const collection = await getPlatformConfigCollection();
+
+    await collection.updateOne(
+      { _id: PLATFORM_CONFIG_ID },
+      {
+        $set: {
+          ...data,
+          _id: PLATFORM_CONFIG_ID,
+          id: PLATFORM_CONFIG_ID,
+        },
+      },
+      { upsert: true },
+    );
+
+    return this.get();
+  },
 };

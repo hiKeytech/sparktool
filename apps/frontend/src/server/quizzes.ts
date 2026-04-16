@@ -41,11 +41,10 @@ const listQuizAttemptsInputSchema = z.object({
 
 const updateQuizAttemptInputSchema = z.object({
   attemptData: z.object({
-    answers: z.array(z.any()).optional(),
     completedAt: z.number().optional(),
-    passed: z.boolean().optional(),
-    percentage: z.number().optional(),
-    score: z.number().optional(),
+    rawAnswers: z
+      .record(z.string(), z.union([z.number(), z.string()]))
+      .optional(),
     timeSpent: z.number().optional(),
   }),
   attemptId: z.string().min(1),

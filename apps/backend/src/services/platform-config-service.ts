@@ -27,4 +27,25 @@ export const PlatformConfigService = {
       return null;
     }
   },
+
+  updatePlatformConfig: async (
+    nextConfig: PlatformConfig,
+  ): Promise<PlatformConfig | null> => {
+    try {
+      const parseResult = platformConfigSchema.safeParse(nextConfig);
+
+      if (!parseResult.success) {
+        console.error("Invalid platform config update:", parseResult.error);
+        return null;
+      }
+
+      return platformConfigRepository.update({
+        ...parseResult.data,
+        id: "platform",
+      });
+    } catch (error) {
+      console.error("Error updating platform config:", error);
+      return null;
+    }
+  },
 };

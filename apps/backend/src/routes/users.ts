@@ -119,7 +119,7 @@ usersRouter.get("/:userId", requireSession, async (request, response) => {
   const actor = await getActorFromSession(request);
   if (!actor) throw httpError(401, "Unauthorized");
 
-  const user = await userRepository.getById(request.params.userId);
+  const user = await userRepository.getById((request.params.userId as string));
   if (!user) return response.json(null);
 
   const tenantId = request.session.activeTenantId;
@@ -141,7 +141,7 @@ usersRouter.patch("/:userId", requireSession, async (request, response) => {
   const actor = await getActorFromSession(request);
   if (!actor) throw httpError(401, "Unauthorized");
 
-  const targetUser = await userRepository.getById(request.params.userId);
+  const targetUser = await userRepository.getById((request.params.userId as string));
   if (!targetUser) throw httpError(404, "User not found.");
 
   const tenantId = request.session.activeTenantId;
@@ -156,7 +156,7 @@ usersRouter.patch("/:userId", requireSession, async (request, response) => {
   }
 
   const updated = await userRepository.update(
-    request.params.userId,
+    (request.params.userId as string),
     request.body,
   );
   if (!updated) throw httpError(500, "Failed to update user.");
@@ -172,7 +172,7 @@ usersRouter.post(
     const actor = await getActorFromSession(request);
     if (!actor) throw httpError(401, "Unauthorized");
 
-    const targetUser = await userRepository.getById(request.params.userId);
+    const targetUser = await userRepository.getById((request.params.userId as string));
     if (!targetUser) throw httpError(404, "User not found.");
 
     const tenantId = request.session.activeTenantId;
@@ -186,7 +186,7 @@ usersRouter.post(
       );
     }
 
-    const updated = await userRepository.deactivate(request.params.userId);
+    const updated = await userRepository.deactivate((request.params.userId as string));
     if (!updated) throw httpError(500, "Failed to deactivate user.");
 
     response.json({ id: updated.id });
@@ -198,7 +198,7 @@ usersRouter.delete("/:userId", requireSession, async (request, response) => {
   const actor = await getActorFromSession(request);
   if (!actor) throw httpError(401, "Unauthorized");
 
-  const targetUser = await userRepository.getById(request.params.userId);
+  const targetUser = await userRepository.getById((request.params.userId as string));
   if (!targetUser) throw httpError(404, "User not found.");
 
   const tenantId = request.session.activeTenantId;
@@ -212,7 +212,7 @@ usersRouter.delete("/:userId", requireSession, async (request, response) => {
     );
   }
 
-  const updated = await userRepository.deactivate(request.params.userId);
+  const updated = await userRepository.deactivate((request.params.userId as string));
   if (!updated) throw httpError(500, "Failed to remove user access.");
 
   response.json({ success: true, userId: updated.id });

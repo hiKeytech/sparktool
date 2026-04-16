@@ -1,3 +1,5 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useAuthContext } from "@/providers/auth-provider";
 import {
   Button,
   Center,
@@ -18,8 +20,6 @@ import {
   IconTarget,
   IconUsers,
 } from "@tabler/icons-react";
-import { useNavigate } from "@tanstack/react-router";
-
 import {
   openCreateQuizModal,
   openDeleteQuizModal,
@@ -31,21 +31,51 @@ import {
   createQuizTableFilters,
   type QuizTableActions,
 } from "@/components/shared/data-table/quiz-table-config";
-import { useListCourses, useQuizzes } from "@/services/hooks";
-import type { TenantUserPageProps } from "@/types/route-page-props";
+import { useListCourses, useQuizAttempts, useQuizzes } from "@/services/hooks";
+import type { Tenant } from "@/schemas/tenant-contract";
 
-export function QuizManagement({ tenant, user }: TenantUserPageProps) {
+export const Route = createFileRoute("/$tenant/admin/quizzes/")({
+  component: QuizManagement,
+});
+
+function QuizManagement() {
+  const { tenant } = Route.useRouteContext() as { tenant: Tenant };
+  const { user } = useAuthContext();
   const navigate = useNavigate();
 
   // Fetch data using TanStack Query
   const { data: quizzesData = [], isLoading: quizzesLoading } = useQuizzes();
-  const { data: coursesData = [] } = useListCourses(tenant?.id);
+  const { data: coursesData = [] } = useListCourses(tenant.id);
+  const { data: quizAttempts = [] } = useQuizAttempts({});
 
   const quizzes = quizzesData;
   const courses = coursesData.map((course) => ({
     id: course.id || "",
     title: course.title || "",
   }));
+  const completedAttempts = quizAttempts.filter(
+    (attempt) => typeof attempt.completedAt === "number",
+  );
+  const averagePassRate = completedAttempts.length
+    ? Math.round(
+        (completedAttempts.filter((attempt) => attempt.passed).length /
+          completedAttempts.length) *
+          100,
+      )
+    : null;
+  const averageDurationMinutes = completedAttempts.length
+    ? Math.max(
+        1,
+        Math.round(
+          completedAttempts.reduce(
+            (total, attempt) => total + (attempt.timeSpent || 0),
+            0,
+          ) /
+            completedAttempts.length /
+            60,
+        ),
+      )
+    : null;
 
   // Table handlers
   const tableHandlers: QuizTableActions = {
@@ -62,7 +92,7 @@ export function QuizManagement({ tenant, user }: TenantUserPageProps) {
       }
     },
     onManageQuestions: (quizId: string) => {
-      if (!tenant?.id) return;
+      if (!tenant.id) return;
 
       navigate({
         to: "/$tenant/admin/quizzes/$quizId/questions",
@@ -70,7 +100,7 @@ export function QuizManagement({ tenant, user }: TenantUserPageProps) {
       });
     },
     onView: (quizId: string) => {
-      if (!tenant?.id) return;
+      if (!tenant.id) return;
 
       navigate({
         to: "/$tenant/admin/quizzes/$quizId",
@@ -165,7 +195,9 @@ export function QuizManagement({ tenant, user }: TenantUserPageProps) {
                     Avg Pass Rate
                   </Text>
                   <Text className="text-orange-800" fw={600} size="lg">
-                    85%
+                    {averagePassRate === null
+                      ? "No data"
+                      : `${averagePassRate}%`}
                   </Text>
                 </div>
               </Group>
@@ -182,7 +214,9 @@ export function QuizManagement({ tenant, user }: TenantUserPageProps) {
                     Avg Duration
                   </Text>
                   <Text className="text-purple-800" fw={600} size="lg">
-                    25 min
+                    {averageDurationMinutes === null
+                      ? "No data"
+                      : `${averageDurationMinutes} min`}
                   </Text>
                 </div>
               </Group>

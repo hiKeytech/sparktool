@@ -79,7 +79,11 @@ export const quizAttemptRepository = {
 
   async nextAttemptNumber(input: { quizId: string; studentId: string }) {
     const attempts = await this.list(input);
-    return attempts.length + 1;
+    return (
+      attempts.reduce((highestAttemptNumber, attempt) => {
+        return Math.max(highestAttemptNumber, attempt.attemptNumber ?? 0);
+      }, 0) + 1
+    );
   },
 
   async update(attemptId: string, updates: Partial<QuizAttempt>) {

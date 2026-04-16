@@ -1,5 +1,6 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useAuthContext } from "@/providers/auth-provider";
 import type { User } from "@/types";
-
 import {
   Alert,
   Button,
@@ -15,13 +16,12 @@ import {
 import { modals } from "@mantine/modals";
 import { notifications } from "@mantine/notifications";
 import {
+  IconCheck,
   IconDownload,
   IconExclamationCircle,
   IconPlus,
+  IconX,
 } from "@tabler/icons-react";
-import { IconCheck, IconX } from "@tabler/icons-react";
-import { useNavigate } from "@tanstack/react-router";
-
 import {
   openEditStudentModal,
   openResetUserPasswordModal,
@@ -30,21 +30,24 @@ import {
 import { DataTable } from "@/components/shared/data-table";
 import { createUserTableColumns } from "@/components/shared/data-table/user-table-config";
 import { useDeleteUser, useUpdateUser, useUsers } from "@/services/hooks";
-import type { TenantUserPageProps } from "@/types/route-page-props";
+import type { Tenant } from "@/schemas/tenant-contract";
 
-export function UserManagement({
-  tenant,
-  user: currentUser,
-}: TenantUserPageProps) {
+export const Route = createFileRoute("/$tenant/admin/users/")({
+  component: UserManagement,
+});
+
+function UserManagement() {
+  const { tenant } = Route.useRouteContext() as { tenant: Tenant };
+  const { user: currentUser } = useAuthContext();
   const navigate = useNavigate();
 
   // Real API calls with basic filters
-  const { data: users = [], error, isLoading } = useUsers(tenant?.id);
+  const { data: users = [], error, isLoading } = useUsers(tenant.id);
   const deleteUser = useDeleteUser();
   const updateUser = useUpdateUser();
 
   function handleViewUser(userId: string) {
-    if (!tenant?.id) return;
+    if (!tenant.id) return;
 
     navigate({
       params: { studentId: userId, tenant: tenant.id },
@@ -131,7 +134,7 @@ export function UserManagement({
   }
 
   function handleCreateUser() {
-    if (!tenant?.id) return;
+    if (!tenant.id) return;
 
     navigate({ params: { tenant: tenant.id }, to: "/$tenant/admin/users/new" });
   }

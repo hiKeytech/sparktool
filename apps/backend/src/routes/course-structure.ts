@@ -35,11 +35,10 @@ async function syncCourseSectionIds(courseId: string) {
 
 /** GET /api/courses/:courseId/sections */
 sectionsRouter.get("/", async (request, response) => {
+  const params = request.params as Record<string, string>;
   const tenant = await TenantService.getTenantByHost(request.hostname);
-  if (tenant) await getCourseForTenant(request.params.courseId, tenant.id);
-  response.json(
-    await courseSectionRepository.listByCourse(request.params.courseId),
-  );
+  if (tenant) await getCourseForTenant(params.courseId, tenant.id);
+  response.json(await courseSectionRepository.listByCourse(params.courseId));
 });
 
 /** POST /api/courses/:courseId/sections */
@@ -47,7 +46,7 @@ sectionsRouter.post("/", requireTenantSession, async (request, response) => {
   const actor = await getActorFromSession(request);
   assertAdminAccess(actor);
   await getCourseForTenant(
-    request.params.courseId,
+    request.params.courseId as string,
     request.session.activeTenantId!,
   );
 
@@ -61,8 +60,8 @@ sectionsRouter.post("/", requireTenantSession, async (request, response) => {
   });
   if (!created) throw httpError(500, "Failed to create section.");
 
-  await syncCourseSectionIds(request.params.courseId);
-  await courseRepository.update(request.params.courseId, {
+  await syncCourseSectionIds(request.params.courseId as string);
+  await courseRepository.update(request.params.courseId as string, {
     lastModifiedBy: actor.id,
   });
 
@@ -77,7 +76,7 @@ sectionsRouter.post(
     const actor = await getActorFromSession(request);
     assertAdminAccess(actor);
     await getCourseForTenant(
-      request.params.courseId,
+      request.params.courseId as string,
       request.session.activeTenantId!,
     );
 
@@ -88,7 +87,7 @@ sectionsRouter.post(
           courseSectionRepository.update(itemId, { order: newOrder }),
       ),
     );
-    await syncCourseSectionIds(request.params.courseId);
+    await syncCourseSectionIds(request.params.courseId as string);
     response.json({ success: true });
   },
 );
@@ -99,7 +98,7 @@ export const sectionByIdRouter = Router();
 sectionByIdRouter.get("/:sectionId", async (request, response) => {
   const [tenant, section] = await Promise.all([
     TenantService.getTenantByHost(request.hostname),
-    courseSectionRepository.getById(request.params.sectionId),
+    courseSectionRepository.getById(request.params.sectionId as string),
   ]);
   if (!section) return response.json(null);
   if (tenant) {
@@ -118,14 +117,14 @@ sectionByIdRouter.patch(
     assertAdminAccess(actor);
 
     const section = await courseSectionRepository.getById(
-      request.params.sectionId,
+      request.params.sectionId as string,
     );
     if (!section) throw httpError(404, "Section not found.");
     await getCourseForTenant(section.courseId, request.session.activeTenantId!);
 
     const { sectionData } = request.body;
     const updated = await courseSectionRepository.update(
-      request.params.sectionId,
+      request.params.sectionId as string,
       {
         ...(sectionData.updates ?? sectionData),
         updatedBy: actor.id,
@@ -146,7 +145,7 @@ sectionByIdRouter.delete(
     assertAdminAccess(actor);
 
     const section = await courseSectionRepository.getById(
-      request.params.sectionId,
+      request.params.sectionId as string,
     );
     if (!section) throw httpError(404, "Section not found.");
     await getCourseForTenant(section.courseId, request.session.activeTenantId!);
@@ -173,15 +172,14 @@ sectionByIdRouter.delete(
 
 /** GET /api/sections/:sectionId/lessons */
 lessonsRouter.get("/", async (request, response) => {
+  const params = request.params as Record<string, string>;
   const [tenant, section] = await Promise.all([
     TenantService.getTenantByHost(request.hostname),
-    courseSectionRepository.getById(request.params.sectionId),
+    courseSectionRepository.getById(params.sectionId),
   ]);
   if (!section) return response.json([]);
   if (tenant) await getCourseForTenant(section.courseId, tenant.id);
-  response.json(
-    await courseLessonRepository.listBySection(request.params.sectionId),
-  );
+  response.json(await courseLessonRepository.listBySection(params.sectionId));
 });
 
 /** POST /api/sections/:sectionId/lessons */
@@ -218,7 +216,7 @@ lessonsRouter.post(
     assertAdminAccess(actor);
 
     const section = await courseSectionRepository.getById(
-      request.params.sectionId,
+      request.params.sectionId as string,
     );
     if (!section) throw httpError(404, "Section not found.");
     await getCourseForTenant(section.courseId, request.session.activeTenantId!);
@@ -242,7 +240,7 @@ export const lessonByIdRouter = Router();
 lessonByIdRouter.get("/:lessonId", async (request, response) => {
   const [tenant, lesson] = await Promise.all([
     TenantService.getTenantByHost(request.hostname),
-    courseLessonRepository.getById(request.params.lessonId),
+    courseLessonRepository.getById(request.params.lessonId as string),
   ]);
   if (!lesson) return response.json(null);
   if (tenant) {
@@ -261,13 +259,13 @@ lessonByIdRouter.patch(
     assertAdminAccess(actor);
 
     const lesson = await courseLessonRepository.getById(
-      request.params.lessonId,
+      request.params.lessonId as string,
     );
     if (!lesson) throw httpError(404, "Lesson not found.");
     await getCourseForTenant(lesson.courseId, request.session.activeTenantId!);
 
     const updated = await courseLessonRepository.update(
-      request.params.lessonId,
+      request.params.lessonId as string,
       request.body.lessonData ?? request.body,
     );
     if (!updated) throw httpError(500, "Failed to update lesson.");
@@ -284,7 +282,7 @@ lessonByIdRouter.delete(
     assertAdminAccess(actor);
 
     const lesson = await courseLessonRepository.getById(
-      request.params.lessonId,
+      request.params.lessonId as string,
     );
     if (!lesson) throw httpError(404, "Lesson not found.");
     await getCourseForTenant(lesson.courseId, request.session.activeTenantId!);
@@ -306,9 +304,8 @@ lessonByIdRouter.delete(
 export const courseLessonsRouter = Router({ mergeParams: true });
 
 courseLessonsRouter.get("/", async (request, response) => {
+  const params = request.params as Record<string, string>;
   const tenant = await TenantService.getTenantByHost(request.hostname);
-  if (tenant) await getCourseForTenant(request.params.courseId, tenant.id);
-  response.json(
-    await courseLessonRepository.listByCourse(request.params.courseId),
-  );
+  if (tenant) await getCourseForTenant(params.courseId, tenant.id);
+  response.json(await courseLessonRepository.listByCourse(params.courseId));
 });

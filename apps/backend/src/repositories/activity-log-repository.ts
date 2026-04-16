@@ -49,7 +49,14 @@ export const activityLogRepository = {
 
   async list(variables: ListActivityLogVariables & { tenantId?: string }) {
     const activityLogs = await getActivityLogCollection();
-    const { queryFilter = [], queryOrder = [], tenantId, userId } = variables;
+    const {
+      queryFilter = [],
+      queryOrder = [],
+      tenantId,
+      userId,
+      courseId,
+      action,
+    } = variables;
     const query: Filter<ActivityLogDocument> = {};
 
     if (userId) {
@@ -58,6 +65,14 @@ export const activityLogRepository = {
 
     if (tenantId) {
       query.tenantId = tenantId;
+    }
+
+    if (courseId) {
+      query.courseId = courseId;
+    }
+
+    if (action) {
+      query.action = action as ActivityLogDocument["action"];
     }
 
     for (const filter of queryFilter) {

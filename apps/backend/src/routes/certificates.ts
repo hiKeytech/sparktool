@@ -17,10 +17,7 @@ export const certificatesRouter = Router();
 certificatesRouter.get("/", requireTenantSession, async (request, response) => {
   const actor = await getActorFromSession(request);
   assertAdminAccess(actor);
-  const { tenantId: queryTenantId, courseId } = request.query as Record<
-    string,
-    string
-  >;
+  const { tenantId: queryTenantId } = request.query as Record<string, string>;
   const tenantId = queryTenantId ?? request.session.activeTenantId!;
   response.json(await certificateRepository.list({ tenantId }));
 });
@@ -78,7 +75,7 @@ certificatesRouter.post(
     if (!created) throw httpError(500, "Failed to create certificate.");
 
     void activityLogRepository.create({
-      action: "certificate_issued",
+      action: "certificate_earned",
       courseId: certificateData.courseId,
       tenantId,
       userId: certificateData.studentId,
@@ -94,7 +91,7 @@ certificatesRouter.get(
   requireSession,
   async (request, response) => {
     const cert = await certificateRepository.getById(
-      request.params.certificateId,
+      request.params.certificateId as string,
     );
     if (!cert) return response.json(null);
     const actor = await getActorFromSession(request);
@@ -120,7 +117,7 @@ certificatesRouter.patch(
     assertAdminAccess(actor);
 
     const cert = await certificateRepository.getById(
-      request.params.certificateId,
+      request.params.certificateId as string,
     );
     if (!cert) throw httpError(404, "Certificate not found.");
 
@@ -128,7 +125,7 @@ certificatesRouter.patch(
     if (cert.tenantId !== tenantId) throw httpError(403, "Access denied.");
 
     const updated = await certificateRepository.update(
-      request.params.certificateId,
+      request.params.certificateId as string,
       request.body,
     );
     if (!updated) throw httpError(500, "Failed to update certificate.");

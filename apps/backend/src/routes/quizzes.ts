@@ -41,7 +41,7 @@ quizzesRouter.get(
   "/:quizId",
   requireTenantSession,
   async (request, response) => {
-    const quiz = await quizRepository.getById(request.params.quizId);
+    const quiz = await quizRepository.getById((request.params.quizId as string));
     if (!quiz) return response.json(null);
     response.json(quiz);
   },
@@ -55,11 +55,11 @@ quizzesRouter.patch(
     const actor = await getActorFromSession(request);
     assertAdminAccess(actor);
 
-    const quiz = await quizRepository.getById(request.params.quizId);
+    const quiz = await quizRepository.getById((request.params.quizId as string));
     if (!quiz) throw httpError(404, "Quiz not found.");
 
     const updated = await quizRepository.update(
-      request.params.quizId,
+      (request.params.quizId as string),
       request.body.quizData ?? request.body,
     );
     if (!updated) throw httpError(500, "Failed to update quiz.");
@@ -75,10 +75,10 @@ quizzesRouter.delete(
     const actor = await getActorFromSession(request);
     assertAdminAccess(actor);
 
-    const quiz = await quizRepository.getById(request.params.quizId);
+    const quiz = await quizRepository.getById((request.params.quizId as string));
     if (!quiz) throw httpError(404, "Quiz not found.");
 
-    await quizRepository.softDelete(request.params.quizId);
+    await quizRepository.softDelete((request.params.quizId as string));
     response.json({ success: true });
   },
 );

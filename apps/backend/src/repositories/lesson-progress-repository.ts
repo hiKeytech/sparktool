@@ -71,6 +71,22 @@ export const lessonProgressRepository = {
       );
   },
 
+  async listByStudentAndCourse(input: { studentId: string; courseId: string }) {
+    const progressCollection = await getLessonProgressCollection();
+    const sort: Sort = { lastAccessedAt: -1 };
+
+    return (
+      await progressCollection
+        .find({ studentId: input.studentId, courseId: input.courseId })
+        .sort(sort)
+        .toArray()
+    )
+      .map((document) => parseStoredLessonProgress(document))
+      .filter(
+        (progress): progress is StoredLessonProgress => progress !== null,
+      );
+  },
+
   async update(progressId: string, updates: Partial<LessonProgress>) {
     const progressCollection = await getLessonProgressCollection();
 

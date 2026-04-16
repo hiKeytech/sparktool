@@ -1,18 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-
-import { QuizManagement } from "@/pages/admin/quiz-management";
-import { useAuthContext } from "@/providers/auth-provider";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/$tenant/admin/quizzes")({
-  component: QuizManagementRoute,
+  component: Outlet,
 });
-
-function QuizManagementRoute() {
-  const { tenant, user } = useAuthContext();
-
-  if (!tenant || !user) {
-    return null;
-  }
-
-  return <QuizManagement tenant={tenant} user={user} />;
-}

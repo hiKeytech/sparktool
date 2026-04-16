@@ -35,6 +35,8 @@ export const userSchema = z.object({
     )
     .nullish(),
   tenantIds: z.array(z.string()).nullish(),
+  averageQuizScore: z.number().nullish(),
+  quizzesPassed: z.number().nullish(),
   totalWatchTime: z.number().nullish(),
   uid: z.string(),
   updatedAt: z.number(),

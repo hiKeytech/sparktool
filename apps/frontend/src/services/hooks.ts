@@ -10,6 +10,10 @@ import {
 } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { minutesToMilliseconds } from "date-fns";
+import { updatePlatformConfig } from "@/actions/platform";
+import { listPlatformActivityLogsFn } from "@/server/activity-logs";
+import type { ActivityLog } from "@/schemas/activity-log";
+import type { PlatformConfig } from "@/schemas/platform-config";
 
 import {
   extractTenantIdFromPath,
@@ -156,8 +160,7 @@ export function useCreateQuiz() {
 export function useCreateQuizAttempt() {
   return useMutation({
     meta: {
-      errorMessage: "Failed to submit quiz attempt. Please try again.",
-      successMessage: "Quiz submitted successfully.",
+      errorMessage: "Failed to start quiz attempt. Please try again.",
     },
     mutationFn: api.$use.quizAttempt.create,
   });
@@ -429,6 +432,28 @@ export function useListActivityLogs(tenantId?: string, userId?: string) {
   });
 }
 
+export function usePlatformActivityLogs(
+  filters: {
+    action?: ActivityLog["action"] | null;
+    limit?: number;
+    tenantId?: string;
+    userId?: string;
+  } = {},
+) {
+  return useQuery({
+    queryFn: () =>
+      listPlatformActivityLogsFn({
+        data: {
+          action: filters.action ?? undefined,
+          limit: filters.limit,
+          tenantId: filters.tenantId,
+          userId: filters.userId,
+        },
+      }),
+    queryKey: ["platform-activity", filters],
+  });
+}
+
 export function useListCertificates(tenantId?: string) {
   return useQuery({
     enabled: !!tenantId,
@@ -672,7 +697,7 @@ export function useSignOut() {
       successMessage: "You have been signed out successfully.",
     },
     mutationFn: api.$use.auth.signOut,
-    onSuccess: async () => {
+    onSuccess: () => {
       queryClient.clear();
     },
   });
@@ -915,5 +940,17 @@ export function useUpdateTenant() {
       successMessage: "Tenant updated successfully.",
     },
     mutationFn: api.$use.tenant.update,
+  });
+}
+
+export function useUpdatePlatformConfig() {
+  return useMutation({
+    meta: {
+      errorMessage:
+        "Failed to update platform configuration. Please try again.",
+      successMessage: "Platform configuration updated successfully.",
+    },
+    mutationFn: (config: PlatformConfig) =>
+      updatePlatformConfig({ data: config }),
   });
 }

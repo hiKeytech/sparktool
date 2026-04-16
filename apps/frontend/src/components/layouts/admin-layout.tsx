@@ -31,7 +31,12 @@ import {
   IconUsers,
   IconVideo,
 } from "@tabler/icons-react";
-import { Outlet, useLocation, useNavigate } from "@tanstack/react-router";
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "@tanstack/react-router";
 import { motion } from "framer-motion";
 
 import { NotificationBell } from "@/components/notifications";
@@ -45,7 +50,10 @@ interface AdminLayoutProps {
 }
 
 export function AdminLayout({ auth }: AdminLayoutProps) {
-  const { tenant, user } = auth;
+  const { tenant: tenantParam } = useParams({ strict: false });
+  const tenantSlug = tenantParam!;
+
+  const { user } = auth;
   const { mutateAsync } = useSignOut();
 
   const [opened, { close, toggle }] = useDisclosure();
@@ -56,115 +64,81 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
   const handleLogout = async () => {
     try {
       await mutateAsync({ userId: user?.uid });
-      navigate({ to: tenant?.id ? "/$tenant/login" : "/login" });
+      navigate({
+        params: { tenant: tenantSlug },
+        replace: true,
+        to: "/$tenant/login",
+      });
     } catch (error) {
       console.error("Logout error:", error);
     }
   };
 
+  const adminRootPath = buildTenantPath(tenantSlug, "/admin");
+
   const navigateToAdminPath = (path: string) => {
     switch (path) {
       case adminRootPath:
-        if (tenant?.id) {
-          navigate({ params: { tenant: tenant.id }, to: "/$tenant/admin" });
-        } else {
-          navigate({ to: "/login" });
-        }
+        navigate({ params: { tenant: tenantSlug }, to: "/$tenant/admin" });
         break;
-      case buildTenantPath(tenant?.id, "/admin/users"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/users",
-          });
-        } else {
-          navigate({ to: "/login" });
-        }
+      case buildTenantPath(tenantSlug, "/admin/users"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/users",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/admin/courses"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/courses",
-          });
-        } else {
-          navigate({ to: "/login" });
-        }
+      case buildTenantPath(tenantSlug, "/admin/courses"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/courses",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/admin/live-sessions"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/live-sessions",
-          });
-        } else {
-          navigate({ to: "/login" });
-        }
+      case buildTenantPath(tenantSlug, "/admin/live-sessions"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/live-sessions",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/admin/quizzes"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/quizzes",
-          });
-        }
+      case buildTenantPath(tenantSlug, "/admin/quizzes"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/quizzes",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/admin/analytics"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/analytics",
-          });
-        } else {
-          navigate({ to: "/login" });
-        }
+      case buildTenantPath(tenantSlug, "/admin/analytics"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/analytics",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/admin/certificates"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/certificates",
-          });
-        } else {
-          navigate({ to: "/login" });
-        }
+      case buildTenantPath(tenantSlug, "/admin/certificates"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/certificates",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/admin/settings"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/settings",
-          });
-        } else {
-          navigate({ to: "/login" });
-        }
+      case buildTenantPath(tenantSlug, "/admin/settings"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/settings",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/admin/profile"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/profile",
-          });
-        } else {
-          navigate({ to: "/login" });
-        }
+      case buildTenantPath(tenantSlug, "/admin/profile"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/profile",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/admin/security"):
-        if (tenant?.id) {
-          navigate({
-            params: { tenant: tenant.id },
-            to: "/$tenant/admin/security",
-          });
-        } else {
-          navigate({ to: "/login" });
-        }
+      case buildTenantPath(tenantSlug, "/admin/security"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/admin/security",
+        });
         break;
       default:
         break;
     }
   };
-
-  const adminRootPath = buildTenantPath(tenant?.id, "/admin");
 
   const navigationItems = [
     {
@@ -177,64 +151,64 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
       description: "Manage students and staff",
       icon: IconUsers,
       label: "User Management",
-      path: buildTenantPath(tenant?.id, "/admin/users"),
+      path: buildTenantPath(tenantSlug, "/admin/users"),
     },
     {
       description: "Manage courses and content",
       icon: IconBook,
       label: "Course Management",
-      path: buildTenantPath(tenant?.id, "/admin/courses"),
+      path: buildTenantPath(tenantSlug, "/admin/courses"),
     },
     {
       description: "Manage live teaching sessions",
       icon: IconVideo,
       label: "Live Sessions",
-      path: buildTenantPath(tenant?.id, "/admin/live-sessions"),
+      path: buildTenantPath(tenantSlug, "/admin/live-sessions"),
     },
     {
       description: "Manage quizzes and assessments",
       icon: IconClipboardList,
       label: "Quiz Management",
-      path: buildTenantPath(tenant?.id, "/admin/quizzes"),
+      path: buildTenantPath(tenantSlug, "/admin/quizzes"),
     },
     {
       description: "Performance insights",
       icon: IconChartBar,
       label: "Analytics & Reports",
-      path: buildTenantPath(tenant?.id, "/admin/analytics"),
+      path: buildTenantPath(tenantSlug, "/admin/analytics"),
     },
     {
       description: "Manage certificates",
       icon: IconCertificate,
       label: "Certificates",
-      path: buildTenantPath(tenant?.id, "/admin/certificates"),
+      path: buildTenantPath(tenantSlug, "/admin/certificates"),
     },
     {
       description: "Platform configuration",
       icon: IconSettings,
       label: "System Settings",
-      path: buildTenantPath(tenant?.id, "/admin/settings"),
+      path: buildTenantPath(tenantSlug, "/admin/settings"),
     },
   ];
 
   const quickActions = [
     {
       action: () =>
-        navigateToAdminPath(buildTenantPath(tenant?.id, "/admin/courses")),
+        navigateToAdminPath(buildTenantPath(tenantSlug, "/admin/courses")),
       color: "fun-green",
       icon: IconPlus,
       label: "Add Course",
     },
     {
       action: () =>
-        navigateToAdminPath(buildTenantPath(tenant?.id, "/admin/users")),
+        navigateToAdminPath(buildTenantPath(tenantSlug, "/admin/users")),
       color: "blue",
       icon: IconUserCheck,
       label: "Add User",
     },
     {
       action: () =>
-        navigateToAdminPath(buildTenantPath(tenant?.id, "/admin/analytics")),
+        navigateToAdminPath(buildTenantPath(tenantSlug, "/admin/analytics")),
       color: "orange",
       icon: IconFileText,
       label: "Generate Report",
@@ -362,7 +336,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                       leftSection={<IconSettings size={14} />}
                       onClick={() =>
                         navigateToAdminPath(
-                          buildTenantPath(tenant?.id, "/admin/profile"),
+                          buildTenantPath(tenantSlug, "/admin/profile"),
                         )
                       }
                     >
@@ -373,7 +347,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                       leftSection={<IconShield size={14} />}
                       onClick={() =>
                         navigateToAdminPath(
-                          buildTenantPath(tenant?.id, "/admin/security"),
+                          buildTenantPath(tenantSlug, "/admin/security"),
                         )
                       }
                     >

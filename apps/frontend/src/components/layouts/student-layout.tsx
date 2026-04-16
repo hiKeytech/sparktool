@@ -22,7 +22,12 @@ import {
   IconUserCircle,
   IconVideo,
 } from "@tabler/icons-react";
-import { Outlet, useLocation, useNavigate } from "@tanstack/react-router";
+import {
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "@tanstack/react-router";
 
 import { NotificationBell } from "@/components/notifications";
 import { NCSLogo } from "@/components/shared/ncs-logo";
@@ -37,45 +42,63 @@ interface StudentLayoutProps {
 export function StudentLayout({ auth }: StudentLayoutProps) {
   const [opened, { toggle }] = useDisclosure();
 
-  const { tenant, user } = auth;
+  const { tenant: tenantParam } = useParams({ strict: false });
+  const tenantSlug = tenantParam!;
+
+  const { user } = auth;
   const { mutate } = useSignOut();
 
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleLogout = () => {
-    mutate({ userId: user?.uid });
+    mutate(
+      { userId: user?.uid },
+      {
+        onSuccess: () => {
+          navigate({
+            params: { tenant: tenantSlug },
+            replace: true,
+            to: "/$tenant/login",
+          });
+        },
+      },
+    );
   };
 
-  const navigateToProfile = () => {
-    if (tenant?.id) {
-      navigate({
-        params: { tenant: tenant.id },
-        to: "/$tenant/student/profile",
-      });
-      return;
-    }
+  const studentRootPath = buildTenantPath(tenantSlug, "/student");
 
-    navigate({ to: "/login" });
+  const navigateToProfile = () => {
+    navigate({
+      params: { tenant: tenantSlug },
+      to: "/$tenant/student/profile",
+    });
   };
 
   const navigateToItem = (path: string) => {
     switch (path) {
       case studentRootPath:
-        navigate({ to: tenant?.id ? "/$tenant/student" : "/login" });
+        navigate({ params: { tenant: tenantSlug }, to: "/$tenant/student" });
         break;
-      case buildTenantPath(tenant?.id, "/student/courses"):
-        navigate({ to: tenant?.id ? "/$tenant/student/courses" : "/login" });
-        break;
-      case buildTenantPath(tenant?.id, "/student/live-sessions"):
+      case buildTenantPath(tenantSlug, "/student/courses"):
         navigate({
-          to: tenant?.id ? "/$tenant/student/live-sessions" : "/login",
+          params: { tenant: tenantSlug },
+          to: "/$tenant/student/courses",
         });
         break;
-      case buildTenantPath(tenant?.id, "/student/progress"):
-        navigate({ to: tenant?.id ? "/$tenant/student/progress" : "/login" });
+      case buildTenantPath(tenantSlug, "/student/live-sessions"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/student/live-sessions",
+        });
         break;
-      case buildTenantPath(tenant?.id, "/student/profile"):
+      case buildTenantPath(tenantSlug, "/student/progress"):
+        navigate({
+          params: { tenant: tenantSlug },
+          to: "/$tenant/student/progress",
+        });
+        break;
+      case buildTenantPath(tenantSlug, "/student/profile"):
         navigateToProfile();
         break;
       default:
@@ -83,7 +106,6 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
     }
   };
 
-  const studentRootPath = buildTenantPath(tenant?.id, "/student");
   const navigationItems: {
     icon: any;
     label: string;
@@ -97,22 +119,22 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
     {
       icon: IconBooks,
       label: "Course Catalog",
-      path: buildTenantPath(tenant?.id, "/student/courses"),
+      path: buildTenantPath(tenantSlug, "/student/courses"),
     },
     {
       icon: IconVideo,
       label: "Live Sessions",
-      path: buildTenantPath(tenant?.id, "/student/live-sessions"),
+      path: buildTenantPath(tenantSlug, "/student/live-sessions"),
     },
     {
       icon: IconProgress,
       label: "My Progress",
-      path: buildTenantPath(tenant?.id, "/student/progress"),
+      path: buildTenantPath(tenantSlug, "/student/progress"),
     },
     {
       icon: IconUserCircle,
       label: "Profile",
-      path: buildTenantPath(tenant?.id, "/student/profile"),
+      path: buildTenantPath(tenantSlug, "/student/profile"),
     },
   ];
 

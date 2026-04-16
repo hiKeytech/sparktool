@@ -106,7 +106,7 @@ async function assertLessonTenantAccess(lessonId: string, tenantId: string) {
 lessonResourcesRouter.post("/", requireSession, async (request, response) => {
   try {
     const { resourceData, file } = request.body;
-    const { tenantId } = request.session;
+    const tenantId = request.session.activeTenantId!;
 
     const lesson = await assertLessonTenantAccess(
       resourceData.lessonId,
@@ -129,11 +129,9 @@ lessonResourcesRouter.post("/", requireSession, async (request, response) => {
     }
 
     if (resourceData.type !== "link" && !nextUrl) {
-      return response
-        .status(400)
-        .json({
-          message: "A file upload or URL is required for this resource type.",
-        });
+      return response.status(400).json({
+        message: "A file upload or URL is required for this resource type.",
+      });
     }
 
     const resource = lessonResourceSchema.parse({
@@ -154,12 +152,9 @@ lessonResourcesRouter.post("/", requireSession, async (request, response) => {
 
     response.json(resource.id);
   } catch (error) {
-    response
-      .status(500)
-      .json({
-        message:
-          error instanceof Error ? error.message : "Internal server error",
-      });
+    response.status(500).json({
+      message: error instanceof Error ? error.message : "Internal server error",
+    });
   }
 });
 
@@ -169,16 +164,14 @@ lessonResourcesRouter.get(
   requireSession,
   async (request, response) => {
     try {
-      const { resourceId } = request.params;
+      const resourceId = request.params.resourceId as string;
       const { resource } = await getLessonResourceOrThrow(resourceId);
       response.json(resource);
     } catch (error) {
-      response
-        .status(500)
-        .json({
-          message:
-            error instanceof Error ? error.message : "Internal server error",
-        });
+      response.status(500).json({
+        message:
+          error instanceof Error ? error.message : "Internal server error",
+      });
     }
   },
 );
@@ -189,18 +182,16 @@ lessonResourcesRouter.get(
   requireSession,
   async (request, response) => {
     try {
-      const lesson = await getLessonOrThrow(request.params.lessonId);
+      const lesson = await getLessonOrThrow(request.params.lessonId as string);
       const sorted = [...lesson.resources].sort(
         (a, b) => a.order - b.order || a.createdAt - b.createdAt,
       );
       response.json(sorted);
     } catch (error) {
-      response
-        .status(500)
-        .json({
-          message:
-            error instanceof Error ? error.message : "Internal server error",
-        });
+      response.status(500).json({
+        message:
+          error instanceof Error ? error.message : "Internal server error",
+      });
     }
   },
 );
@@ -212,9 +203,9 @@ lessonResourcesRouter.patch(
   async (request, response) => {
     try {
       const { resourceData, file } = request.body;
-      const { tenantId } = request.session;
+      const tenantId = request.session.activeTenantId!;
       const { lesson, resource } = await getLessonResourceOrThrow(
-        request.params.resourceId,
+        request.params.resourceId as string,
       );
 
       await assertLessonTenantAccess(lesson.id, tenantId);
@@ -254,12 +245,10 @@ lessonResourcesRouter.patch(
 
       response.json(updatedResource.id);
     } catch (error) {
-      response
-        .status(500)
-        .json({
-          message:
-            error instanceof Error ? error.message : "Internal server error",
-        });
+      response.status(500).json({
+        message:
+          error instanceof Error ? error.message : "Internal server error",
+      });
     }
   },
 );
@@ -270,9 +259,9 @@ lessonResourcesRouter.delete(
   requireSession,
   async (request, response) => {
     try {
-      const { tenantId } = request.session;
+      const tenantId = request.session.activeTenantId!;
       const { lesson, resource } = await getLessonResourceOrThrow(
-        request.params.resourceId,
+        request.params.resourceId as string,
       );
 
       await assertLessonTenantAccess(lesson.id, tenantId);
@@ -284,12 +273,10 @@ lessonResourcesRouter.delete(
 
       response.json({ success: true });
     } catch (error) {
-      response
-        .status(500)
-        .json({
-          message:
-            error instanceof Error ? error.message : "Internal server error",
-        });
+      response.status(500).json({
+        message:
+          error instanceof Error ? error.message : "Internal server error",
+      });
     }
   },
 );

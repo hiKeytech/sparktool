@@ -18,7 +18,7 @@ courseQuizzesRouter.get(
   async (request, response) => {
     const { courseId } = request.query as Record<string, string>;
     if (courseId) {
-      return response.json(await courseQuizRepository.listByCourse(courseId));
+      return response.json(await courseQuizRepository.list({ courseId }));
     }
     response.json([]);
   },
@@ -73,7 +73,9 @@ courseQuizzesRouter.get(
   "/:quizId",
   requireTenantSession,
   async (request, response) => {
-    const quiz = await courseQuizRepository.getById(request.params.quizId);
+    const quiz = await courseQuizRepository.getById(
+      request.params.quizId as string,
+    );
     if (!quiz) return response.json(null);
     const tenantId = request.session.activeTenantId!;
     const course = await courseRepository.getById(quiz.courseId);
@@ -91,7 +93,9 @@ courseQuizzesRouter.patch(
     assertAdminAccess(actor);
     const tenantId = request.session.activeTenantId!;
 
-    const quiz = await courseQuizRepository.getById(request.params.quizId);
+    const quiz = await courseQuizRepository.getById(
+      request.params.quizId as string,
+    );
     if (!quiz) throw httpError(404, "Course quiz not found.");
     const course = await courseRepository.getById(quiz.courseId);
     if (!course || course.tenantId !== tenantId) {
@@ -99,7 +103,7 @@ courseQuizzesRouter.patch(
     }
 
     const updated = await courseQuizRepository.update(
-      request.params.quizId,
+      request.params.quizId as string,
       request.body.quizData ?? request.body,
     );
     if (!updated) throw httpError(500, "Failed to update course quiz.");
@@ -116,14 +120,16 @@ courseQuizzesRouter.delete(
     assertAdminAccess(actor);
     const tenantId = request.session.activeTenantId!;
 
-    const quiz = await courseQuizRepository.getById(request.params.quizId);
+    const quiz = await courseQuizRepository.getById(
+      request.params.quizId as string,
+    );
     if (!quiz) throw httpError(404, "Course quiz not found.");
     const course = await courseRepository.getById(quiz.courseId);
     if (!course || course.tenantId !== tenantId) {
       throw httpError(403, "Access denied.");
     }
 
-    await courseQuizRepository.delete(request.params.quizId);
+    await courseQuizRepository.delete(request.params.quizId as string);
     await courseRepository.update(quiz.courseId, {
       totalQuizzes: Math.max(0, (course.totalQuizzes ?? 0) - 1),
     });

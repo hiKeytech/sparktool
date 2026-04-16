@@ -521,8 +521,10 @@ export interface UpdateQuiz extends Partial<
 
 export type UpdateQuizAttempt = Pick<
   QuizAttempt,
-  "answers" | "completedAt" | "passed" | "percentage" | "score" | "timeSpent"
->;
+  "completedAt" | "timeSpent"
+> & {
+  rawAnswers?: Record<string, number | string | undefined>;
+};
 
 export type UpdateSection = Partial<Omit<CreateSection, "courseId">> & {
   updatedAt: Timestamp;

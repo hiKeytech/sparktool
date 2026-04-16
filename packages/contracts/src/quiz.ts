@@ -24,6 +24,7 @@ export interface QuizAttempt {
   answers?: QuizAnswer[];
   attemptNumber: number;
   completedAt?: Timestamp;
+  correctAnswers?: number;
   courseId: string;
   id: string;
   passed: boolean;
@@ -32,8 +33,10 @@ export interface QuizAttempt {
   score: number;
   startedAt: Timestamp;
   studentId: string;
+  tenantId?: string;
   timeSpent: number;
   totalPoints: number;
+  totalQuestions?: number;
 }
 
 export interface QuizQuestion {
@@ -68,10 +71,12 @@ export interface LessonProgress {
   currentPosition: number;
   isCompleted: boolean;
   lastAccessedAt: Timestamp;
+  lastWatchedAt?: Timestamp;
   lessonId: string;
   resourcesViewed: string[];
   sectionId: string;
   studentId: string;
+  tenantId?: string;
   timeSpent: number;
   totalDuration: number;
   viewCount: number;

@@ -54,7 +54,7 @@ studentProgressRouter.get(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      request.params.studentId === "me" ? actor.id : request.params.studentId;
+      (request.params.studentId as string) === "me" ? actor.id : (request.params.studentId as string);
 
     if (
       actor.id !== targetId &&
@@ -89,7 +89,7 @@ studentProgressRouter.patch(
   requireTenantSession,
   async (request, response) => {
     const updated = await studentProgressRepository.update(
-      request.params.progressId,
+      (request.params.progressId as string),
       request.body,
     );
     if (!updated) throw httpError(500, "Failed to update student progress.");

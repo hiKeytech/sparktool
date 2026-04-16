@@ -1,3 +1,5 @@
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useAuthContext } from "@/providers/auth-provider";
 import {
   Button,
   Card,
@@ -18,8 +20,6 @@ import {
   IconUpload,
   IconUsers,
 } from "@tabler/icons-react";
-import { useNavigate } from "@tanstack/react-router";
-
 import { openCreateCourseModal } from "@/components/modals/create-course-modal";
 import { openDeleteCourseModal } from "@/components/modals/delete-course-modal";
 import { openDuplicateCourseModal } from "@/components/modals/duplicate-course-modal";
@@ -30,13 +30,19 @@ import {
   createCourseColumns,
 } from "@/components/shared/data-table/course-table-config";
 import { useListCourses, useUpdateCourse } from "@/services/hooks";
-import type { TenantUserPageProps } from "@/types/route-page-props";
+import type { Tenant } from "@/schemas/tenant-contract";
 
-export function CourseManagement({ tenant, user }: TenantUserPageProps) {
+export const Route = createFileRoute("/$tenant/admin/courses/")({
+  component: CourseManagement,
+});
+
+function CourseManagement() {
+  const { tenant } = Route.useRouteContext() as { tenant: Tenant };
+  const { user } = useAuthContext();
   const navigate = useNavigate();
 
   // Fetch courses using TanStack Query
-  const { data: courses = [], isLoading } = useListCourses(tenant?.id);
+  const { data: courses = [], isLoading } = useListCourses(tenant.id);
   const updateCourse = useUpdateCourse();
 
   // Combine existing categories from courses with predefined common categories
@@ -92,7 +98,7 @@ export function CourseManagement({ tenant, user }: TenantUserPageProps) {
       }
     },
     onEditStructure: (courseId: string) => {
-      if (!tenant?.id) return;
+      if (!tenant.id) return;
 
       navigate({
         params: { courseId, tenant: tenant.id },

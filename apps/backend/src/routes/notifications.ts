@@ -21,7 +21,7 @@ notificationsRouter.get(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      request.params.userId === "me" ? actor.id : request.params.userId;
+      (request.params.userId as string) === "me" ? actor.id : (request.params.userId as string);
 
     if (
       actor.id !== targetId &&
@@ -46,7 +46,7 @@ notificationsRouter.get(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      request.params.userId === "me" ? actor.id : request.params.userId;
+      (request.params.userId as string) === "me" ? actor.id : (request.params.userId as string);
 
     if (
       actor.id !== targetId &&
@@ -98,7 +98,7 @@ notificationsRouter.post(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      request.params.userId === "me" ? actor.id : request.params.userId;
+      (request.params.userId as string) === "me" ? actor.id : (request.params.userId as string);
 
     if (
       actor.id !== targetId &&
@@ -122,7 +122,7 @@ notificationsRouter.patch(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const notification = await notificationRepository.getById(
-      request.params.notificationId,
+      (request.params.notificationId as string),
     );
     if (!notification) throw httpError(404, "Notification not found.");
     if (
@@ -133,7 +133,7 @@ notificationsRouter.patch(
       throw httpError(403, "Access denied.");
     }
 
-    await notificationRepository.markAsRead(request.params.notificationId);
-    response.json({ id: request.params.notificationId });
+    await notificationRepository.markAsRead((request.params.notificationId as string));
+    response.json({ id: (request.params.notificationId as string) });
   },
 );

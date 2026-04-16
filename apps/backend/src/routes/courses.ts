@@ -13,7 +13,7 @@ import {
   httpError,
   userHasTenantAccess,
 } from "../lib/request-helpers.js";
-import { requireSession, requireTenantSession } from "../middleware/session.js";
+import { requireTenantSession } from "../middleware/session.js";
 
 export const coursesRouter = Router();
 
@@ -37,7 +37,7 @@ coursesRouter.get("/", async (request, response) => {
 coursesRouter.get("/:courseId", async (request, response) => {
   const [tenant, course] = await Promise.all([
     TenantService.getTenantByHost(request.hostname),
-    courseRepository.getById(request.params.courseId),
+    courseRepository.getById(request.params.courseId as string),
   ]);
 
   if (!course) return response.json(null);
@@ -110,7 +110,9 @@ coursesRouter.patch(
     assertAdminAccess(actor);
 
     const tenantId = request.session.activeTenantId!;
-    const existing = await courseRepository.getById(request.params.courseId);
+    const existing = await courseRepository.getById(
+      request.params.courseId as string,
+    );
     if (!existing) throw httpError(404, "Course not found.");
     if (existing.tenantId !== tenantId) {
       throw httpError(403, "Course does not belong to the current tenant.");
@@ -124,11 +126,14 @@ coursesRouter.patch(
           ? null
           : existing.publishedAt;
 
-    const updated = await courseRepository.update(request.params.courseId, {
-      ...courseData,
-      lastModifiedBy: actor.id,
-      publishedAt,
-    });
+    const updated = await courseRepository.update(
+      request.params.courseId as string,
+      {
+        ...courseData,
+        lastModifiedBy: actor.id,
+        publishedAt,
+      },
+    );
     if (!updated) throw httpError(500, "Failed to update course.");
 
     response.json({ id: updated.id });
@@ -144,31 +149,35 @@ coursesRouter.delete(
     assertAdminAccess(actor);
 
     const tenantId = request.session.activeTenantId!;
-    const course = await courseRepository.getById(request.params.courseId);
+    const course = await courseRepository.getById(
+      request.params.courseId as string,
+    );
     if (!course) throw httpError(404, "Course not found.");
     if (course.tenantId !== tenantId) {
       throw httpError(403, "Course does not belong to the current tenant.");
     }
 
     const progressRecords = await studentProgressRepository.listByCourse(
-      request.params.courseId,
+      request.params.courseId as string,
     );
     const affectedStudentIds = Array.from(
       new Set(progressRecords.map((p) => p.studentId)),
     );
 
     await Promise.all([
-      studentProgressRepository.deleteByCourseId(request.params.courseId),
-      courseRepository.delete(request.params.courseId),
+      studentProgressRepository.deleteByCourseId(
+        request.params.courseId as string,
+      ),
+      courseRepository.delete(request.params.courseId as string),
       ...affectedStudentIds.map(async (studentId) => {
         const user = await userRepository.getById(studentId);
         if (!user) return;
         await userRepository.update(studentId, {
           completedCourses: (user.completedCourses ?? []).filter(
-            (id) => id !== request.params.courseId,
+            (id) => id !== (request.params.courseId as string),
           ),
           enrolledCourses: (user.enrolledCourses ?? []).filter(
-            (id) => id !== request.params.courseId,
+            (id) => id !== (request.params.courseId as string),
           ),
         });
       }),
@@ -198,14 +207,14 @@ coursesRouter.post(
     }
 
     const existing = await studentProgressRepository.getByStudentAndCourse({
-      courseId: request.params.courseId,
+      courseId: request.params.courseId as string,
       studentId,
       tenantId,
     });
     if (existing) throw httpError(409, "Student is already enrolled.");
 
     const [course, user] = await Promise.all([
-      courseRepository.getById(request.params.courseId),
+      courseRepository.getById(request.params.courseId as string),
       userRepository.getById(studentId),
     ]);
 
@@ -218,10 +227,16 @@ coursesRouter.post(
       throw httpError(403, "Student does not belong to the current tenant.");
     }
 
+    await studentProgressRepository.deleteByStudentAndCourse({
+      courseId: request.params.courseId as string,
+      studentId,
+      tenantId,
+    });
+
     await studentProgressRepository.create({
       averageQuizScore: 0,
       completionPercentage: 0,
-      courseId: request.params.courseId,
+      courseId: request.params.courseId as string,
       enrolledAt: Date.now(),
       estimatedTimeRemaining: 0,
       lastAccessedAt: Date.now(),
@@ -238,15 +253,21 @@ coursesRouter.post(
     });
 
     await Promise.all([
-      courseRepository.incrementEnrollment(request.params.courseId, 1),
+      courseRepository.incrementEnrollment(
+        request.params.courseId as string,
+        1,
+      ),
       userRepository.update(studentId, {
         enrolledCourses: Array.from(
-          new Set([...(user.enrolledCourses ?? []), request.params.courseId]),
+          new Set([
+            ...(user.enrolledCourses ?? []),
+            request.params.courseId as string,
+          ]),
         ),
       }),
       activityLogRepository.create({
         action: "course_enrolled",
-        courseId: request.params.courseId,
+        courseId: request.params.courseId as string,
         enrollmentMethod: "self_enrolled",
         tenantId,
         userId: studentId,
