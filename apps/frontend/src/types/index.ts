@@ -523,7 +523,7 @@ export type UpdateQuizAttempt = Pick<
   QuizAttempt,
   "completedAt" | "timeSpent"
 > & {
-  rawAnswers?: Record<string, number | string | undefined>;
+  rawAnswers?: Record<string, number | string>;
 };
 
 export type UpdateSection = Partial<Omit<CreateSection, "courseId">> & {

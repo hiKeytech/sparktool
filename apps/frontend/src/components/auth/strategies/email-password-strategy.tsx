@@ -4,17 +4,26 @@ import {
   Button,
   LoadingOverlay,
   PasswordInput,
+  Text,
   TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { z } from "zod";
-import { useSignInWithEmailAndPassword } from "@/services/hooks";
+import type { AdminInvitationPreview } from "@/schemas/invitation";
+import {
+  useRedeemAdminInvitation,
+  useSignInWithEmailAndPassword,
+} from "@/services/hooks";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { zod4Resolver } from "mantine-form-zod-resolver";
+import { formatDateTime } from "@/utils/date-utils";
 
 interface EmailPasswordStrategyProps {
   allowSignup?: boolean;
-  config: any;
+  config: Record<string, unknown>;
+  invitationError?: string | null;
+  invitationPreview?: null | AdminInvitationPreview;
+  invitationToken?: string;
   label?: string;
   restrictedDomains?: string[];
 }
@@ -26,12 +35,18 @@ const baseSchema = z.object({
   confirmPassword: z.string().optional(),
 });
 
+type EmailPasswordFormValues = z.infer<typeof baseSchema>;
+
 export function EmailPasswordStrategy({
   allowSignup = false,
   config: _config,
+  invitationError,
+  invitationPreview,
+  invitationToken,
   label,
   restrictedDomains,
 }: EmailPasswordStrategyProps) {
+  const isInvitationMode = Boolean(invitationToken);
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const {
     mutate: signIn,
@@ -39,9 +54,15 @@ export function EmailPasswordStrategy({
     error,
     isError,
   } = useSignInWithEmailAndPassword();
+  const {
+    mutate: redeemInvitation,
+    isPending: isRedeemingInvitation,
+    error: redeemError,
+    isError: isRedeemError,
+  } = useRedeemAdminInvitation();
 
   const schema = baseSchema.superRefine((values, context) => {
-    if (mode === "sign-up") {
+    if (isInvitationMode || mode === "sign-up") {
       if (!values.displayName) {
         context.addIssue({
           code: "custom",
@@ -69,15 +90,33 @@ export function EmailPasswordStrategy({
   const form = useForm({
     initialValues: {
       confirmPassword: "",
-      displayName: "",
-      email: "",
+      displayName:
+        invitationPreview?.displayName ??
+        invitationPreview?.email.split("@")[0] ??
+        "",
+      email: invitationPreview?.email ?? "",
       password: "",
     },
     validate: zod4Resolver(schema),
   });
 
-  const handleSubmit = (values) => {
+  const isBusy = isPending || isRedeemingInvitation;
+
+  const handleSubmit = (values: EmailPasswordFormValues) => {
     const displayName = values.displayName?.trim() || undefined;
+
+    if (isInvitationMode && invitationToken && invitationPreview) {
+      redeemInvitation({
+        department: null,
+        displayName:
+          displayName || invitationPreview.email.split("@")[0] || "Admin",
+        location: null,
+        password: values.password,
+        tenantId: invitationPreview.tenantId,
+        token: invitationToken,
+      });
+      return;
+    }
 
     signIn({
       allowSignup,
@@ -91,22 +130,37 @@ export function EmailPasswordStrategy({
 
   return (
     <div className="relative">
-      <LoadingOverlay visible={isPending} />
+      <LoadingOverlay visible={isBusy} />
 
-      {isError && (
+      {(isError || isRedeemError || invitationError) && (
         <Alert
           color="red"
           icon={<IconAlertCircle size={16} />}
           mb="md"
           variant="light"
         >
-          {error?.message || "An error occurred during authentication."}
+          {invitationError ||
+            redeemError?.message ||
+            error?.message ||
+            "An error occurred during authentication."}
         </Alert>
       )}
 
+      {isInvitationMode && invitationPreview ? (
+        <Alert color="green" mb="md" variant="light">
+          <Text fw={600} size="sm">
+            Administrator invitation for {invitationPreview.email}
+          </Text>
+          <Text c="dimmed" size="sm">
+            Complete account setup before{" "}
+            {formatDateTime(invitationPreview.expiresAt)}.
+          </Text>
+        </Alert>
+      ) : null}
+
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <div className="space-y-4">
-          {mode === "sign-up" && (
+          {(mode === "sign-up" || isInvitationMode) && (
             <TextInput
               classNames={{
                 input: "border-stone-300 focus:border-fun-green-700",
@@ -123,6 +177,7 @@ export function EmailPasswordStrategy({
               input: "border-stone-300 focus:border-fun-green-700",
               label: "mb-1 font-sans font-medium text-stone-900",
             }}
+            disabled={isInvitationMode}
             label="Email"
             placeholder="your@email.com"
             size="md"
@@ -138,7 +193,7 @@ export function EmailPasswordStrategy({
             size="md"
             {...form.getInputProps("password")}
           />
-          {mode === "sign-up" && (
+          {(mode === "sign-up" || isInvitationMode) && (
             <PasswordInput
               classNames={{
                 input: "border-stone-300 focus:border-fun-green-700",
@@ -153,17 +208,19 @@ export function EmailPasswordStrategy({
           <Button
             className="mt-2 bg-fun-green-800 text-white shadow-sm transition-colors duration-300 hover:bg-fun-green-700"
             fullWidth
-            loading={isPending}
+            loading={isBusy}
             size="lg"
             type="submit"
           >
             <span className="font-sans font-medium tracking-wide">
-              {mode === "sign-up"
-                ? label || "Create account"
-                : label || "Sign in"}
+              {isInvitationMode
+                ? label || "Accept invitation"
+                : mode === "sign-up"
+                  ? label || "Create account"
+                  : label || "Sign in"}
             </span>
           </Button>
-          {allowSignup && (
+          {allowSignup && !isInvitationMode && (
             <Button
               className="font-sans text-fun-green-800 hover:bg-fun-green-50"
               onClick={() => {

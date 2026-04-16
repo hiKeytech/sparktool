@@ -5,6 +5,7 @@ import { useSignOut } from "@/services/hooks";
 import {
   BarChart3,
   Building2,
+  History,
   LayoutDashboard,
   LogOut,
   Settings,
@@ -26,6 +27,11 @@ const navItems: NavItem[] = [
     path: "/super-admin/identities",
   },
   { icon: Building2, label: "Tenants", path: "/super-admin/tenants" },
+  {
+    icon: History,
+    label: "Invitations",
+    path: "/super-admin/invitations",
+  },
   {
     icon: BarChart3,
     label: "Operational Signals",

@@ -21,7 +21,7 @@ export function LoginHeader({ branding }: LoginHeaderProps) {
             />
             <div>
               <Title className="font-semibold text-white" order={3}>
-                {branding?.portalName || "Sparktool"}
+                {branding?.portalName || "SparkTool"}
               </Title>
               <Text className="text-xs text-white/80">
                 {branding?.subheading || "Technology Education Platform"}

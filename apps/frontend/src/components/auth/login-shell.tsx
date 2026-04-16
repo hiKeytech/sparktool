@@ -1,8 +1,16 @@
 import { Stack, Text } from "@mantine/core";
 import { motion } from "framer-motion";
-import { ShieldCheck, LockKeyhole, Waypoints, Activity, Users, BookOpen } from "lucide-react";
+import {
+  ShieldCheck,
+  LockKeyhole,
+  Waypoints,
+  Activity,
+  Users,
+  BookOpen,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
+import type { AdminInvitationPreview } from "@/schemas/invitation";
 import type { PlatformConfig } from "@/schemas/platform-config";
 import type { TenantConfig } from "@/schemas/tenant-contract";
 
@@ -20,6 +28,9 @@ interface LoginShellProps {
   formTitle: string;
   heroHeading: string;
   heroSubheading: string;
+  invitationError?: string | null;
+  invitationPreview?: null | AdminInvitationPreview;
+  invitationToken?: string;
   logoUrl: string;
   portalName: string;
 }
@@ -39,6 +50,9 @@ export function LoginShell({
   formTitle,
   heroHeading,
   heroSubheading,
+  invitationError,
+  invitationPreview,
+  invitationToken,
   portalName,
 }: LoginShellProps) {
   const restrictedDomains = auth.restrictedDomains?.length
@@ -47,19 +61,17 @@ export function LoginShell({
 
   return (
     <div className="flex min-h-screen bg-stone-50 font-sans selection:bg-fun-green-500/30">
-      
       {/* 
         ========================================================================
         LEFT PANEL (COMMAND SUITE STYLE)
         ========================================================================
       */}
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-[#070b09] p-12 text-white lg:flex lg:p-16 border-r border-white/10">
-        
         {/* Deep Nigerian Green Gradient Background */}
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_32%),linear-gradient(135deg,_#1d4f35_0%,_#113620_58%,_#070b09_100%)]" />
-        
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_32%),linear-gradient(135deg,#1d4f35_0%,#113620_58%,#070b09_100%)]" />
+
         {/* Grid pattern overlay */}
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
         {/* Top Header / Portal Name */}
         <div className="relative z-10 flex items-center space-x-4">
@@ -135,7 +147,9 @@ export function LoginShell({
 
         {/* Footer */}
         <div className="relative z-10 flex items-center justify-between text-[10px] tracking-widest uppercase text-white/40 font-semibold border-t border-white/10 pt-8 mt-12">
-          <span>© {new Date().getFullYear()} {portalName}.</span>
+          <span>
+            © {new Date().getFullYear()} {portalName}.
+          </span>
           <div className="flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-fun-green-500 animate-pulse" />
             SECURE CONNECTION
@@ -149,14 +163,15 @@ export function LoginShell({
         ========================================================================
       */}
       <div className="relative flex w-full flex-col justify-center bg-white lg:w-[55%]">
-        
         {/* Mobile Header */}
         <div className="absolute top-0 flex w-full items-center px-6 py-5 bg-[#070b09] text-white lg:hidden border-b border-white/10">
           <div className="flex items-center space-x-3">
             <div className="flex items-center justify-center p-1.5 rounded-lg bg-white/5 border border-white/10">
               <ShieldCheck size={20} className="text-fun-green-400" />
             </div>
-            <span className="font-sans font-semibold tracking-wide text-sm">{portalName}</span>
+            <span className="font-sans font-semibold tracking-wide text-sm">
+              {portalName}
+            </span>
           </div>
         </div>
 
@@ -182,6 +197,9 @@ export function LoginShell({
             <div className="mt-4">
               <AuthStrategyResolver
                 allowSignup={auth.allowSignup}
+                invitationError={invitationError}
+                invitationPreview={invitationPreview}
+                invitationToken={invitationToken}
                 restrictedDomains={restrictedDomains}
                 strategies={auth.strategies}
               />
@@ -198,7 +216,9 @@ export function LoginShell({
                 <span className="w-1.5 h-1.5 rounded-full bg-fun-green-500 animate-pulse" />
                 SECURE CONNECTION
               </div>
-              <span>© {new Date().getFullYear()} {portalName}.</span>
+              <span>
+                © {new Date().getFullYear()} {portalName}.
+              </span>
             </div>
           </Stack>
         </motion.div>

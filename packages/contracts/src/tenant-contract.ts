@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { createTenantAdminInvitationInputSchema } from "./invitation.js";
+
 const VISIBILITY_ROLES = ["student", "admin", "mentor"] as const;
 const PUBLIC_CATEGORY_ICONS = [
   "briefcase",
@@ -204,12 +206,20 @@ export const createTenantInputSchema = z.object({
   subscriptionStatus: tenantSubscriptionStatusSchema.optional(),
 });
 
+export const createTenantOnboardingInputSchema = z.object({
+  initialAdminInvitation: createTenantAdminInvitationInputSchema,
+  tenant: createTenantInputSchema,
+});
+
 export const updateTenantInputSchema = z.object({
   tenantData: tenantSchema.partial(),
   tenantId: tenantIdSchema,
 });
 
 export type CreateTenantVariables = z.infer<typeof createTenantInputSchema>;
+export type CreateTenantOnboardingVariables = z.infer<
+  typeof createTenantOnboardingInputSchema
+>;
 export type Tenant = z.infer<typeof tenantSchema>;
 export type TenantConfig = z.infer<typeof tenantConfigSchema>;
 export type UpdateTenantVariables = z.infer<typeof updateTenantInputSchema>;

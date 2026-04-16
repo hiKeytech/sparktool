@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
+  CopyButton,
   Badge,
   Button,
   Container,
@@ -18,12 +19,23 @@ import {
   Title,
 } from "@mantine/core";
 import { Building2, Plus } from "lucide-react";
-import { useCreateTenant, useTenants, useUpdateTenant } from "@/services/hooks";
+import {
+  useCreateTenantOnboarding,
+  useReissueTenantAdminInvitation,
+  useRevokeTenantAdminInvitation,
+  useTenantAdminInvitations,
+  useTenants,
+  useUpdateTenant,
+} from "@/services/hooks";
+import { formatDateTime, formatRelativeTime } from "@/utils/date-utils";
 import type { Tenant } from "@/schemas/tenant";
+import type { AdminInvitationSummary } from "@/schemas/invitation";
 
 type TenantSubscriptionStatus = "active" | "inactive" | "trial";
 
 interface AddTenantForm {
+  adminDisplayName: string;
+  adminEmail: string;
   allowSignup: boolean;
   domain: string;
   id: string;
@@ -31,7 +43,72 @@ interface AddTenantForm {
   subscriptionStatus: TenantSubscriptionStatus;
 }
 
+interface OnboardingResult {
+  inviteLink: string;
+  inviteeEmail: string;
+  tenantName: string;
+}
+
+type InvitationRecordMap = Record<string, AdminInvitationSummary[]>;
+
+function toDataUrl(svg: string) {
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function escapeSvgText(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function buildTenantBadgeDataUrl(name: string) {
+  const initials =
+    name
+      .split(/\s+/)
+      .filter(Boolean)
+      .slice(0, 2)
+      .map((part) => part[0]?.toUpperCase() ?? "")
+      .join("") || "TN";
+
+  return toDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" fill="none">
+      <rect width="160" height="160" rx="32" fill="#0f3d2e"/>
+      <rect x="16" y="16" width="128" height="128" rx="24" fill="#15523d" stroke="#8ed5b2" stroke-width="2"/>
+      <text x="80" y="92" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" fill="#f3fbf7">${initials}</text>
+    </svg>
+  `);
+}
+
+function buildTenantIllustrationDataUrl(name: string) {
+  const safeName = escapeSvgText(name);
+
+  return toDataUrl(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" fill="none">
+      <rect width="1200" height="720" fill="#eef6f1"/>
+      <circle cx="1040" cy="120" r="220" fill="#d2eadc"/>
+      <circle cx="160" cy="640" r="240" fill="#dcefe4"/>
+      <rect x="120" y="124" width="960" height="472" rx="40" fill="#ffffff" stroke="#c5dfd1" stroke-width="2"/>
+      <rect x="184" y="192" width="224" height="18" rx="9" fill="#1b7339" fill-opacity="0.18"/>
+      <rect x="184" y="232" width="448" height="64" rx="20" fill="#114b2d"/>
+      <rect x="184" y="320" width="372" height="18" rx="9" fill="#9cc8af"/>
+      <rect x="184" y="356" width="312" height="18" rx="9" fill="#c8dfd2"/>
+      <rect x="184" y="420" width="192" height="52" rx="26" fill="#1b7339"/>
+      <rect x="414" y="420" width="188" height="52" rx="26" fill="#edf5f0" stroke="#d5e7db" stroke-width="2"/>
+      <rect x="744" y="220" width="220" height="280" rx="28" fill="#f4faf6" stroke="#d5e7db" stroke-width="2"/>
+      <rect x="784" y="268" width="140" height="140" rx="28" fill="#d7eadf"/>
+      <text x="184" y="286" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="700" fill="#ffffff">${safeName}</text>
+      <text x="184" y="398" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500" fill="#37644d">Tenant workspace on SparkTool</text>
+    </svg>
+  `);
+}
+
 function buildDefaultConfig(name: string, allowSignup: boolean) {
+  const badgeUrl = buildTenantBadgeDataUrl(name);
+  const illustrationUrl = buildTenantIllustrationDataUrl(name);
+
   return {
     auth: {
       allowSignup,
@@ -65,10 +142,10 @@ function buildDefaultConfig(name: string, allowSignup: boolean) {
         heading: name,
         subheading: `${name} operates on SparkTool's multi-tenant learning infrastructure.`,
       },
-      logoUrl: "/nigerian-coat-of-arms.svg",
+      logoUrl: badgeUrl,
       portalName: name,
-      primaryColor: "#006838",
-      secondaryColor: "#f4f8f2",
+      primaryColor: "#1b7339",
+      secondaryColor: "#eef6f1",
     },
     dashboard: { layout: "modern" as const, widgets: [] },
     modules: {
@@ -81,23 +158,23 @@ function buildDefaultConfig(name: string, allowSignup: boolean) {
     publicSite: {
       categorySectionTitle: "Explore Courses",
       categories: [{ icon: "briefcase" as const, name: "Business" }],
-      copyright: "© 2024 Federal Republic of Nigeria. All rights reserved.",
+      copyright: `© ${new Date().getFullYear()} ${name}. Powered by SparkTool.`,
       featuredCoursesCtaLabel: "View All",
       featuredCoursesTitle: "Featured Courses",
       footerLogoAlt: `${name} logo`,
-      footerLogoUrl: "/nigerian-coat-of-arms.svg",
+      footerLogoUrl: badgeUrl,
       footerTagline: `${name} learning workspace on SparkTool`,
-      heroBackgroundImageUrl: "/nigerian-coat-of-arms.svg",
-      heroDescription: `Official digital learning access for ${name}.`,
+      heroBackgroundImageUrl: illustrationUrl,
+      heroDescription: `${name} delivers tenant-isolated learning experiences on SparkTool.`,
       heroLogoAlt: `${name} logo`,
-      heroLogoUrl: "/nigerian-coat-of-arms.svg",
+      heroLogoUrl: badgeUrl,
       heroPrimaryCtaLabel: "Start Learning",
       heroSecondaryCtaLabel: "Explore Courses",
       heroTitle: name,
       missionCtaLabel: "Learn More",
       missionDescription: `${name} uses SparkTool to deliver structured, tenant-isolated learning experiences.`,
       missionImageAlt: `${name} mission graphic`,
-      missionImageUrl: "/nigerian-coat-of-arms.svg",
+      missionImageUrl: illustrationUrl,
       missionTitle: "Mission",
       stats: [{ label: "Students", value: "0" }],
     },
@@ -118,6 +195,8 @@ const statusColors: Record<TenantSubscriptionStatus, string> = {
 };
 
 const defaultAddForm: AddTenantForm = {
+  adminDisplayName: "",
+  adminEmail: "",
   allowSignup: false,
   domain: "",
   id: "",
@@ -133,23 +212,44 @@ function TenantsOverview() {
   const [addOpen, setAddOpen] = useState(false);
   const [editTenant, setEditTenant] = useState<Tenant | null>(null);
   const [addForm, setAddForm] = useState<AddTenantForm>(defaultAddForm);
+  const [onboardingResult, setOnboardingResult] =
+    useState<OnboardingResult | null>(null);
 
   const { data: tenants, isLoading } = useTenants();
-  const { isPending: isCreating, mutate: createTenant } = useCreateTenant();
+  const { data: tenantInvitations = [] } = useTenantAdminInvitations();
+  const { isPending: isCreating, mutate: createTenantOnboarding } =
+    useCreateTenantOnboarding();
+  const { isPending: isReissuing, mutate: reissueInvitation } =
+    useReissueTenantAdminInvitation();
+  const { isPending: isRevoking, mutate: revokeInvitation } =
+    useRevokeTenantAdminInvitation();
   const { isPending: isUpdating, mutate: updateTenant } = useUpdateTenant();
 
+  const invitationMap = buildInvitationMap(tenantInvitations);
+
   function handleAddSubmit() {
-    createTenant(
+    createTenantOnboarding(
       {
-        config: buildDefaultConfig(addForm.name, addForm.allowSignup),
-        domain: addForm.domain,
-        id: addForm.id,
-        name: addForm.name,
-        subscriptionStatus: addForm.subscriptionStatus,
+        initialAdminInvitation: {
+          displayName: addForm.adminDisplayName || null,
+          email: addForm.adminEmail,
+        },
+        tenant: {
+          config: buildDefaultConfig(addForm.name, addForm.allowSignup),
+          domain: addForm.domain,
+          id: addForm.id,
+          name: addForm.name,
+          subscriptionStatus: addForm.subscriptionStatus,
+        },
       },
       {
-        onSuccess: () => {
+        onSuccess: (result) => {
           setAddOpen(false);
+          setOnboardingResult({
+            inviteLink: `${window.location.origin}/${result.tenant.id}/login?invite=${result.invitationToken}`,
+            inviteeEmail: result.invitation.email,
+            tenantName: result.tenant.name,
+          });
           setAddForm(defaultAddForm);
         },
       },
@@ -246,7 +346,7 @@ function TenantsOverview() {
           </Group>
 
           {isLoading ? (
-            <div className="flex justify-center items-center p-12">
+            <div className="flex items-center justify-center p-12">
               <Loader size="sm" color="green" />
             </div>
           ) : (
@@ -255,27 +355,30 @@ function TenantsOverview() {
               horizontalSpacing="md"
               className="w-full"
             >
-              <Table.Thead className="bg-stone-50 border-b border-stone-200">
+              <Table.Thead className="border-b bg-stone-50 border-stone-200">
                 <Table.Tr>
-                  <Table.Th className="text-stone-500 font-semibold text-xs tracking-wide">
+                  <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
                     Tenant ID
                   </Table.Th>
-                  <Table.Th className="text-stone-500 font-semibold text-xs tracking-wide">
+                  <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
                     Tenant
                   </Table.Th>
-                  <Table.Th className="text-stone-500 font-semibold text-xs tracking-wide">
+                  <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
                     Domain
                   </Table.Th>
-                  <Table.Th className="text-stone-500 font-semibold text-xs tracking-wide">
+                  <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
                     Access Policy
                   </Table.Th>
-                  <Table.Th className="text-stone-500 font-semibold text-xs tracking-wide">
+                  <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
                     Modules
                   </Table.Th>
-                  <Table.Th className="text-stone-500 font-semibold text-xs tracking-wide">
+                  <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
                     Status
                   </Table.Th>
-                  <Table.Th className="text-stone-500 font-semibold text-xs tracking-wide text-right">
+                  <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
+                    Admin Invite
+                  </Table.Th>
+                  <Table.Th className="text-xs font-semibold tracking-wide text-right text-stone-500">
                     Actions
                   </Table.Th>
                 </Table.Tr>
@@ -284,7 +387,7 @@ function TenantsOverview() {
                 {(tenants ?? []).map((tenant) => (
                   <Table.Tr
                     key={tenant.id}
-                    className="border-b border-stone-100 hover:bg-stone-50 transition-colors"
+                    className="transition-colors border-b border-stone-100 hover:bg-stone-50"
                   >
                     <Table.Td className="font-mono text-xs text-stone-500">
                       {tenant.id}
@@ -297,7 +400,7 @@ function TenantsOverview() {
                         {tenant.config.branding.portalName}
                       </Text>
                     </Table.Td>
-                    <Table.Td className="text-stone-600 text-xs font-mono">
+                    <Table.Td className="font-mono text-xs text-stone-600">
                       {tenant.domain}
                     </Table.Td>
                     <Table.Td>
@@ -327,7 +430,74 @@ function TenantsOverview() {
                       </Badge>
                     </Table.Td>
                     <Table.Td>
+                      <TenantInviteCell
+                        invitation={resolveLatestPendingInvitation(
+                          invitationMap[tenant.id] ?? [],
+                        )}
+                      />
+                    </Table.Td>
+                    <Table.Td>
                       <Group justify="flex-end" gap="xs">
+                        {resolveLatestManageableInvitation(
+                          invitationMap[tenant.id] ?? [],
+                        ) ? (
+                          <Button
+                            variant="subtle"
+                            color="green"
+                            size="xs"
+                            className="text-[#006838] hover:bg-[#006838]/10"
+                            loading={isReissuing}
+                            onClick={() => {
+                              const invitation =
+                                resolveLatestManageableInvitation(
+                                  invitationMap[tenant.id] ?? [],
+                                );
+                              if (!invitation) return;
+
+                              reissueInvitation(
+                                {
+                                  invitationId: invitation.id,
+                                  tenantId: tenant.id,
+                                },
+                                {
+                                  onSuccess: (result) => {
+                                    setOnboardingResult({
+                                      inviteLink: `${window.location.origin}/${tenant.id}/login?invite=${result.invitationToken}`,
+                                      inviteeEmail: result.invitation.email,
+                                      tenantName: tenant.name,
+                                    });
+                                  },
+                                },
+                              );
+                            }}
+                          >
+                            Reissue Invite
+                          </Button>
+                        ) : null}
+                        {resolveLatestPendingInvitation(
+                          invitationMap[tenant.id] ?? [],
+                        ) ? (
+                          <Button
+                            variant="subtle"
+                            color="red"
+                            size="xs"
+                            className="text-red-600 hover:bg-red-50"
+                            loading={isRevoking}
+                            onClick={() => {
+                              const invitation = resolveLatestPendingInvitation(
+                                invitationMap[tenant.id] ?? [],
+                              );
+                              if (!invitation) return;
+
+                              revokeInvitation({
+                                invitationId: invitation.id,
+                                tenantId: tenant.id,
+                              });
+                            }}
+                          >
+                            Revoke Invite
+                          </Button>
+                        ) : null}
                         <Button
                           variant="subtle"
                           color="gray"
@@ -344,8 +514,8 @@ function TenantsOverview() {
                 {!isLoading && (tenants ?? []).length === 0 && (
                   <Table.Tr>
                     <Table.Td
-                      colSpan={7}
-                      className="text-center py-10 text-stone-400"
+                      colSpan={8}
+                      className="py-10 text-center text-stone-400"
                     >
                       No tenants registered yet.
                     </Table.Td>
@@ -366,9 +536,15 @@ function TenantsOverview() {
           centered
         >
           <div className="space-y-4">
+            <Text c="dimmed" size="sm">
+              A tenant is not considered operational until it has an accountable
+              first administrator. This flow creates the tenant and issues a
+              one-time administrator invite instead of pre-creating a dormant
+              account.
+            </Text>
             <TextInput
               label="Tenant Name"
-              placeholder="e.g. Nigerian Correctional Service"
+              placeholder="e.g. Lagos Public Service Academy"
               required
               value={addForm.name}
               onChange={(e) => {
@@ -431,6 +607,38 @@ function TenantsOverview() {
                 }))
               }
             />
+            <div className="pt-2">
+              <Text fw={600} size="sm">
+                Initial Tenant Administrator Invite
+              </Text>
+              <Text c="dimmed" size="xs">
+                This email receives the first admin redemption link for the new
+                tenant workspace.
+              </Text>
+            </div>
+            <TextInput
+              label="Invitee Name"
+              placeholder="e.g. Ada Nwosu"
+              value={addForm.adminDisplayName}
+              onChange={(e) =>
+                setAddForm((prev) => ({
+                  ...prev,
+                  adminDisplayName: e.currentTarget.value,
+                }))
+              }
+            />
+            <TextInput
+              label="Invitee Email Address"
+              placeholder="e.g. ada@tenant.org"
+              required
+              value={addForm.adminEmail}
+              onChange={(e) =>
+                setAddForm((prev) => ({
+                  ...prev,
+                  adminEmail: e.currentTarget.value,
+                }))
+              }
+            />
             <Group justify="flex-end" mt="md">
               <Button
                 variant="default"
@@ -444,13 +652,45 @@ function TenantsOverview() {
               <Button
                 color="green"
                 loading={isCreating}
-                disabled={!addForm.name || !addForm.id || !addForm.domain}
+                disabled={
+                  !addForm.name ||
+                  !addForm.id ||
+                  !addForm.domain ||
+                  !addForm.adminEmail
+                }
                 onClick={handleAddSubmit}
               >
-                Create Tenant
+                Create Tenant and Invite Admin
               </Button>
             </Group>
           </div>
+        </Modal>
+
+        <Modal
+          opened={onboardingResult !== null}
+          onClose={() => setOnboardingResult(null)}
+          title="Administrator Invite Ready"
+          centered
+        >
+          <Stack gap="md">
+            <Text c="dimmed" size="sm">
+              {onboardingResult?.tenantName} is now provisioned. Share this
+              one-time invite with {onboardingResult?.inviteeEmail} so they can
+              create the first tenant admin account.
+            </Text>
+            <TextInput
+              label="Administrator invite link"
+              readOnly
+              value={onboardingResult?.inviteLink ?? ""}
+            />
+            <CopyButton value={onboardingResult?.inviteLink ?? ""}>
+              {({ copied, copy }) => (
+                <Button color="green" onClick={copy}>
+                  {copied ? "Invite link copied" : "Copy invite link"}
+                </Button>
+              )}
+            </CopyButton>
+          </Stack>
         </Modal>
 
         <Modal
@@ -542,7 +782,7 @@ function TenantsOverview() {
               <Building2 size={16} className="text-[#006838]" />
               <Text className="text-[#006838] text-sm font-medium">
                 New tenants now bootstrap from a platform-neutral SparkTool
-                template instead of inheriting tenant-specific NCS assets or
+                template instead of inheriting tenant-specific branding or
                 missing placeholder files.
               </Text>
             </Group>
@@ -555,6 +795,60 @@ function TenantsOverview() {
 
 function countEnabledModules(modules: Tenant["config"]["modules"]) {
   return Object.values(modules).filter(Boolean).length;
+}
+
+function buildInvitationMap(invitations: AdminInvitationSummary[]) {
+  return invitations.reduce<InvitationRecordMap>((accumulator, invitation) => {
+    if (!accumulator[invitation.tenantId]) {
+      accumulator[invitation.tenantId] = [];
+    }
+
+    accumulator[invitation.tenantId]!.push(invitation);
+    return accumulator;
+  }, {});
+}
+
+function resolveLatestPendingInvitation(invitations: AdminInvitationSummary[]) {
+  return (
+    invitations.find((invitation) => invitation.status === "pending") ?? null
+  );
+}
+
+function resolveLatestManageableInvitation(
+  invitations: AdminInvitationSummary[],
+) {
+  return (
+    invitations.find(
+      (invitation) =>
+        invitation.status === "pending" || invitation.status === "revoked",
+    ) ?? null
+  );
+}
+
+function TenantInviteCell({
+  invitation,
+}: {
+  invitation: AdminInvitationSummary | null;
+}) {
+  if (!invitation) {
+    return (
+      <Text c="dimmed" size="xs">
+        No active invite
+      </Text>
+    );
+  }
+
+  return (
+    <div>
+      <Text size="sm">{invitation.email}</Text>
+      <Text c="dimmed" size="xs">
+        Expires {formatRelativeTime(invitation.expiresAt)}
+      </Text>
+      <Text c="dimmed" size="xs">
+        {formatDateTime(invitation.expiresAt)}
+      </Text>
+    </div>
+  );
 }
 
 function TenantStat({ label, value }: { label: string; value: string }) {

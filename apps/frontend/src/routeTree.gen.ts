@@ -19,6 +19,7 @@ import { Route as TenantIndexRouteImport } from './routes/$tenant/index'
 import { Route as SuperAdminTenantsRouteImport } from './routes/super-admin/tenants'
 import { Route as SuperAdminTelemetryRouteImport } from './routes/super-admin/telemetry'
 import { Route as SuperAdminSettingsRouteImport } from './routes/super-admin/settings'
+import { Route as SuperAdminInvitationsRouteImport } from './routes/super-admin/invitations'
 import { Route as SuperAdminIdentitiesRouteImport } from './routes/super-admin/identities'
 import { Route as TenantStudentRouteImport } from './routes/$tenant/student'
 import { Route as TenantLoginRouteImport } from './routes/$tenant/login'
@@ -103,6 +104,11 @@ const SuperAdminTelemetryRoute = SuperAdminTelemetryRouteImport.update({
 const SuperAdminSettingsRoute = SuperAdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => SuperAdminRoute,
+} as any)
+const SuperAdminInvitationsRoute = SuperAdminInvitationsRouteImport.update({
+  id: '/invitations',
+  path: '/invitations',
   getParentRoute: () => SuperAdminRoute,
 } as any)
 const SuperAdminIdentitiesRoute = SuperAdminIdentitiesRouteImport.update({
@@ -304,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/$tenant/login': typeof TenantLoginRoute
   '/$tenant/student': typeof TenantStudentRouteWithChildren
   '/super-admin/identities': typeof SuperAdminIdentitiesRoute
+  '/super-admin/invitations': typeof SuperAdminInvitationsRoute
   '/super-admin/settings': typeof SuperAdminSettingsRoute
   '/super-admin/telemetry': typeof SuperAdminTelemetryRoute
   '/super-admin/tenants': typeof SuperAdminTenantsRoute
@@ -347,6 +354,7 @@ export interface FileRoutesByTo {
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/login': typeof TenantLoginRoute
   '/super-admin/identities': typeof SuperAdminIdentitiesRoute
+  '/super-admin/invitations': typeof SuperAdminInvitationsRoute
   '/super-admin/settings': typeof SuperAdminSettingsRoute
   '/super-admin/telemetry': typeof SuperAdminTelemetryRoute
   '/super-admin/tenants': typeof SuperAdminTenantsRoute
@@ -388,6 +396,7 @@ export interface FileRoutesById {
   '/$tenant/login': typeof TenantLoginRoute
   '/$tenant/student': typeof TenantStudentRouteWithChildren
   '/super-admin/identities': typeof SuperAdminIdentitiesRoute
+  '/super-admin/invitations': typeof SuperAdminInvitationsRoute
   '/super-admin/settings': typeof SuperAdminSettingsRoute
   '/super-admin/telemetry': typeof SuperAdminTelemetryRoute
   '/super-admin/tenants': typeof SuperAdminTenantsRoute
@@ -437,6 +446,7 @@ export interface FileRouteTypes {
     | '/$tenant/login'
     | '/$tenant/student'
     | '/super-admin/identities'
+    | '/super-admin/invitations'
     | '/super-admin/settings'
     | '/super-admin/telemetry'
     | '/super-admin/tenants'
@@ -480,6 +490,7 @@ export interface FileRouteTypes {
     | '/verify-certificate'
     | '/$tenant/login'
     | '/super-admin/identities'
+    | '/super-admin/invitations'
     | '/super-admin/settings'
     | '/super-admin/telemetry'
     | '/super-admin/tenants'
@@ -520,6 +531,7 @@ export interface FileRouteTypes {
     | '/$tenant/login'
     | '/$tenant/student'
     | '/super-admin/identities'
+    | '/super-admin/invitations'
     | '/super-admin/settings'
     | '/super-admin/telemetry'
     | '/super-admin/tenants'
@@ -636,6 +648,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/super-admin/settings'
       preLoaderRoute: typeof SuperAdminSettingsRouteImport
+      parentRoute: typeof SuperAdminRoute
+    }
+    '/super-admin/invitations': {
+      id: '/super-admin/invitations'
+      path: '/invitations'
+      fullPath: '/super-admin/invitations'
+      preLoaderRoute: typeof SuperAdminInvitationsRouteImport
       parentRoute: typeof SuperAdminRoute
     }
     '/super-admin/identities': {
@@ -1065,6 +1084,7 @@ const TenantRouteWithChildren =
 
 interface SuperAdminRouteChildren {
   SuperAdminIdentitiesRoute: typeof SuperAdminIdentitiesRoute
+  SuperAdminInvitationsRoute: typeof SuperAdminInvitationsRoute
   SuperAdminSettingsRoute: typeof SuperAdminSettingsRoute
   SuperAdminTelemetryRoute: typeof SuperAdminTelemetryRoute
   SuperAdminTenantsRoute: typeof SuperAdminTenantsRoute
@@ -1073,6 +1093,7 @@ interface SuperAdminRouteChildren {
 
 const SuperAdminRouteChildren: SuperAdminRouteChildren = {
   SuperAdminIdentitiesRoute: SuperAdminIdentitiesRoute,
+  SuperAdminInvitationsRoute: SuperAdminInvitationsRoute,
   SuperAdminSettingsRoute: SuperAdminSettingsRoute,
   SuperAdminTelemetryRoute: SuperAdminTelemetryRoute,
   SuperAdminTenantsRoute: SuperAdminTenantsRoute,

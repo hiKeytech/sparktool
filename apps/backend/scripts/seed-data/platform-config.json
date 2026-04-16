@@ -32,16 +32,16 @@
       "formDescription": "Use your super-admin account to create tenants, manage domains, and oversee platform access.",
       "formTitle": "Platform Admin Sign In",
       "heading": "Platform Operations",
-      "subheading": "A dedicated control surface for Sparktool operators"
+      "subheading": "A dedicated control surface for SparkTool operators"
     },
     "logoUrl": "/logo.png",
-    "portalName": "Sparktool Platform",
+    "portalName": "SparkTool Platform",
     "primaryColor": "#1b7339",
     "secondaryColor": "#ffffff"
   },
   "marketing": {
     "eyebrow": "Platform workspace",
-    "heroTitle": "Operate Sparktool without leaking tenant concerns into the platform surface.",
+    "heroTitle": "Operate SparkTool without leaking tenant concerns into the platform surface.",
     "heroDescription": "Platform branding, auth rules, and operator messaging are resolved from persisted configuration so the platform can evolve independently from tenant experiences.",
     "highlights": [
       {

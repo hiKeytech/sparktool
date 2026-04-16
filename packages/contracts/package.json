@@ -11,6 +11,7 @@
     "./course": "./src/course.ts",
     "./course-lesson": "./src/course-lesson.ts",
     "./course-section": "./src/course-section.ts",
+    "./invitation": "./src/invitation.ts",
     "./live-session": "./src/live-session.ts",
     "./platform-config": "./src/platform-config.ts",
     "./quiz": "./src/quiz.ts",

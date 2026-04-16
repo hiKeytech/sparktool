@@ -6,6 +6,8 @@ import type { QueryFilters } from "@/types/query-filters";
 import { isDefined } from "@/utils/is-defined";
 
 type ActivityLogEntry =
+  | LogAdminInvitationCreatedDetails
+  | LogAdminInvitationRedeemedDetails
   | LogCertificateEarnedDetails
   | LogCertificateModifiedDetails
   | LogCourseCompletedDetails
@@ -120,6 +122,21 @@ interface LogCourseStartedDetails
     Nullish<{
       action: "course_started";
       courseId: string;
+    }> {}
+
+interface LogAdminInvitationCreatedDetails
+  extends
+    ActivityLogDetails,
+    Nullish<{
+      action: "admin_invitation_created";
+      invitedEmail: string;
+    }> {}
+
+interface LogAdminInvitationRedeemedDetails
+  extends
+    ActivityLogDetails,
+    Nullish<{
+      action: "admin_invitation_redeemed";
     }> {}
 
 interface LogLiveSessionCreatedDetails

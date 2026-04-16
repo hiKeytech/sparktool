@@ -1,6 +1,12 @@
 import type { Options } from "./types";
 import type { EmailPasswordCredentials } from "@/types";
 import type { StudentProgress } from "@/schemas/student-progress";
+import type { User } from "@/schemas/user";
+import type {
+  AdminInvitationPreview,
+  AdminInvitationSummary,
+  RedeemAdminInvitationInput,
+} from "sparktool-contracts";
 
 import {
   queryOptions,
@@ -12,8 +18,19 @@ import { useNavigate } from "@tanstack/react-router";
 import { minutesToMilliseconds } from "date-fns";
 import { updatePlatformConfig } from "@/actions/platform";
 import { listPlatformActivityLogsFn } from "@/server/activity-logs";
+import {
+  getAdminInvitationPreviewFn,
+  redeemAdminInvitationFn,
+} from "@/server/auth";
+import {
+  createTenantOnboardingFn,
+  listTenantAdminInvitationsFn,
+  reissueTenantAdminInvitationFn,
+  revokeTenantAdminInvitationFn,
+} from "@/server/tenants";
 import type { ActivityLog } from "@/schemas/activity-log";
 import type { PlatformConfig } from "@/schemas/platform-config";
+import type { CreateTenantOnboardingVariables } from "@/schemas/tenant-contract";
 
 import {
   extractTenantIdFromPath,
@@ -29,6 +46,90 @@ export function useCreateTenant() {
       successMessage: "Tenant created successfully.",
     },
     mutationFn: api.$use.tenant.create,
+  });
+}
+
+export function useCreateTenantOnboarding() {
+  return useMutation({
+    meta: {
+      errorMessage:
+        "Failed to create tenant and administrator invitation. Please try again.",
+      successMessage:
+        "Tenant and administrator invitation created successfully.",
+    },
+    mutationFn: (variables: CreateTenantOnboardingVariables) =>
+      createTenantOnboardingFn({ data: variables }),
+  });
+}
+
+export function useTenantAdminInvitation(
+  tenantId: string,
+  token?: string,
+  options: Options<typeof query> = {},
+  query = queryOptions({
+    enabled: Boolean(tenantId && token),
+    queryFn: () =>
+      getAdminInvitationPreviewFn({
+        data: {
+          tenantId,
+          token: token!,
+        },
+      }) as Promise<AdminInvitationPreview>,
+    queryKey: ["tenant-admin-invitation", tenantId, token],
+  }),
+) {
+  return useQuery({ ...query, ...options });
+}
+
+export function useTenantAdminInvitations(
+  options: Options<typeof query> = {},
+  query = queryOptions({
+    queryFn: () =>
+      listTenantAdminInvitationsFn() as Promise<AdminInvitationSummary[]>,
+    queryKey: ["tenant-admin-invitations"],
+  }),
+) {
+  return useQuery({ ...query, ...options });
+}
+
+export function useReissueTenantAdminInvitation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to reissue administrator invitation.",
+      successMessage: "Administrator invitation reissued successfully.",
+    },
+    mutationFn: (variables: { invitationId: string; tenantId: string }) =>
+      reissueTenantAdminInvitationFn({ data: variables }) as Promise<{
+        invitation: AdminInvitationSummary;
+        invitationToken: string;
+      }>,
+    onSuccess: async (_result, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["tenant-admin-invitations", variables.tenantId],
+      });
+    },
+  });
+}
+
+export function useRevokeTenantAdminInvitation() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to revoke administrator invitation.",
+      successMessage: "Administrator invitation revoked successfully.",
+    },
+    mutationFn: (variables: { invitationId: string; tenantId: string }) =>
+      revokeTenantAdminInvitationFn({ data: variables }) as Promise<{
+        success: true;
+      }>,
+    onSuccess: async (_result, variables) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["tenant-admin-invitations", variables.tenantId],
+      });
+    },
   });
 }
 // Course Progress Calculation Hooks
@@ -719,6 +820,27 @@ export function useSignInWithEmailAndPassword() {
       const tenantId =
         extractTenantIdFromPath(window.location.pathname) ??
         data.userData.tenantIds?.[0];
+      navigate({
+        replace: true,
+        ...resolveRoleHomeTarget(data.userData.role, tenantId),
+      });
+    },
+  });
+}
+
+export function useRedeemAdminInvitation() {
+  const navigate = useNavigate();
+
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to accept the administrator invitation.",
+    },
+    mutationFn: (variables: RedeemAdminInvitationInput) =>
+      redeemAdminInvitationFn({ data: variables }) as Promise<{
+        userData: User & { id: string };
+      }>,
+    onSuccess: (data: { userData: User & { id: string } }) => {
+      const tenantId = data.userData.tenantIds?.[0];
       navigate({
         replace: true,
         ...resolveRoleHomeTarget(data.userData.role, tenantId),

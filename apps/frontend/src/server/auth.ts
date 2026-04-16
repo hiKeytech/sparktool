@@ -1,5 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import {
+  adminInvitationPreviewSchema,
+  redeemAdminInvitationInputSchema,
+} from "sparktool-contracts/invitation";
 
 import {
   api,
@@ -15,6 +19,7 @@ type StoredUser = User & { id: string };
 type PasswordAuthResponse = {
   userData: StoredUser & { activeTenantId?: string };
 };
+type AdminInvitationPreview = z.infer<typeof adminInvitationPreviewSchema>;
 type ResetPasswordResponse = ApiSuccessResponse & { userId: string };
 
 const setSessionDataSchema = sessionDataSchema.extend({
@@ -22,6 +27,11 @@ const setSessionDataSchema = sessionDataSchema.extend({
 });
 
 const userLookupSchema = z.string().min(1).nullable();
+
+const invitationLookupSchema = z.object({
+  tenantId: z.string().min(1, "Tenant ID is required"),
+  token: z.string().min(1, "Invitation token is required"),
+});
 
 const passwordAuthSchema = z.object({
   allowSignup: z.boolean().default(false),
@@ -126,6 +136,42 @@ export const signOutUserFn = createServerFn({ method: "POST" }).handler(
     return { success: true };
   },
 );
+
+export const getAdminInvitationPreviewFn = createServerFn({ method: "GET" })
+  .inputValidator(invitationLookupSchema)
+  .handler(async ({ data }) => {
+    const preview = await api.get<AdminInvitationPreview>(
+      `/api/auth/invitations/${encodeURIComponent(data.token)}`,
+    );
+
+    if (preview.tenantId !== data.tenantId) {
+      throw new Error("This invitation does not belong to the current tenant.");
+    }
+
+    return preview;
+  });
+
+export const redeemAdminInvitationFn = createServerFn({ method: "POST" })
+  .inputValidator(redeemAdminInvitationInputSchema)
+  .handler(async ({ data }) => {
+    const result = await api.post<PasswordAuthResponse>(
+      "/api/auth/redeem-invite",
+      data,
+    );
+
+    const session = await useAppSession();
+    const user = result.userData;
+
+    await session.update({
+      activeTenantId: data.tenantId,
+      email: user.email,
+      role: user.role,
+      tenantIds: user.tenantIds ?? [],
+      uid: user.id,
+    });
+
+    return result;
+  });
 
 export const updateUserProfileFn = createServerFn({ method: "POST" })
   .inputValidator(

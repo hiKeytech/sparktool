@@ -50,6 +50,21 @@ interface LogCourseStartedDetails
       courseId: string;
     }> {}
 
+interface LogAdminInvitationCreatedDetails
+  extends
+    ActivityLogDetails,
+    Nullish<{
+      action: "admin_invitation_created";
+      invitedEmail: string;
+    }> {}
+
+interface LogAdminInvitationRedeemedDetails
+  extends
+    ActivityLogDetails,
+    Nullish<{
+      action: "admin_invitation_redeemed";
+    }> {}
+
 interface LogLiveSessionCreatedDetails
   extends
     ActivityLogDetails,
@@ -155,6 +170,8 @@ interface LogVideoWatchedDetails
     }> {}
 
 export type ActivityLog =
+  | LogAdminInvitationCreatedDetails
+  | LogAdminInvitationRedeemedDetails
   | LogCertificateEarnedDetails
   | LogCertificateModifiedDetails
   | LogCourseCompletedDetails
@@ -179,6 +196,7 @@ export interface ActivityLogCreateInput {
   certificateId?: null | string;
   courseId?: null | string;
   enrollmentMethod?: "admin_enrolled" | "self_enrolled";
+  invitedEmail?: string;
   lessonId?: null | string;
   method?:
     | "manual_login"

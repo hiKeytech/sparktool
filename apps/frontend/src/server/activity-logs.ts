@@ -6,6 +6,8 @@ import type { ActivityLog } from "@/schemas/activity-log";
 
 const activityLogActionSchema = z
   .enum([
+    "admin_invitation_created",
+    "admin_invitation_redeemed",
     "certificate_earned",
     "certificate_modified",
     "course_completed",
@@ -30,6 +32,7 @@ const activityLogCreateInputSchema = z.object({
   certificateId: z.string().nullable().optional(),
   courseId: z.string().nullable().optional(),
   enrollmentMethod: z.enum(["admin_enrolled", "self_enrolled"]).optional(),
+  invitedEmail: z.string().email().optional(),
   method: z
     .enum([
       "manual_login",

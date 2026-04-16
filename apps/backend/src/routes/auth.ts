@@ -1,9 +1,12 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 import { Router } from "express";
 import { TenantService } from "../services/tenant-service.js";
 import { PlatformConfigService } from "../services/platform-config-service.js";
+import { redeemAdminInvitationInputSchema } from "sparktool-contracts/invitation";
 
+import { activityLogRepository } from "../repositories/activity-log-repository.js";
+import { adminInvitationRepository } from "../repositories/admin-invitation-repository.js";
 import { passwordAuthRepository } from "../repositories/password-auth-repository.js";
 import { userRepository } from "../repositories/user-repository.js";
 import {
@@ -13,6 +16,40 @@ import {
 } from "../lib/request-helpers.js";
 
 export const authRouter = Router();
+
+function hashInvitationToken(token: string) {
+  return createHash("sha256").update(token).digest("hex");
+}
+
+async function getInvitationOrThrow(token: string) {
+  const invitation = await adminInvitationRepository.getByTokenHash(
+    hashInvitationToken(token),
+  );
+
+  if (!invitation) {
+    throw httpError(404, "Invitation was not found.");
+  }
+
+  if (invitation.status === "revoked") {
+    throw httpError(410, "This invitation has been revoked.");
+  }
+
+  if (invitation.status === "redeemed") {
+    throw httpError(409, "This invitation has already been redeemed.");
+  }
+
+  if (invitation.expiresAt <= Date.now()) {
+    if (invitation.status !== "expired") {
+      await adminInvitationRepository.update(invitation.id, {
+        status: "expired",
+      });
+    }
+
+    throw httpError(410, "This invitation has expired.");
+  }
+
+  return invitation;
+}
 
 function isDomainAllowed(email: string, restrictedDomains?: string[]) {
   if (!restrictedDomains?.length) return true;
@@ -124,6 +161,116 @@ authRouter.post("/sign-in", async (request, response) => {
   }
 
   response.json({ userData: updatedUser });
+});
+
+/** GET /api/auth/invitations/:token */
+authRouter.get("/invitations/:token", async (request, response) => {
+  const invitation = await getInvitationOrThrow(request.params.token);
+
+  response.json({
+    displayName: invitation.displayName ?? null,
+    email: invitation.email,
+    expiresAt: invitation.expiresAt,
+    role: invitation.role,
+    status: invitation.status,
+    tenantId: invitation.tenantId,
+  });
+});
+
+/** POST /api/auth/redeem-invite */
+authRouter.post("/redeem-invite", async (request, response) => {
+  const parseResult = redeemAdminInvitationInputSchema.safeParse(request.body);
+
+  if (!parseResult.success) {
+    throw httpError(400, "Invalid invitation redemption payload.");
+  }
+
+  const { department, displayName, location, password, tenantId, token } =
+    parseResult.data;
+  const invitation = await getInvitationOrThrow(token);
+
+  if (invitation.tenantId !== tenantId) {
+    throw httpError(
+      400,
+      "This invitation does not belong to the current tenant.",
+    );
+  }
+
+  const normalizedEmail = invitation.email.trim().toLowerCase();
+  const [existingUser, existingAccount] = await Promise.all([
+    userRepository.getByEmail(normalizedEmail),
+    passwordAuthRepository.getByEmail(normalizedEmail),
+  ]);
+
+  if (existingUser || existingAccount) {
+    throw httpError(
+      409,
+      "An account with this email already exists. Ask a platform administrator to re-issue access.",
+    );
+  }
+
+  const userId = randomUUID();
+  const now = Date.now();
+  const createdUser = await userRepository.create({
+    certificatesEarned: 0,
+    completedCourses: [],
+    createdAt: now,
+    department: department?.trim() || null,
+    displayName: displayName.trim(),
+    email: normalizedEmail,
+    enrolledCourses: [],
+    isActive: true,
+    isPending: false,
+    lastLoginAt: now,
+    location: location?.trim() || null,
+    photoURL: "",
+    preferences: { language: "en", notifications: true, theme: "light" },
+    role: invitation.role,
+    studentId: null,
+    subscriptions: [],
+    tenantIds: [invitation.tenantId],
+    totalWatchTime: 0,
+    uid: userId,
+    updatedAt: now,
+  });
+
+  if (!createdUser) {
+    throw httpError(500, "Failed to create the invited administrator account.");
+  }
+
+  try {
+    await passwordAuthRepository.createAccount({
+      email: normalizedEmail,
+      password,
+      userId: createdUser.id,
+    });
+
+    await adminInvitationRepository.update(invitation.id, {
+      redeemedAt: now,
+      redeemedUserId: createdUser.id,
+      status: "redeemed",
+    });
+
+    void activityLogRepository.create({
+      action: "admin_invitation_redeemed",
+      tenantId: invitation.tenantId,
+      userId: createdUser.id,
+    });
+
+    response.json({ userData: createdUser });
+  } catch (error) {
+    await Promise.allSettled([
+      passwordAuthRepository.deleteByUserId(createdUser.id),
+      userRepository.delete(createdUser.id),
+    ]);
+
+    throw httpError(
+      500,
+      error instanceof Error
+        ? error.message
+        : "Failed to redeem the administrator invitation.",
+    );
+  }
 });
 
 /** GET /api/auth/me */

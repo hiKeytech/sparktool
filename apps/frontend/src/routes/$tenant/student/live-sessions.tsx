@@ -48,7 +48,7 @@ function StudentLiveSessionsPage() {
   const { data: sessions = [], isLoading } = useListLiveSessions(tenant.id);
   const joinLiveSession = useJoinLiveSession();
   const joinWindowMinutes = tenant.config.liveSessions?.joinWindowMinutes ?? 10;
-  const portalName = tenant.config.branding.portalName ?? "Sparktool";
+  const portalName = tenant.config.branding.portalName ?? "SparkTool";
   const interfaceConfig: Partial<JitsiMeetInterfaceConfig> = {
     APP_NAME:
       tenant.config.liveSessions?.appName ?? `${portalName} Live Session`,

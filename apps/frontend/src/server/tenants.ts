@@ -2,16 +2,31 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 import {
+  createTenantOnboardingInputSchema,
   createTenantInputSchema,
   tenantConfigSchema,
   tenantIdSchema,
   tenantSchema,
   updateTenantInputSchema,
 } from "@/schemas/tenant-contract";
+import {
+  type AdminInvitationPreview,
+  type AdminInvitationSummary,
+} from "sparktool-contracts/invitation";
 import { api } from "@/lib/api-client";
 import { requireAuthenticatedUser } from "@/server/tenant-context";
 
 type Tenant = z.infer<typeof tenantSchema>;
+type TenantOnboardingResponse = {
+  invitation: AdminInvitationPreview;
+  invitationToken: string;
+  tenant: Tenant;
+};
+
+const invitationActionInputSchema = z.object({
+  invitationId: z.string().trim().min(1),
+  tenantId: tenantIdSchema,
+});
 
 function normalizeTenantHost(value: null | string | undefined): null | string {
   if (!value) return null;
@@ -88,6 +103,20 @@ export const createTenantFn = createServerFn({ method: "POST" })
     return api.post<Tenant>("/api/tenants", tenant);
   });
 
+export const createTenantOnboardingFn = createServerFn({ method: "POST" })
+  .inputValidator(createTenantOnboardingInputSchema)
+  .handler(async ({ data }) => {
+    await requireSuperAdmin();
+
+    return api.post<TenantOnboardingResponse>("/api/tenants/onboard", {
+      initialAdminInvitation: {
+        displayName: data.initialAdminInvitation.displayName?.trim() || null,
+        email: data.initialAdminInvitation.email.trim().toLowerCase(),
+      },
+      tenant: normalizeTenantRecord(data.tenant),
+    });
+  });
+
 export const getTenantByIdFn = createServerFn({ method: "GET" })
   .inputValidator(tenantIdSchema)
   .handler(async ({ data }) => {
@@ -128,4 +157,36 @@ export const updateTenantFn = createServerFn({ method: "POST" })
     });
 
     return api.patch<Tenant>(`/api/tenants/${data.tenantId}`, nextTenant);
+  });
+
+export const listTenantAdminInvitationsFn = createServerFn({
+  method: "GET",
+}).handler(async () => {
+  await requireSuperAdmin();
+  return api.get<AdminInvitationSummary[]>(
+    "/api/tenants/admin-invitations/all",
+  );
+});
+
+export const reissueTenantAdminInvitationFn = createServerFn({ method: "POST" })
+  .inputValidator(invitationActionInputSchema)
+  .handler(async ({ data }) => {
+    await requireSuperAdmin();
+    return api.post<{
+      invitation: AdminInvitationSummary;
+      invitationToken: string;
+    }>(
+      `/api/tenants/${data.tenantId}/admin-invitations/${data.invitationId}/reissue`,
+      {},
+    );
+  });
+
+export const revokeTenantAdminInvitationFn = createServerFn({ method: "POST" })
+  .inputValidator(invitationActionInputSchema)
+  .handler(async ({ data }) => {
+    await requireSuperAdmin();
+    return api.post<{ success: true }>(
+      `/api/tenants/${data.tenantId}/admin-invitations/${data.invitationId}/revoke`,
+      {},
+    );
   });

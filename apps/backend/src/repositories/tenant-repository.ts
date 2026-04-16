@@ -93,6 +93,11 @@ export const tenantRepository = {
       .filter((tenant): tenant is Tenant => tenant !== null);
   },
 
+  async delete(id: string) {
+    const tenants = await getTenantCollection();
+    await tenants.deleteOne({ _id: id });
+  },
+
   async update(id: string, updates: Partial<Tenant>) {
     const tenants = await getTenantCollection();
 

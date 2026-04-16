@@ -1,8 +1,11 @@
 import type { EmailPasswordCredentials, UpdateUser } from "@/types";
+import type { RedeemAdminInvitationInput } from "@/schemas/invitation";
 import {
   changePasswordFn,
+  getAdminInvitationPreviewFn,
   getSessionDataFn,
   getUserByIdFn,
+  redeemAdminInvitationFn,
   resetUserPasswordFn,
   signInWithPasswordFn,
   signOutUserFn,
@@ -17,6 +20,17 @@ export const authService = {
 
   signInWithEmailAndPassword: async (credentials: EmailPasswordCredentials) => {
     return signInWithPasswordFn({ data: credentials });
+  },
+
+  getAdminInvitationPreview: async (variables: {
+    tenantId: string;
+    token: string;
+  }) => {
+    return getAdminInvitationPreviewFn({ data: variables });
+  },
+
+  redeemAdminInvitation: async (variables: RedeemAdminInvitationInput) => {
+    return redeemAdminInvitationFn({ data: variables });
   },
 
   signOut: async (_variables: { userId?: string }) => {
