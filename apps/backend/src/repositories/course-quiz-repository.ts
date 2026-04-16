@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { Collection, Filter, Sort } from "mongodb";
 
 import type { CourseQuiz } from "sparktool-contracts/quiz";
-import { getMongoDb } from "../db/mongo";
+import { getMongoDb } from "../db/mongo.js";
 
 type CourseQuizDocument = Omit<CourseQuiz, "id"> & { _id: string };
 export type StoredCourseQuiz = CourseQuiz;

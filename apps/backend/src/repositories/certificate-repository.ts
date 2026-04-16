@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { Collection, Filter, Sort } from "mongodb";
 
 import type { Certificate } from "sparktool-contracts/certificate";
-import { getMongoDb } from "../db/mongo";
+import { getMongoDb } from "../db/mongo.js";
 
 type CertificateDocument = Certificate & { _id: string };
 export type StoredCertificate = Certificate & { id: string };

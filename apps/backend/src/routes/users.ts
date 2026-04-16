@@ -2,14 +2,14 @@ import { randomUUID } from "node:crypto";
 
 import { Router } from "express";
 
-import { passwordAuthRepository } from "../repositories/password-auth-repository";
-import { userRepository } from "../repositories/user-repository";
+import { passwordAuthRepository } from "../repositories/password-auth-repository.js";
+import { userRepository } from "../repositories/user-repository.js";
 import {
   getActorFromSession,
   httpError,
   userHasTenantAccess,
-} from "../lib/request-helpers";
-import { requireSession } from "../middleware/session";
+} from "../lib/request-helpers.js";
+import { requireSession } from "../middleware/session.js";
 
 export const usersRouter = Router();
 

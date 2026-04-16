@@ -1,13 +1,13 @@
 import { Router } from "express";
 
-import { courseRepository } from "../repositories/course-repository";
-import { quizRepository } from "../repositories/quiz-repository";
+import { courseRepository } from "../repositories/course-repository.js";
+import { quizRepository } from "../repositories/quiz-repository.js";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
-} from "../lib/request-helpers";
-import { requireTenantSession } from "../middleware/session";
+} from "../lib/request-helpers.js";
+import { requireTenantSession } from "../middleware/session.js";
 
 export const quizzesRouter = Router();
 

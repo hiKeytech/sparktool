@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { Collection, Filter, Sort } from "mongodb";
 
 import type { LessonProgress } from "sparktool-contracts/quiz";
-import { getMongoDb } from "../db/mongo";
+import { getMongoDb } from "../db/mongo.js";
 
 type LessonProgressDocument = Omit<LessonProgress, never> & { _id: string };
 export type StoredLessonProgress = LessonProgress & { id: string };

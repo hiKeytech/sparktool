@@ -1,7 +1,7 @@
-import { courseLessonRepository } from "../repositories/course-lesson-repository";
-import { courseRepository } from "../repositories/course-repository";
-import { lessonProgressRepository } from "../repositories/lesson-progress-repository";
-import { studentProgressRepository } from "../repositories/student-progress-repository";
+import { courseLessonRepository } from "../repositories/course-lesson-repository.js";
+import { courseRepository } from "../repositories/course-repository.js";
+import { lessonProgressRepository } from "../repositories/lesson-progress-repository.js";
+import { studentProgressRepository } from "../repositories/student-progress-repository.js";
 
 export async function syncStudentSectionProgress(input: {
   courseId: string;

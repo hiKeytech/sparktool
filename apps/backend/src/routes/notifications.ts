@@ -1,14 +1,14 @@
 import { Router } from "express";
 
-import { notificationRepository } from "../repositories/notification-repository";
-import { userRepository } from "../repositories/user-repository";
+import { notificationRepository } from "../repositories/notification-repository.js";
+import { userRepository } from "../repositories/user-repository.js";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
   userHasTenantAccess,
-} from "../lib/request-helpers";
-import { requireSession, requireTenantSession } from "../middleware/session";
+} from "../lib/request-helpers.js";
+import { requireSession, requireTenantSession } from "../middleware/session.js";
 
 export const notificationsRouter = Router();
 

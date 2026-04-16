@@ -1,5 +1,5 @@
 import { isAfter } from "date-fns";
-import { twoWeeksAgo } from "./dates";
+import { twoWeeksAgo } from "./dates.js";
 export interface StudentPerformance {
   averageQuizScore: number;
   studentsAtRisk: number;

@@ -3,9 +3,9 @@ import { Router } from "express";
 import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
 import { lessonResourceSchema } from "sparktool-contracts/course-lesson";
-import { courseRepository } from "../repositories/course-repository";
-import { courseLessonRepository } from "../repositories/course-lesson-repository";
-import { requireSession } from "../middleware/session";
+import { courseRepository } from "../repositories/course-repository.js";
+import { courseLessonRepository } from "../repositories/course-lesson-repository.js";
+import { requireSession } from "../middleware/session.js";
 
 export const lessonResourcesRouter = Router();
 

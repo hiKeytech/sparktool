@@ -1,26 +1,26 @@
 import { Router } from "express";
 
-import { computeBasicAnalytics } from "../lib/analytics/basic-counts";
-import { getTimeframeStartDate } from "../lib/analytics/date-ranges";
+import { computeBasicAnalytics } from "../lib/analytics/basic-counts.js";
+import { getTimeframeStartDate } from "../lib/analytics/date-ranges.js";
 import {
   computeActiveUsers,
   computeCompletionRate,
   computePopularCourses,
-} from "../lib/analytics/engagement";
-import { computeBasicMetrics } from "../lib/metrics/basic";
-import { computeEngagementMetrics } from "../lib/metrics/engagement";
-import { computeInsights } from "../lib/metrics/insights";
-import { computeLearningPatterns } from "../lib/metrics/learning-patterns";
-import { computeMonthlyTrends } from "../lib/metrics/monthly-trends";
-import { computeStudentPerformance } from "../lib/metrics/performance";
-import { computeTrendMetrics } from "../lib/metrics/trend-metrics";
-import { activityLogRepository } from "../repositories/activity-log-repository";
-import { certificateRepository } from "../repositories/certificate-repository";
-import { courseRepository } from "../repositories/course-repository";
-import { quizAttemptRepository } from "../repositories/quiz-attempt-repository";
-import { studentProgressRepository } from "../repositories/student-progress-repository";
-import { userRepository } from "../repositories/user-repository";
-import { requireSession, requireTenantSession } from "../middleware/session";
+} from "../lib/analytics/engagement.js";
+import { computeBasicMetrics } from "../lib/metrics/basic.js";
+import { computeEngagementMetrics } from "../lib/metrics/engagement.js";
+import { computeInsights } from "../lib/metrics/insights.js";
+import { computeLearningPatterns } from "../lib/metrics/learning-patterns.js";
+import { computeMonthlyTrends } from "../lib/metrics/monthly-trends.js";
+import { computeStudentPerformance } from "../lib/metrics/performance.js";
+import { computeTrendMetrics } from "../lib/metrics/trend-metrics.js";
+import { activityLogRepository } from "../repositories/activity-log-repository.js";
+import { certificateRepository } from "../repositories/certificate-repository.js";
+import { courseRepository } from "../repositories/course-repository.js";
+import { quizAttemptRepository } from "../repositories/quiz-attempt-repository.js";
+import { studentProgressRepository } from "../repositories/student-progress-repository.js";
+import { userRepository } from "../repositories/user-repository.js";
+import { requireSession, requireTenantSession } from "../middleware/session.js";
 
 export const dashboardRouter = Router();
 

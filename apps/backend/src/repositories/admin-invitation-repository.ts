@@ -5,7 +5,7 @@ import {
   type AdminInvitation,
 } from "sparktool-contracts/invitation";
 
-import { getMongoDb } from "../db/mongo";
+import { getMongoDb } from "../db/mongo.js";
 
 type InvitationDocument = AdminInvitation & { _id: string };
 export type StoredAdminInvitation = AdminInvitation & { id: string };

@@ -1,4 +1,4 @@
-import type { LogEntry, NullableExcept } from "./common.ts";
+import type { LogEntry, NullableExcept } from "./common";
 
 export type CertificateStatus = "issued" | "pending" | "revoked";
 

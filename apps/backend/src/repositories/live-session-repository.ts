@@ -5,8 +5,8 @@ import {
   liveSessionSchema,
   type LiveSession,
 } from "sparktool-contracts/live-session";
-import { getMongoDb } from "../db/mongo";
-import { buildMeetingSlug } from "../lib/live-session";
+import { getMongoDb } from "../db/mongo.js";
+import { buildMeetingSlug } from "../lib/live-session.js";
 
 type LiveSessionDocument = Partial<Omit<LiveSession, "id">> & {
   _id: string;

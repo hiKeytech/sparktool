@@ -1,5 +1,5 @@
 import { isAfter } from "date-fns";
-import { oneWeekAgo } from "./dates";
+import { oneWeekAgo } from "./dates.js";
 export interface InsightsMetrics {
   averageCompletionDays: number;
   mostActiveDay: string;

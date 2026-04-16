@@ -1,7 +1,7 @@
-import type { TrendData } from "./trends";
+import type { TrendData } from "./trends.js";
 import { isAfter, isWithinInterval } from "date-fns";
-import { oneMonthAgo, twoMonthsAgo } from "./dates";
-import { calculateTrend } from "./trends";
+import { oneMonthAgo, twoMonthsAgo } from "./dates.js";
+import { calculateTrend } from "./trends.js";
 export interface TrendMetrics {
   activeCourses: TrendData;
   certificates: TrendData;

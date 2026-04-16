@@ -4,7 +4,7 @@ import {
   authConfigSchema,
   brandingSchema,
   loginFeatureSchema,
-} from "./tenant-contract.ts";
+} from "./tenant-contract";
 
 export const platformHighlightSchema = loginFeatureSchema;
 

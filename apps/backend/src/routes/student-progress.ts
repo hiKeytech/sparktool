@@ -1,14 +1,14 @@
 import { Router } from "express";
 
-import { courseRepository } from "../repositories/course-repository";
-import { studentProgressRepository } from "../repositories/student-progress-repository";
-import { userRepository } from "../repositories/user-repository";
+import { courseRepository } from "../repositories/course-repository.js";
+import { studentProgressRepository } from "../repositories/student-progress-repository.js";
+import { userRepository } from "../repositories/user-repository.js";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
-} from "../lib/request-helpers";
-import { requireTenantSession } from "../middleware/session";
+} from "../lib/request-helpers.js";
+import { requireTenantSession } from "../middleware/session.js";
 
 export const studentProgressRouter = Router();
 

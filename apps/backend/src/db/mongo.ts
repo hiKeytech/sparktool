@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 
-import { serverEnv } from "../env";
+import { serverEnv } from "../env.js";
 
 declare global {
   var __sparktoolMongoClientPromise__: Promise<MongoClient> | undefined;

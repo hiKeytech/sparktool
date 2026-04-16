@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import type { Collection, Sort } from "mongodb";
 
 import type { Notification } from "sparktool-contracts/quiz";
-import { getMongoDb } from "../db/mongo";
+import { getMongoDb } from "../db/mongo.js";
 
 type NotificationDocument = Omit<Notification, "id"> & { _id: string };
 export type StoredNotification = Notification;

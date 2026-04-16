@@ -6,9 +6,9 @@ import {
   type User,
   type UserRole,
 } from "sparktool-contracts/user";
-import { getMongoDb } from "../db/mongo";
-import { isDefined } from "../utils/is-defined";
-import { filterUsersBySearch } from "../utils/search";
+import { getMongoDb } from "../db/mongo.js";
+import { isDefined } from "../utils/is-defined.js";
+import { filterUsersBySearch } from "../utils/search.js";
 
 type UserDocument = User & { _id: string };
 export type StoredUser = User & { id: string };

@@ -1,12 +1,12 @@
 import { Router } from "express";
 import type { QuizAnswer } from "sparktool-contracts/quiz";
 
-import { activityLogRepository } from "../repositories/activity-log-repository";
-import { quizAttemptRepository } from "../repositories/quiz-attempt-repository";
-import { quizRepository } from "../repositories/quiz-repository";
-import { userRepository } from "../repositories/user-repository";
-import { getActorFromSession, httpError } from "../lib/request-helpers";
-import { requireTenantSession } from "../middleware/session";
+import { activityLogRepository } from "../repositories/activity-log-repository.js";
+import { quizAttemptRepository } from "../repositories/quiz-attempt-repository.js";
+import { quizRepository } from "../repositories/quiz-repository.js";
+import { userRepository } from "../repositories/user-repository.js";
+import { getActorFromSession, httpError } from "../lib/request-helpers.js";
+import { requireTenantSession } from "../middleware/session.js";
 
 export const quizAttemptsRouter = Router();
 

@@ -1,19 +1,19 @@
 import { createHash, randomUUID } from "node:crypto";
 
 import { Router } from "express";
-import { TenantService } from "../services/tenant-service";
-import { PlatformConfigService } from "../services/platform-config-service";
+import { TenantService } from "../services/tenant-service.js";
+import { PlatformConfigService } from "../services/platform-config-service.js";
 import { redeemAdminInvitationInputSchema } from "sparktool-contracts/invitation";
 
-import { activityLogRepository } from "../repositories/activity-log-repository";
-import { adminInvitationRepository } from "../repositories/admin-invitation-repository";
-import { passwordAuthRepository } from "../repositories/password-auth-repository";
-import { userRepository } from "../repositories/user-repository";
+import { activityLogRepository } from "../repositories/activity-log-repository.js";
+import { adminInvitationRepository } from "../repositories/admin-invitation-repository.js";
+import { passwordAuthRepository } from "../repositories/password-auth-repository.js";
+import { userRepository } from "../repositories/user-repository.js";
 import {
   getActorFromSession,
   httpError,
   userHasTenantAccess,
-} from "../lib/request-helpers";
+} from "../lib/request-helpers.js";
 
 export const authRouter = Router();
 

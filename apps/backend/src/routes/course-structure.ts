@@ -1,15 +1,15 @@
 import { Router } from "express";
-import { TenantService } from "../services/tenant-service";
+import { TenantService } from "../services/tenant-service.js";
 
-import { courseLessonRepository } from "../repositories/course-lesson-repository";
-import { courseRepository } from "../repositories/course-repository";
-import { courseSectionRepository } from "../repositories/course-section-repository";
+import { courseLessonRepository } from "../repositories/course-lesson-repository.js";
+import { courseRepository } from "../repositories/course-repository.js";
+import { courseSectionRepository } from "../repositories/course-section-repository.js";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
-} from "../lib/request-helpers";
-import { requireTenantSession } from "../middleware/session";
+} from "../lib/request-helpers.js";
+import { requireTenantSession } from "../middleware/session.js";
 
 export const sectionsRouter = Router({ mergeParams: true });
 export const lessonsRouter = Router({ mergeParams: true });

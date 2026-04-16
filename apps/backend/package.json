@@ -6,9 +6,9 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc -p tsconfig.json",
+    "build": "pnpm --filter sparktool-contracts build && tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "pnpm --filter sparktool-contracts typecheck && tsc --noEmit",
     "seed:ncs": "node scripts/seed-ncs-tenant.mjs",
     "cleanup:quiz-attempts": "tsx scripts/cleanup-quiz-attempt-duplicates.ts"
   },

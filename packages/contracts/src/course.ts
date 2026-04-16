@@ -1,6 +1,6 @@
 import { z } from "zod";
-import type { CourseSection } from "./course-section.ts";
-import type { CourseLesson } from "./course-lesson.ts";
+import type { CourseSection } from "./course-section";
+import type { CourseLesson } from "./course-lesson";
 
 export const instructorSchema = z.object({
   biography: z.string().nullish(),

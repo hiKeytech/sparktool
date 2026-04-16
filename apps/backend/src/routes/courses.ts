@@ -1,19 +1,19 @@
 import { randomUUID } from "node:crypto";
 
 import { Router } from "express";
-import { TenantService } from "../services/tenant-service";
+import { TenantService } from "../services/tenant-service.js";
 
-import { activityLogRepository } from "../repositories/activity-log-repository";
-import { courseRepository } from "../repositories/course-repository";
-import { studentProgressRepository } from "../repositories/student-progress-repository";
-import { userRepository } from "../repositories/user-repository";
+import { activityLogRepository } from "../repositories/activity-log-repository.js";
+import { courseRepository } from "../repositories/course-repository.js";
+import { studentProgressRepository } from "../repositories/student-progress-repository.js";
+import { userRepository } from "../repositories/user-repository.js";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
   userHasTenantAccess,
-} from "../lib/request-helpers";
-import { requireTenantSession } from "../middleware/session";
+} from "../lib/request-helpers.js";
+import { requireTenantSession } from "../middleware/session.js";
 
 export const coursesRouter = Router();
 

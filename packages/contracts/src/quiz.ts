@@ -1,4 +1,4 @@
-import type { Timestamp } from "./common.ts";
+import type { Timestamp } from "./common";
 
 export interface Quiz {
   courseId: string;

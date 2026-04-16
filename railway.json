@@ -1,0 +1,12 @@
+{
+  "$schema": "https://backboard.railway.app/railway.schema.json",
+  "build": {
+    "buildCommand": "pnpm --filter sparktool-backend build"
+  },
+  "deploy": {
+    "healthcheckPath": "/health",
+    "restartPolicyType": "on_failure",
+    "restartPolicyMaxRetries": 10,
+    "startCommand": "pnpm --filter sparktool-backend start"
+  }
+}

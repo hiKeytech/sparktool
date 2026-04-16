@@ -3,24 +3,80 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
+    "postbuild": "tsc-alias -p tsconfig.build.json --resolve-full-paths --resolve-full-extension .js",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
   "exports": {
-    ".": "./src/index.ts",
-    "./activity-log": "./src/activity-log.ts",
-    "./certificate": "./src/certificate.ts",
-    "./common": "./src/common.ts",
-    "./course": "./src/course.ts",
-    "./course-lesson": "./src/course-lesson.ts",
-    "./course-section": "./src/course-section.ts",
-    "./invitation": "./src/invitation.ts",
-    "./live-session": "./src/live-session.ts",
-    "./platform-config": "./src/platform-config.ts",
-    "./quiz": "./src/quiz.ts",
-    "./session": "./src/session.ts",
-    "./student-progress": "./src/student-progress.ts",
-    "./tenant-contract": "./src/tenant-contract.ts",
-    "./user": "./src/user.ts"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./activity-log": {
+      "types": "./dist/activity-log.d.ts",
+      "import": "./dist/activity-log.js"
+    },
+    "./certificate": {
+      "types": "./dist/certificate.d.ts",
+      "import": "./dist/certificate.js"
+    },
+    "./common": {
+      "types": "./dist/common.d.ts",
+      "import": "./dist/common.js"
+    },
+    "./course": {
+      "types": "./dist/course.d.ts",
+      "import": "./dist/course.js"
+    },
+    "./course-lesson": {
+      "types": "./dist/course-lesson.d.ts",
+      "import": "./dist/course-lesson.js"
+    },
+    "./course-section": {
+      "types": "./dist/course-section.d.ts",
+      "import": "./dist/course-section.js"
+    },
+    "./invitation": {
+      "types": "./dist/invitation.d.ts",
+      "import": "./dist/invitation.js"
+    },
+    "./live-session": {
+      "types": "./dist/live-session.d.ts",
+      "import": "./dist/live-session.js"
+    },
+    "./platform-config": {
+      "types": "./dist/platform-config.d.ts",
+      "import": "./dist/platform-config.js"
+    },
+    "./quiz": {
+      "types": "./dist/quiz.d.ts",
+      "import": "./dist/quiz.js"
+    },
+    "./session": {
+      "types": "./dist/session.d.ts",
+      "import": "./dist/session.js"
+    },
+    "./student-progress": {
+      "types": "./dist/student-progress.d.ts",
+      "import": "./dist/student-progress.js"
+    },
+    "./tenant-contract": {
+      "types": "./dist/tenant-contract.d.ts",
+      "import": "./dist/tenant-contract.js"
+    },
+    "./user": {
+      "types": "./dist/user.d.ts",
+      "import": "./dist/user.js"
+    }
   },
   "dependencies": {
     "zod": "^4.1.12"
+  },
+  "devDependencies": {
+    "tsc-alias": "^1.8.16",
+    "typescript": "^5.9.3"
   }
 }

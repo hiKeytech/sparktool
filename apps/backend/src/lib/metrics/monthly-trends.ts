@@ -1,5 +1,5 @@
 import { isWithinInterval } from "date-fns";
-import { now } from "./dates";
+import { now } from "./dates.js";
 export interface MonthlyTrend {
   activeUsers: number;
   certificatesIssued: number;

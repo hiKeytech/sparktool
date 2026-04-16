@@ -5,9 +5,9 @@ import {
   type Course,
   type CreateCourseVariables,
 } from "sparktool-contracts/course";
-import { getMongoDb } from "../db/mongo";
-import { isDefined } from "../utils/is-defined";
-import { filterCoursesBySearch } from "../utils/search";
+import { getMongoDb } from "../db/mongo.js";
+import { isDefined } from "../utils/is-defined.js";
+import { filterCoursesBySearch } from "../utils/search.js";
 
 type CourseDocument = Course & { _id: string };
 export type StoredCourse = Course & { id: string };

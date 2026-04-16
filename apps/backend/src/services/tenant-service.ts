@@ -1,6 +1,6 @@
 import { type Tenant, tenantSchema } from "sparktool-contracts/tenant-contract";
 
-import { tenantRepository } from "../repositories/tenant-repository";
+import { tenantRepository } from "../repositories/tenant-repository.js";
 
 export const TenantService = {
   getTenantByDomain: async (domain: string): Promise<Tenant | null> => {
