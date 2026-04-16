@@ -1,15 +1,15 @@
 import { Router } from "express";
 
-import { activityLogRepository } from "../repositories/activity-log-repository.js";
-import { courseRepository } from "../repositories/course-repository.js";
-import { liveSessionRepository } from "../repositories/live-session-repository.js";
+import { activityLogRepository } from "../repositories/activity-log-repository";
+import { courseRepository } from "../repositories/course-repository";
+import { liveSessionRepository } from "../repositories/live-session-repository";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
-} from "../lib/request-helpers.js";
-import { buildMeetingSlug } from "../lib/live-session.js";
-import { requireSession, requireTenantSession } from "../middleware/session.js";
+} from "../lib/request-helpers";
+import { buildMeetingSlug } from "../lib/live-session";
+import { requireSession, requireTenantSession } from "../middleware/session";
 
 export const liveSessionsRouter = Router();
 

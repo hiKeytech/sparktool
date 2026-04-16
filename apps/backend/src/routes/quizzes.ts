@@ -1,13 +1,13 @@
 import { Router } from "express";
 
-import { courseRepository } from "../repositories/course-repository.js";
-import { quizRepository } from "../repositories/quiz-repository.js";
+import { courseRepository } from "../repositories/course-repository";
+import { quizRepository } from "../repositories/quiz-repository";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
-} from "../lib/request-helpers.js";
-import { requireTenantSession } from "../middleware/session.js";
+} from "../lib/request-helpers";
+import { requireTenantSession } from "../middleware/session";
 
 export const quizzesRouter = Router();
 
@@ -41,7 +41,7 @@ quizzesRouter.get(
   "/:quizId",
   requireTenantSession,
   async (request, response) => {
-    const quiz = await quizRepository.getById((request.params.quizId as string));
+    const quiz = await quizRepository.getById(request.params.quizId as string);
     if (!quiz) return response.json(null);
     response.json(quiz);
   },
@@ -55,11 +55,11 @@ quizzesRouter.patch(
     const actor = await getActorFromSession(request);
     assertAdminAccess(actor);
 
-    const quiz = await quizRepository.getById((request.params.quizId as string));
+    const quiz = await quizRepository.getById(request.params.quizId as string);
     if (!quiz) throw httpError(404, "Quiz not found.");
 
     const updated = await quizRepository.update(
-      (request.params.quizId as string),
+      request.params.quizId as string,
       request.body.quizData ?? request.body,
     );
     if (!updated) throw httpError(500, "Failed to update quiz.");
@@ -75,10 +75,10 @@ quizzesRouter.delete(
     const actor = await getActorFromSession(request);
     assertAdminAccess(actor);
 
-    const quiz = await quizRepository.getById((request.params.quizId as string));
+    const quiz = await quizRepository.getById(request.params.quizId as string);
     if (!quiz) throw httpError(404, "Quiz not found.");
 
-    await quizRepository.softDelete((request.params.quizId as string));
+    await quizRepository.softDelete(request.params.quizId as string);
     response.json({ success: true });
   },
 );

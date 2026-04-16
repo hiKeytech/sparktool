@@ -1,14 +1,14 @@
 import { Router } from "express";
 
-import { courseRepository } from "../repositories/course-repository.js";
-import { studentProgressRepository } from "../repositories/student-progress-repository.js";
-import { userRepository } from "../repositories/user-repository.js";
+import { courseRepository } from "../repositories/course-repository";
+import { studentProgressRepository } from "../repositories/student-progress-repository";
+import { userRepository } from "../repositories/user-repository";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
-} from "../lib/request-helpers.js";
-import { requireTenantSession } from "../middleware/session.js";
+} from "../lib/request-helpers";
+import { requireTenantSession } from "../middleware/session";
 
 export const studentProgressRouter = Router();
 
@@ -54,7 +54,9 @@ studentProgressRouter.get(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      (request.params.studentId as string) === "me" ? actor.id : (request.params.studentId as string);
+      (request.params.studentId as string) === "me"
+        ? actor.id
+        : (request.params.studentId as string);
 
     if (
       actor.id !== targetId &&
@@ -89,7 +91,7 @@ studentProgressRouter.patch(
   requireTenantSession,
   async (request, response) => {
     const updated = await studentProgressRepository.update(
-      (request.params.progressId as string),
+      request.params.progressId as string,
       request.body,
     );
     if (!updated) throw httpError(500, "Failed to update student progress.");

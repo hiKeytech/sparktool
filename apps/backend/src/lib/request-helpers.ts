@@ -3,7 +3,7 @@ import type { Request } from "express";
 import {
   userRepository,
   type StoredUser,
-} from "../repositories/user-repository.js";
+} from "../repositories/user-repository";
 
 export async function getActorFromSession(
   request: Request,

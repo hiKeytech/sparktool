@@ -5,7 +5,7 @@ import {
   type PlatformConfig,
 } from "sparktool-contracts/platform-config";
 
-import { getMongoDb } from "../db/mongo.js";
+import { getMongoDb } from "../db/mongo";
 
 type PlatformConfigDocument = PlatformConfig & { _id: string };
 

@@ -1,14 +1,14 @@
 import { Router } from "express";
 
-import { notificationRepository } from "../repositories/notification-repository.js";
-import { userRepository } from "../repositories/user-repository.js";
+import { notificationRepository } from "../repositories/notification-repository";
+import { userRepository } from "../repositories/user-repository";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
   userHasTenantAccess,
-} from "../lib/request-helpers.js";
-import { requireSession, requireTenantSession } from "../middleware/session.js";
+} from "../lib/request-helpers";
+import { requireSession, requireTenantSession } from "../middleware/session";
 
 export const notificationsRouter = Router();
 
@@ -21,7 +21,9 @@ notificationsRouter.get(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      (request.params.userId as string) === "me" ? actor.id : (request.params.userId as string);
+      (request.params.userId as string) === "me"
+        ? actor.id
+        : (request.params.userId as string);
 
     if (
       actor.id !== targetId &&
@@ -46,7 +48,9 @@ notificationsRouter.get(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      (request.params.userId as string) === "me" ? actor.id : (request.params.userId as string);
+      (request.params.userId as string) === "me"
+        ? actor.id
+        : (request.params.userId as string);
 
     if (
       actor.id !== targetId &&
@@ -98,7 +102,9 @@ notificationsRouter.post(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const targetId =
-      (request.params.userId as string) === "me" ? actor.id : (request.params.userId as string);
+      (request.params.userId as string) === "me"
+        ? actor.id
+        : (request.params.userId as string);
 
     if (
       actor.id !== targetId &&
@@ -122,7 +128,7 @@ notificationsRouter.patch(
     if (!actor) throw httpError(401, "Unauthorized");
 
     const notification = await notificationRepository.getById(
-      (request.params.notificationId as string),
+      request.params.notificationId as string,
     );
     if (!notification) throw httpError(404, "Notification not found.");
     if (
@@ -133,7 +139,9 @@ notificationsRouter.patch(
       throw httpError(403, "Access denied.");
     }
 
-    await notificationRepository.markAsRead((request.params.notificationId as string));
-    response.json({ id: (request.params.notificationId as string) });
+    await notificationRepository.markAsRead(
+      request.params.notificationId as string,
+    );
+    response.json({ id: request.params.notificationId as string });
   },
 );

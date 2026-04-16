@@ -5,7 +5,7 @@ import {
   courseLessonSchema,
   type CourseLesson,
 } from "sparktool-contracts/course-lesson";
-import { getMongoDb } from "../db/mongo.js";
+import { getMongoDb } from "../db/mongo";
 
 type CourseLessonDocument = Omit<CourseLesson, "id"> & { _id: string };
 export type StoredCourseLesson = CourseLesson;

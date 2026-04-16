@@ -1,7 +1,7 @@
 import { compare, hash } from "bcryptjs";
 import type { Collection } from "mongodb";
 
-import { getMongoDb } from "../db/mongo.js";
+import { getMongoDb } from "../db/mongo";
 
 type PasswordAuthDocument = {
   _id: string;

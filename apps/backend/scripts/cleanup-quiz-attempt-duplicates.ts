@@ -1,6 +1,6 @@
 import "dotenv/config";
 
-import { getMongoClient, getMongoDb } from "../src/db/mongo.js";
+import { getMongoClient, getMongoDb } from "../src/db/mongo";
 
 type QuizAttemptDocument = {
   _id: string;

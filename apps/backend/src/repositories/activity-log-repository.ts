@@ -6,7 +6,7 @@ import type {
   ActivityLogCreateInput,
   ListActivityLogVariables,
 } from "sparktool-contracts/activity-log";
-import { getMongoDb } from "../db/mongo.js";
+import { getMongoDb } from "../db/mongo";
 
 type ActivityLogDocument = ActivityLog & { _id: string };
 export type StoredActivityLog = ActivityLog & { id: string };

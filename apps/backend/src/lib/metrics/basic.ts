@@ -1,5 +1,5 @@
 import { isAfter } from "date-fns";
-import { oneWeekAgo } from "./dates.js";
+import { oneWeekAgo } from "./dates";
 export interface BasicMetrics {
   activeCoursesCount: number;
   averageProgress: number;

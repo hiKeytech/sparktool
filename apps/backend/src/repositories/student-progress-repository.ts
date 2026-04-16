@@ -5,7 +5,7 @@ import {
   studentProgressSchema,
   type StudentProgress,
 } from "sparktool-contracts/student-progress";
-import { getMongoDb } from "../db/mongo.js";
+import { getMongoDb } from "../db/mongo";
 
 type StudentProgressDocument = Omit<StudentProgress, "id"> & { _id: string };
 export type StoredStudentProgress = StudentProgress;

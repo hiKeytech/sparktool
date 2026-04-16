@@ -1,14 +1,14 @@
 import { Router } from "express";
 
-import { activityLogRepository } from "../repositories/activity-log-repository.js";
-import { courseLessonRepository } from "../repositories/course-lesson-repository.js";
-import { lessonProgressRepository } from "../repositories/lesson-progress-repository.js";
-import { getActorFromSession, httpError } from "../lib/request-helpers.js";
-import { requireTenantSession } from "../middleware/session.js";
+import { activityLogRepository } from "../repositories/activity-log-repository";
+import { courseLessonRepository } from "../repositories/course-lesson-repository";
+import { lessonProgressRepository } from "../repositories/lesson-progress-repository";
+import { getActorFromSession, httpError } from "../lib/request-helpers";
+import { requireTenantSession } from "../middleware/session";
 import {
   updateCourseProgress,
   syncStudentSectionProgress,
-} from "../lib/course-progress.js";
+} from "../lib/course-progress";
 
 export const lessonProgressRouter = Router();
 

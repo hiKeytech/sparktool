@@ -3,14 +3,14 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
 import { Router } from "express";
 import { createTenantOnboardingInputSchema } from "sparktool-contracts/tenant-contract";
 
-import { activityLogRepository } from "../repositories/activity-log-repository.js";
-import { adminInvitationRepository } from "../repositories/admin-invitation-repository.js";
-import { passwordAuthRepository } from "../repositories/password-auth-repository.js";
-import { tenantRepository } from "../repositories/tenant-repository.js";
-import { userRepository } from "../repositories/user-repository.js";
+import { activityLogRepository } from "../repositories/activity-log-repository";
+import { adminInvitationRepository } from "../repositories/admin-invitation-repository";
+import { passwordAuthRepository } from "../repositories/password-auth-repository";
+import { tenantRepository } from "../repositories/tenant-repository";
+import { userRepository } from "../repositories/user-repository";
 
-import { getActorFromSession, httpError } from "../lib/request-helpers.js";
-import { requireSession } from "../middleware/session.js";
+import { getActorFromSession, httpError } from "../lib/request-helpers";
+import { requireSession } from "../middleware/session";
 
 export const tenantsRouter = Router();
 

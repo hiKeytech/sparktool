@@ -5,8 +5,8 @@ import {
   liveSessionSchema,
   type LiveSession,
 } from "sparktool-contracts/live-session";
-import { getMongoDb } from "../db/mongo.js";
-import { buildMeetingSlug } from "../lib/live-session.js";
+import { getMongoDb } from "../db/mongo";
+import { buildMeetingSlug } from "../lib/live-session";
 
 type LiveSessionDocument = Partial<Omit<LiveSession, "id">> & {
   _id: string;
@@ -41,7 +41,9 @@ function parseStoredLiveSession(
     return null;
   }
 
-  const result = liveSessionSchema.safeParse(normalizeStoredLiveSession(document));
+  const result = liveSessionSchema.safeParse(
+    normalizeStoredLiveSession(document),
+  );
 
   if (!result.success) {
     console.error("Invalid live session document", result.error);

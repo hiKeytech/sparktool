@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createTenantAdminInvitationInputSchema } from "./invitation.js";
+import { createTenantAdminInvitationInputSchema } from "./invitation";
 
 const VISIBILITY_ROLES = ["student", "admin", "mentor"] as const;
 const PUBLIC_CATEGORY_ICONS = [

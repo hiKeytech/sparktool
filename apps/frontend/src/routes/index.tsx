@@ -107,20 +107,20 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
       */}
       <section className="relative overflow-hidden border-b border-white/5 bg-[#070b09]">
         {/* Deep Nigerian Green Gradient Background */}
-        <div className="absolute inset-0 z-0 transition-colors duration-1000 bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.08),_transparent_32%),linear-gradient(135deg,_#1d4f35_0%,_#113620_58%,_#070b09_100%)] opacity-100" />
+        <div className="absolute inset-0 z-0 transition-colors duration-1000 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_32%),linear-gradient(135deg,#1d4f35_0%,#113620_58%,#070b09_100%)] opacity-100" />
 
         {/* Grid pattern overlay */}
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
         <div className="relative z-10 px-6 pt-8 pb-24 mx-auto max-w-7xl lg:px-8 lg:pt-10 lg:pb-32">
           {/* Navigation */}
           <nav className="flex items-center justify-between pb-12 sm:pb-20">
             <div className="flex items-center gap-4">
-              <div className="flex items-center justify-center p-2 rounded-xl h-11 w-11 bg-white/5 border border-white/10 backdrop-blur-md">
+              <div className="flex items-center justify-center p-2 border rounded-xl h-11 w-11 bg-white/5 border-white/10 backdrop-blur-md">
                 <ShieldCheck size={24} className="text-fun-green-400" />
               </div>
               <div>
-                <h2 className="text-white text-sm font-semibold tracking-wide">
+                <h2 className="text-sm font-semibold tracking-wide text-white">
                   {platform.branding.portalName}
                 </h2>
                 <p className="text-white/50 text-[10px] uppercase tracking-[0.2em] font-medium hidden sm:block">
@@ -132,12 +132,12 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
             <div className="flex items-center gap-4">
               <a
                 href="mailto:support@correctional.gov.ng"
-                className="hidden sm:block text-xs font-semibold text-white/60 hover:text-white transition-colors tracking-widest uppercase"
+                className="hidden text-xs font-semibold tracking-widest uppercase transition-colors sm:block text-white/60 hover:text-white"
               >
                 Support
               </a>
               <Button
-                className="bg-white text-stone-900 hover:bg-stone-200 h-10 px-5 rounded-lg text-xs tracking-wider uppercase font-bold transition-all"
+                className="h-10 px-5 text-xs font-bold tracking-wider uppercase transition-all bg-white rounded-lg text-stone-900 hover:bg-stone-200"
                 onClick={() => navigate({ to: "/login" })}
               >
                 Enter Platform
@@ -155,20 +155,20 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
               {hero.heroTitle.replace(".", "")}
               <span className="text-fun-green-500">.</span>
             </h1>
-            <p className="text-lg sm:text-xl text-white/50 leading-relaxed max-w-2xl mb-12 font-light">
+            <p className="max-w-2xl mb-12 text-lg font-light leading-relaxed sm:text-xl text-white/50">
               {hero.heroDescription}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <Button
-                className="bg-fun-green-600 hover:bg-fun-green-500 text-white h-14 px-8 rounded-lg text-sm tracking-wider uppercase font-bold border border-fun-green-500 transition-all w-full sm:w-auto"
+                className="w-full px-8 text-sm font-bold tracking-wider text-white uppercase transition-all border rounded-lg bg-fun-green-600 hover:bg-fun-green-500 h-14 border-fun-green-500 sm:w-auto"
                 onClick={() => navigate({ to: "/login" })}
                 rightSection={<ArrowRight size={18} className="opacity-70" />}
               >
                 {hero.primaryCtaLabel}
               </Button>
               <Button
-                className="bg-transparent hover:bg-white/5 text-white h-14 px-8 rounded-lg text-sm tracking-wider uppercase font-bold border border-white/15 transition-all w-full sm:w-auto"
+                className="w-full px-8 text-sm font-bold tracking-wider text-white uppercase transition-all bg-transparent border rounded-lg hover:bg-white/5 h-14 border-white/15 sm:w-auto"
                 onClick={() => navigate({ to: "/login" })}
               >
                 {hero.secondaryCtaLabel}
@@ -178,20 +178,20 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
         </div>
 
         {/* High-End Metrics Ticker */}
-        <div className="border-t border-white/10 bg-white/[0.02] backdrop-blur-xl relative z-10">
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 divide-y divide-white/10 border-x border-white/10 lg:divide-y-0 lg:divide-x">
+        <div className="relative z-10 border-t border-white/10 bg-white/2 backdrop-blur-xl">
+          <div className="px-6 mx-auto max-w-7xl lg:px-8">
+            <div className="grid grid-cols-2 divide-y lg:grid-cols-4 divide-white/10 border-x border-white/10 lg:divide-y-0 lg:divide-x">
               {metrics.map((metric, i) => (
                 <div
                   key={metric.label}
-                  className="py-6 px-6"
+                  className="px-6 py-6"
                   data-aos="fade-up"
                   data-aos-delay={i * 100}
                 >
                   <p className="text-white/40 text-[10px] font-bold uppercase tracking-[0.25em] mb-2">
                     {metric.label}
                   </p>
-                  <p className="text-white text-3xl font-medium tracking-tight">
+                  <p className="text-3xl font-medium tracking-tight text-white">
                     {metric.value}
                   </p>
                 </div>
@@ -208,24 +208,24 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
       */}
       {highlights.length > 0 && (
         <section
-          className="bg-white py-24 sm:py-32 border-b border-stone-200"
+          className="py-24 bg-white border-b sm:py-32 border-stone-200"
           id="features"
         >
-          <div className="mx-auto max-w-7xl px-6 lg:px-8">
-            <div className="mb-16 max-w-2xl" data-aos="fade-up">
+          <div className="px-6 mx-auto max-w-7xl lg:px-8">
+            <div className="max-w-2xl mb-16" data-aos="fade-up">
               <p className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4">
                 Platform Capabilities
               </p>
-              <h2 className="text-4xl sm:text-5xl font-semibold text-stone-950 tracking-tight leading-tight">
+              <h2 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl text-stone-950">
                 Institutional Grade Infrastructure.
               </h2>
-              <p className="mt-6 text-lg text-stone-600 leading-relaxed font-light">
+              <p className="mt-6 text-lg font-light leading-relaxed text-stone-600">
                 Professional-grade environment to onboard, configure, and
                 operate learning mandates securely — with absolute confidence.
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {highlights.map((highlight, index) => {
                 const HighlightIcon =
                   highlightIconCycle[index % highlightIconCycle.length];
@@ -233,14 +233,14 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 return (
                   <div
                     key={highlight.title}
-                    className="group relative p-8 bg-stone-50 rounded-2xl border border-stone-200/60 hover:bg-stone-100 hover:border-stone-300 transition-colors duration-300 ease-out"
+                    className="relative p-8 transition-colors duration-300 ease-out border group bg-stone-50 rounded-2xl border-stone-200/60 hover:bg-stone-100 hover:border-stone-300"
                     data-aos="fade-up"
                     data-aos-delay={index * 100}
                   >
-                    <div className="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-white border border-stone-200 text-fun-green-700 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                    <div className="inline-flex items-center justify-center w-12 h-12 mb-6 transition-transform duration-300 bg-white border shadow-sm rounded-xl border-stone-200 text-fun-green-700 group-hover:scale-110">
                       <HighlightIcon size={20} strokeWidth={1.5} />
                     </div>
-                    <h3 className="text-lg font-semibold text-stone-950 mb-3 tracking-tight">
+                    <h3 className="mb-3 text-lg font-semibold tracking-tight text-stone-950">
                       {highlight.title}
                     </h3>
                     <p className="text-sm leading-relaxed text-stone-600">
@@ -260,8 +260,8 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
         ========================================================================
       */}
       <section className="bg-[#fbFAF9] py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+        <div className="px-6 mx-auto max-w-7xl lg:px-8">
+          <div className="grid gap-16 lg:grid-cols-2 lg:gap-24">
             {/* Steps */}
             <div>
               <p
@@ -271,7 +271,7 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 Deployment Flow
               </p>
               <h2
-                className="text-3xl sm:text-4xl font-semibold text-stone-950 tracking-tight leading-tight mb-12"
+                className="mb-12 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl text-stone-950"
                 data-aos="fade-right"
               >
                 From Authentication to Live Progress, Structurally Complete.
@@ -301,16 +301,16 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                     data-aos="fade-up"
                     data-aos-delay={i * 100}
                   >
-                    <div className="shrink-0 pt-1">
-                      <span className="text-fun-green-700/20 text-4xl font-semibold tracking-tighter">
+                    <div className="pt-1 shrink-0">
+                      <span className="text-4xl font-semibold tracking-tighter text-fun-green-700/20">
                         {item.step}
                       </span>
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-stone-950 uppercase tracking-widest mb-3">
+                      <h4 className="mb-3 text-sm font-bold tracking-widest uppercase text-stone-950">
                         {item.title}
                       </h4>
-                      <p className="text-stone-600 leading-relaxed text-sm">
+                      <p className="text-sm leading-relaxed text-stone-600">
                         {item.body}
                       </p>
                     </div>
@@ -328,7 +328,7 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 Guided Variables
               </p>
               <h2
-                className="text-3xl sm:text-4xl font-semibold text-stone-950 tracking-tight leading-tight mb-12"
+                className="mb-12 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl text-stone-950"
                 data-aos="fade-left"
               >
                 Configuration Engine.
@@ -341,16 +341,16 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                   return (
                     <div
                       key={feature.title}
-                      className="bg-white p-6 rounded-2xl border border-stone-200/70 shadow-sm"
+                      className="p-6 bg-white border shadow-sm rounded-2xl border-stone-200/70"
                       data-aos="fade-up"
                       data-aos-delay={index * 100}
                     >
                       <FeatureIcon
                         size={20}
-                        className="text-stone-400 mb-4"
+                        className="mb-4 text-stone-400"
                         strokeWidth={1.5}
                       />
-                      <h4 className="text-sm font-semibold text-stone-950 uppercase tracking-wider mb-2">
+                      <h4 className="mb-2 text-sm font-semibold tracking-wider uppercase text-stone-950">
                         {feature.title}
                       </h4>
                       <p className="text-xs leading-relaxed text-stone-500">
@@ -372,27 +372,27 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
       */}
       <section className="bg-[#070b09] py-24 border-t border-white/10 relative overflow-hidden">
         {/* Subtle glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-fun-green-900/30 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-200 h-100 bg-fun-green-900/30 blur-[120px] rounded-full pointer-events-none" />
 
         <div
-          className="relative z-10 mx-auto max-w-4xl px-6 lg:px-8 text-center"
+          className="relative z-10 max-w-4xl px-6 mx-auto text-center lg:px-8"
           data-aos="fade-up"
         >
           <p className="text-white/40 text-xs font-bold uppercase tracking-[0.25em] mb-6">
             ENTERPRISE DEPLOYMENT
           </p>
-          <h2 className="text-4xl sm:text-5xl font-semibold text-white tracking-tight leading-tight mb-10">
+          <h2 className="mb-10 text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
             Scale Your Operational Network.
           </h2>
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
-              className="bg-white hover:bg-stone-200 text-stone-950 h-14 px-10 rounded-lg text-sm tracking-wider uppercase font-bold transition-all w-full sm:w-auto"
+              className="w-full px-10 text-sm font-bold tracking-wider uppercase transition-all bg-white rounded-lg hover:bg-stone-200 text-stone-950 h-14 sm:w-auto"
               onClick={() => navigate({ to: "/login" })}
             >
               Access Platform
             </Button>
             <Button
-              className="bg-transparent hover:bg-white/5 text-white h-14 px-10 rounded-lg text-sm tracking-wider uppercase font-bold border border-white/15 transition-all w-full sm:w-auto"
+              className="w-full px-10 text-sm font-bold tracking-wider text-white uppercase transition-all bg-transparent border rounded-lg hover:bg-white/5 h-14 border-white/15 sm:w-auto"
               onClick={() => navigate({ to: "/login" })}
             >
               Support Hub

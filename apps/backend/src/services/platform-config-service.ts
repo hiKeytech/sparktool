@@ -3,7 +3,7 @@ import {
   type PlatformConfig,
 } from "sparktool-contracts/platform-config";
 
-import { platformConfigRepository } from "../repositories/platform-config-repository.js";
+import { platformConfigRepository } from "../repositories/platform-config-repository";
 
 export const PlatformConfigService = {
   getPlatformConfig: async (): Promise<PlatformConfig | null> => {

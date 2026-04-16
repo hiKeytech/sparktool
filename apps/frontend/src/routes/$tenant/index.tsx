@@ -114,8 +114,8 @@ function TenantLandingPage() {
           HERO SECTION
           ==================================================================== */}
       <div className="relative flex items-center pt-32 pb-20 border-b grow lg:pt-48 lg:pb-32 border-white/5">
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_right,_rgba(27,115,57,0.15),_transparent_40%),linear-gradient(180deg,_#070b09_0%,_#0a140d_100%)]" />
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_right,rgba(27,115,57,0.15),transparent_40%),linear-gradient(180deg,#070b09_0%,#0a140d_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
 
         <div className="relative z-10 flex flex-col items-center gap-16 px-6 mx-auto text-center max-w-7xl lg:px-8 sm:text-left md:flex-row">
           <div className="flex-1 md:pr-12" data-aos="fade-up">
@@ -156,8 +156,8 @@ function TenantLandingPage() {
             data-aos="zoom-in"
             data-aos-delay="200"
           >
-            <div className="relative w-full aspect-square max-w-[500px] mx-auto cursor-pointer group perspective-1000">
-              <div className="absolute inset-4 rounded-4xl bg-linear-to-tr from-[#1b7339]/20 to-transparent border border-white/10 backdrop-blur-xl rotate-[10deg] group-hover:rotate-[15deg] transition-all duration-700 ease-out shadow-2xl" />
+            <div className="relative w-full mx-auto cursor-pointer aspect-square max-w-125 group perspective-1000">
+              <div className="absolute inset-4 rounded-4xl bg-linear-to-tr from-[#1b7339]/20 to-transparent border border-white/10 backdrop-blur-xl rotate-10 group-hover:rotate-15 transition-all duration-700 ease-out shadow-2xl" />
               <div className="absolute inset-8 rounded-4xl bg-linear-to-b from-[#1b7339]/40 to-[#070b09] border border-[#1b7339]/40 backdrop-blur-2xl -rotate-[5deg] group-hover:-rotate-[8deg] transition-all duration-700 ease-out p-8 flex flex-col justify-end shadow-2xl">
                 <div className="w-12 h-12 bg-white mb-6 rounded-xl shadow-[0_0_40px_rgba(255,255,255,0.4)]" />
                 <div className="w-1/3 h-2 mb-3 rounded-full bg-white/20" />

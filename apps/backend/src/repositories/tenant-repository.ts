@@ -2,7 +2,7 @@ import type { Collection } from "mongodb";
 
 import { tenantSchema, type Tenant } from "sparktool-contracts/tenant-contract";
 
-import { getMongoDb } from "../db/mongo.js";
+import { getMongoDb } from "../db/mongo";
 
 type TenantDocument = Tenant & { _id: string };
 

@@ -6,34 +6,34 @@ import express, {
   type Response,
 } from "express";
 import helmet from "helmet";
-import { PlatformConfigService } from "./services/platform-config-service.js";
-import { TenantService } from "./services/tenant-service.js";
-import { getActorFromSession, httpError } from "./lib/request-helpers.js";
+import { PlatformConfigService } from "./services/platform-config-service";
+import { TenantService } from "./services/tenant-service";
+import { getActorFromSession, httpError } from "./lib/request-helpers";
 
-import { sessionMiddleware } from "./middleware/session.js";
-import { requireSession } from "./middleware/session.js";
-import { authRouter } from "./routes/auth.js";
-import { usersRouter } from "./routes/users.js";
-import { coursesRouter } from "./routes/courses.js";
+import { sessionMiddleware } from "./middleware/session";
+import { requireSession } from "./middleware/session";
+import { authRouter } from "./routes/auth";
+import { usersRouter } from "./routes/users";
+import { coursesRouter } from "./routes/courses";
 import {
   sectionsRouter,
   sectionByIdRouter,
   lessonsRouter,
   lessonByIdRouter,
   courseLessonsRouter,
-} from "./routes/course-structure.js";
-import { courseQuizzesRouter } from "./routes/course-quizzes.js";
-import { quizzesRouter } from "./routes/quizzes.js";
-import { quizAttemptsRouter } from "./routes/quiz-attempts.js";
-import { lessonProgressRouter } from "./routes/lesson-progress.js";
-import { studentProgressRouter } from "./routes/student-progress.js";
-import { certificatesRouter } from "./routes/certificates.js";
-import { liveSessionsRouter } from "./routes/live-sessions.js";
-import { notificationsRouter } from "./routes/notifications.js";
-import { activityLogsRouter } from "./routes/activity-logs.js";
-import { tenantsRouter } from "./routes/tenants.js";
-import { dashboardRouter } from "./routes/dashboard.js";
-import { lessonResourcesRouter } from "./routes/lesson-resources.js";
+} from "./routes/course-structure";
+import { courseQuizzesRouter } from "./routes/course-quizzes";
+import { quizzesRouter } from "./routes/quizzes";
+import { quizAttemptsRouter } from "./routes/quiz-attempts";
+import { lessonProgressRouter } from "./routes/lesson-progress";
+import { studentProgressRouter } from "./routes/student-progress";
+import { certificatesRouter } from "./routes/certificates";
+import { liveSessionsRouter } from "./routes/live-sessions";
+import { notificationsRouter } from "./routes/notifications";
+import { activityLogsRouter } from "./routes/activity-logs";
+import { tenantsRouter } from "./routes/tenants";
+import { dashboardRouter } from "./routes/dashboard";
+import { lessonResourcesRouter } from "./routes/lesson-resources";
 
 const app = express();
 const port = Number(process.env.PORT || 4000);

@@ -1,4 +1,4 @@
-import type { DistributiveOmit, Nullish, QueryFilters } from "./common.js";
+import type { DistributiveOmit, Nullish, QueryFilters } from "./common.ts";
 
 type ActivityLogDetails = Nullish<{
   tenantId?: string;

@@ -1,12 +1,12 @@
 import { Router } from "express";
 
-import { activityLogRepository } from "../repositories/activity-log-repository.js";
+import { activityLogRepository } from "../repositories/activity-log-repository";
 import {
   assertAdminAccess,
   getActorFromSession,
   httpError,
-} from "../lib/request-helpers.js";
-import { requireSession } from "../middleware/session.js";
+} from "../lib/request-helpers";
+import { requireSession } from "../middleware/session";
 
 export const activityLogsRouter = Router();
 
