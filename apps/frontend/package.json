@@ -6,10 +6,10 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "pnpm --filter sparktool-contracts build && vite build",
     "preview": "vite preview",
     "lint": "eslint . --report-unused-disable-directives",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "pnpm --filter sparktool-contracts typecheck && tsc --noEmit",
     "lint:fix": "eslint . --fix",
     "ci": "npm run lint"
   },
