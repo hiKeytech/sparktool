@@ -1,5 +1,8 @@
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+
 import { QueryClient } from "@tanstack/query-core";
-import { createRouter } from "@tanstack/react-router";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
 import { minutesToMilliseconds, secondsToMilliseconds } from "date-fns";
 
@@ -35,3 +38,11 @@ declare module "@tanstack/react-router" {
     router: ReturnType<typeof getRouter>;
   }
 }
+
+const router = getRouter();
+
+createRoot(document.getElementById("root")!).render(
+  <StrictMode>
+    <RouterProvider router={router} />
+  </StrictMode>,
+);
