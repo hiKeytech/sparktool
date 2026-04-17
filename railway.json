@@ -4,7 +4,7 @@
     "buildCommand": "pnpm --filter sparktool-backend build"
   },
   "deploy": {
-    "healthcheckPath": "/health",
+    "healthcheckPath": "/ready",
     "restartPolicyType": "on_failure",
     "restartPolicyMaxRetries": 10,
     "startCommand": "pnpm --filter sparktool-backend start"

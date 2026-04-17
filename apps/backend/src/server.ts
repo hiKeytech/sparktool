@@ -6,6 +6,7 @@ import express, {
   type Response,
 } from "express";
 import helmet from "helmet";
+import { getMongoConnectionStatus, pingMongo } from "./db/mongo.js";
 import { PlatformConfigService } from "./services/platform-config-service.js";
 import { TenantService } from "./services/tenant-service.js";
 import { getActorFromSession, httpError } from "./lib/request-helpers.js";
@@ -46,10 +47,32 @@ app.use(sessionMiddleware);
 
 app.get("/health", (_request, response) => {
   response.json({
+    db: getMongoConnectionStatus(),
     service: "sparktool-backend",
     status: "ok",
     timestamp: Date.now(),
   });
+});
+
+app.get("/ready", async (_request, response) => {
+  try {
+    await pingMongo();
+
+    response.json({
+      db: getMongoConnectionStatus(),
+      service: "sparktool-backend",
+      status: "ready",
+      timestamp: Date.now(),
+    });
+  } catch {
+    response.status(503).json({
+      db: getMongoConnectionStatus(),
+      error: "MongoDB is unavailable",
+      service: "sparktool-backend",
+      status: "not_ready",
+      timestamp: Date.now(),
+    });
+  }
 });
 
 app.get("/api/platform-config", async (_request, response) => {
