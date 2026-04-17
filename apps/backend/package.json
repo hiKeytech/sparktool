@@ -9,9 +9,9 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "pnpm --filter sparktool-contracts build && tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
-    "typecheck": "pnpm --filter sparktool-contracts typecheck && tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
