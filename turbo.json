@@ -1,5 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "APP_SESSION_COOKIE_NAME",
+    "APP_SESSION_SECRET",
+    "BACKEND_URL",
+    "VITE_PAYSTACK_PUBLIC_KEY"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

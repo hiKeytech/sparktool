@@ -6,10 +6,10 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm --filter sparktool-contracts build && tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --report-unused-disable-directives",
-    "typecheck": "pnpm --filter sparktool-contracts typecheck && tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint:fix": "eslint . --fix",
     "ci": "npm run lint"
   },
@@ -76,6 +76,7 @@
     "dotenv": "^17.2.4",
     "postcss-preset-mantine": "^1.18.0",
     "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3",
     "vite": "^7.2.2",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.8"
