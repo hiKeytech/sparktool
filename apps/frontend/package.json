@@ -6,12 +6,12 @@
   "packageManager": "pnpm@9.14.4",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm --filter sparktool-contracts build && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --report-unused-disable-directives",
-    "typecheck": "pnpm --filter sparktool-contracts typecheck && tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "lint:fix": "eslint . --fix",
-    "ci": "npm run lint"
+    "ci": "pnpm lint"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

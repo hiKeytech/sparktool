@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { CourseSectionData } from "./course-section";
 import type { CourseLesson } from "@/types";
 import type { Collection, DocumentReference } from "@/types/collection";
-import { api } from "@/services/api";
+import { listSectionsFn, listLessonsFn } from "@/server/course-structure";
 
 export const instructorSchema = z.object({
   biography: z.string().nullish(),
@@ -126,17 +126,14 @@ const get = async (courseId: string) => {
 };
 
 const getWithStructure = async (courseId: string) => {
-  // Get the course
-  const course = await api.$use.course.get(courseId);
+  const course = await get(courseId);
   if (!course) return null;
 
-  // Get all sections for this course
-  const sections = await api.$use.courseSection.list(courseId);
+  const sections = await listSectionsFn({ data: courseId });
 
-  // Get lessons for each section
   const sectionsWithLessons = await Promise.all(
     sections.map(async (section) => {
-      const lessons = await api.$use.courseLesson.list(section.id);
+      const lessons = await listLessonsFn({ data: section.id });
       return {
         ...section,
         lessons,
