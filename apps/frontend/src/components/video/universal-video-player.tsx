@@ -1,23 +1,23 @@
 import type { VideoPlayerProps } from "@/types";
 
 import {
-    ActionIcon,
-    Button,
-    Card,
-    Group,
-    Progress,
-    Stack,
-    Text,
+  ActionIcon,
+  Button,
+  Card,
+  Group,
+  Progress,
+  Stack,
+  Text,
 } from "@mantine/core";
 import {
-    IconMaximize,
-    IconPlayerPause,
-    IconPlayerPlay,
-    IconPlayerSkipBack,
-    IconPlayerSkipForward,
-    IconSettings,
-    IconVolume,
-    IconVolumeOff,
+  IconMaximize,
+  IconPlayerPause,
+  IconPlayerPlay,
+  IconPlayerSkipBack,
+  IconPlayerSkipForward,
+  IconSettings,
+  IconVolume,
+  IconVolumeOff,
 } from "@tabler/icons-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -89,7 +89,7 @@ export function UniversalVideoPlayer({
     switch (platform) {
       case "dailymotion":
         const dailymotionMatch = url.match(
-          /dailymotion\.com\/video\/([a-zA-Z0-9]+)/
+          /dailymotion\.com\/video\/([a-zA-Z0-9]+)/,
         );
         return dailymotionMatch ? dailymotionMatch[1] : null;
       case "vimeo":
@@ -97,7 +97,7 @@ export function UniversalVideoPlayer({
         return vimeoMatch ? vimeoMatch[1] : null;
       case "youtube":
         const youtubeMatch = url.match(
-          /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+          /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/,
         );
         return youtubeMatch ? youtubeMatch[1] : null;
       default:
@@ -124,7 +124,7 @@ export function UniversalVideoPlayer({
           return url;
       }
     },
-    [getVideoType, extractVideoId]
+    [getVideoType, extractVideoId],
   );
 
   // Handle play/pause toggle
@@ -137,7 +137,6 @@ export function UniversalVideoPlayer({
       videoRef.current.play();
     }
   }, [state.isPlaying]);
-
 
   // Handle mute toggle
   const toggleMute = useCallback(() => {
@@ -163,11 +162,11 @@ export function UniversalVideoPlayer({
 
       const newTime = Math.max(
         0,
-        Math.min(state.duration, state.currentTime + seconds)
+        Math.min(state.duration, state.currentTime + seconds),
       );
       handleSeek(newTime);
     },
-    [state.currentTime, state.duration, handleSeek]
+    [state.currentTime, state.duration, handleSeek],
   );
 
   // Show/hide controls
@@ -282,6 +281,19 @@ export function UniversalVideoPlayer({
   const platform = getVideoType(videoUrl);
   const progress =
     state.duration > 0 ? (state.currentTime / state.duration) * 100 : 0;
+
+  // Handle missing / empty URL
+  if (!videoUrl) {
+    return (
+      <Card className="overflow-hidden bg-black" p={0} radius="lg">
+        <div className="relative flex items-center justify-center aspect-video bg-gray-900">
+          <Text className="text-gray-400" size="sm">
+            No video available
+          </Text>
+        </div>
+      </Card>
+    );
+  }
 
   // Render embedded player for platform videos
   if (platform !== "direct") {

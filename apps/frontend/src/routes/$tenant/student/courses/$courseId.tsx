@@ -677,8 +677,8 @@ export function CourseDetails() {
                       </Alert>
                       <Button
                         component={Link}
-                        from="/$tenant/student/courses/$courseId"
-                        to="/learn"
+                        to="/$tenant/student/courses/$courseId/learn"
+                        params={{ courseId, tenant: tenant.id }}
                         className="bg-fun-green-600 hover:bg-fun-green-700"
                         fullWidth
                         size="lg"
