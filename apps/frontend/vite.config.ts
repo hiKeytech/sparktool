@@ -21,7 +21,7 @@ export default defineConfig({
     tsconfigPaths(),
     tailwindcss(),
     tanstackStart({ srcDirectory: "src" }),
-    nitro({ output: { dir: "dist" } }),
+    nitro({ preset: "vercel", output: { dir: ".vercel/output" } }),
     react(),
   ],
   root: ".",
