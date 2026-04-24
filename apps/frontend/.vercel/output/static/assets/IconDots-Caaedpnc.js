@@ -1,1 +1,0 @@
-import{a1 as a}from"./main-ByE57fQB.js";const o=[["path",{d:"M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0",key:"svg-0"}],["path",{d:"M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0",key:"svg-1"}],["path",{d:"M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0",key:"svg-2"}]],e=a("outline","dots","Dots",o);export{e as I};

@@ -1,1 +1,0 @@
-import{n,r as o,j as e,O as a}from"./main-ByE57fQB.js";import{a as r}from"./branding-theme-CD-CxIsk.js";function c(){const{tenant:t}=n.useRouteContext();return o.useLayoutEffect(()=>{t?.config.branding&&r({...t.config.branding,description:t.config.publicSite.heroDescription})},[t]),e.jsx(a,{})}export{c as component};
