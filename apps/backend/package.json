@@ -23,7 +23,9 @@
     "express": "^5.2.1",
     "helmet": "^8.1.0",
     "iron-webcrypto": "^2.0.0",
+    "mammoth": "^1.12.0",
     "mongodb": "^6.21.0",
+    "pdf-parse": "^2.4.5",
     "sparktool-contracts": "workspace:*",
     "zod": "^4.1.12"
   },

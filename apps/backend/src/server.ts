@@ -35,6 +35,7 @@ import { activityLogsRouter } from "./routes/activity-logs.js";
 import { tenantsRouter } from "./routes/tenants.js";
 import { dashboardRouter } from "./routes/dashboard.js";
 import { lessonResourcesRouter } from "./routes/lesson-resources.js";
+import { aiRouter } from "./routes/ai.js";
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
@@ -161,6 +162,7 @@ app.use("/api/notifications", notificationsRouter);
 app.use("/api/activity-logs", activityLogsRouter);
 app.use("/api/dashboard", dashboardRouter);
 app.use("/api/lesson-resources", lessonResourcesRouter);
+app.use("/api/ai", aiRouter);
 
 // ─── global error handler ────────────────────────────────────────────────────
 

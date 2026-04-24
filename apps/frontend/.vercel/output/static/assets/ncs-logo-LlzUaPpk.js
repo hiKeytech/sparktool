@@ -1,0 +1,1 @@
+import{j as a,au as o}from"./main-ByE57fQB.js";function t({className:e="",size:r=40,...i}){return a.jsx("img",{alt:"Nigerian Correctional Service",className:o("rounded-full",e),height:r,src:"/nigerian-correctional-service-badge.png",width:r,...i})}export{t as N};

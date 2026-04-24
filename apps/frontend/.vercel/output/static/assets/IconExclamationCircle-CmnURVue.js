@@ -1,0 +1,1 @@
+import{a1 as a}from"./main-ByE57fQB.js";const e=[["path",{d:"M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0",key:"svg-0"}],["path",{d:"M12 9v4",key:"svg-1"}],["path",{d:"M12 16v.01",key:"svg-2"}]],t=a("outline","exclamation-circle","ExclamationCircle",e);export{t as I};

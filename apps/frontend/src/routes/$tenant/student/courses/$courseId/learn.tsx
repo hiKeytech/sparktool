@@ -17,7 +17,12 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import { IconCheck, IconFileText, IconSettings } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconFileText,
+  IconSettings,
+  IconSparkles,
+} from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { CourseBreadcrumbs } from "@/components/navigation/course-breadcrumbs";
 import { CourseStructureSidebar } from "@/components/navigation/course-structure-sidebar";
@@ -176,6 +181,23 @@ function CourseView() {
               variant="filled"
             >
               Settings
+            </Button>
+            <Button
+              color="violet"
+              leftSection={<IconSparkles size={16} />}
+              onClick={() =>
+                tenant.id &&
+                courseId &&
+                navigate({
+                  params: { tenant: tenant.id },
+                  search: { courseId },
+                  to: "/$tenant/student/ai",
+                })
+              }
+              size="sm"
+              variant="light"
+            >
+              Ask AI
             </Button>
           </Group>
         </Container>

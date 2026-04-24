@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import {
+  IconSparkles,
   IconBooks,
   IconDashboard,
   IconLogout,
@@ -98,6 +99,13 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
           to: "/$tenant/student/progress",
         });
         break;
+      case buildTenantPath(tenantSlug, "/student/ai"):
+        navigate({
+          params: { tenant: tenantSlug },
+          search: { courseId: undefined },
+          to: "/$tenant/student/ai",
+        });
+        break;
       case buildTenantPath(tenantSlug, "/student/profile"):
         navigateToProfile();
         break;
@@ -125,6 +133,11 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
       icon: IconVideo,
       label: "Live Sessions",
       path: buildTenantPath(tenantSlug, "/student/live-sessions"),
+    },
+    {
+      icon: IconSparkles,
+      label: "AI Assistant",
+      path: buildTenantPath(tenantSlug, "/student/ai"),
     },
     {
       icon: IconProgress,

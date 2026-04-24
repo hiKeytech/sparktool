@@ -1,4 +1,5 @@
 export * from "./activity-log";
+export * from "./ai";
 export * from "./certificate";
 export * from "./common";
 export * from "./course";

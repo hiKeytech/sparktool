@@ -30,6 +30,7 @@ import { Route as TenantStudentProgressRouteImport } from './routes/$tenant/stud
 import { Route as TenantStudentProfileRouteImport } from './routes/$tenant/student/profile'
 import { Route as TenantStudentLiveSessionsRouteImport } from './routes/$tenant/student/live-sessions'
 import { Route as TenantStudentCoursesRouteImport } from './routes/$tenant/student/courses'
+import { Route as TenantStudentAiRouteImport } from './routes/$tenant/student/ai'
 import { Route as TenantAdminUsersRouteImport } from './routes/$tenant/admin/users'
 import { Route as TenantAdminSettingsRouteImport } from './routes/$tenant/admin/settings'
 import { Route as TenantAdminSecurityRouteImport } from './routes/$tenant/admin/security'
@@ -160,6 +161,11 @@ const TenantStudentLiveSessionsRoute =
 const TenantStudentCoursesRoute = TenantStudentCoursesRouteImport.update({
   id: '/courses',
   path: '/courses',
+  getParentRoute: () => TenantStudentRoute,
+} as any)
+const TenantStudentAiRoute = TenantStudentAiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
   getParentRoute: () => TenantStudentRoute,
 } as any)
 const TenantAdminUsersRoute = TenantAdminUsersRouteImport.update({
@@ -325,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/$tenant/admin/security': typeof TenantAdminSecurityRoute
   '/$tenant/admin/settings': typeof TenantAdminSettingsRoute
   '/$tenant/admin/users': typeof TenantAdminUsersRouteWithChildren
+  '/$tenant/student/ai': typeof TenantStudentAiRoute
   '/$tenant/student/courses': typeof TenantStudentCoursesRouteWithChildren
   '/$tenant/student/live-sessions': typeof TenantStudentLiveSessionsRoute
   '/$tenant/student/profile': typeof TenantStudentProfileRoute
@@ -366,6 +373,7 @@ export interface FileRoutesByTo {
   '/$tenant/admin/profile': typeof TenantAdminProfileRoute
   '/$tenant/admin/security': typeof TenantAdminSecurityRoute
   '/$tenant/admin/settings': typeof TenantAdminSettingsRoute
+  '/$tenant/student/ai': typeof TenantStudentAiRoute
   '/$tenant/student/live-sessions': typeof TenantStudentLiveSessionsRoute
   '/$tenant/student/profile': typeof TenantStudentProfileRoute
   '/$tenant/student/progress': typeof TenantStudentProgressRoute
@@ -411,6 +419,7 @@ export interface FileRoutesById {
   '/$tenant/admin/security': typeof TenantAdminSecurityRoute
   '/$tenant/admin/settings': typeof TenantAdminSettingsRoute
   '/$tenant/admin/users': typeof TenantAdminUsersRouteWithChildren
+  '/$tenant/student/ai': typeof TenantStudentAiRoute
   '/$tenant/student/courses': typeof TenantStudentCoursesRouteWithChildren
   '/$tenant/student/live-sessions': typeof TenantStudentLiveSessionsRoute
   '/$tenant/student/profile': typeof TenantStudentProfileRoute
@@ -461,6 +470,7 @@ export interface FileRouteTypes {
     | '/$tenant/admin/security'
     | '/$tenant/admin/settings'
     | '/$tenant/admin/users'
+    | '/$tenant/student/ai'
     | '/$tenant/student/courses'
     | '/$tenant/student/live-sessions'
     | '/$tenant/student/profile'
@@ -502,6 +512,7 @@ export interface FileRouteTypes {
     | '/$tenant/admin/profile'
     | '/$tenant/admin/security'
     | '/$tenant/admin/settings'
+    | '/$tenant/student/ai'
     | '/$tenant/student/live-sessions'
     | '/$tenant/student/profile'
     | '/$tenant/student/progress'
@@ -546,6 +557,7 @@ export interface FileRouteTypes {
     | '/$tenant/admin/security'
     | '/$tenant/admin/settings'
     | '/$tenant/admin/users'
+    | '/$tenant/student/ai'
     | '/$tenant/student/courses'
     | '/$tenant/student/live-sessions'
     | '/$tenant/student/profile'
@@ -725,6 +737,13 @@ declare module '@tanstack/react-router' {
       path: '/courses'
       fullPath: '/$tenant/student/courses'
       preLoaderRoute: typeof TenantStudentCoursesRouteImport
+      parentRoute: typeof TenantStudentRoute
+    }
+    '/$tenant/student/ai': {
+      id: '/$tenant/student/ai'
+      path: '/ai'
+      fullPath: '/$tenant/student/ai'
+      preLoaderRoute: typeof TenantStudentAiRouteImport
       parentRoute: typeof TenantStudentRoute
     }
     '/$tenant/admin/users': {
@@ -1046,6 +1065,7 @@ const TenantStudentCoursesRouteWithChildren =
   TenantStudentCoursesRoute._addFileChildren(TenantStudentCoursesRouteChildren)
 
 interface TenantStudentRouteChildren {
+  TenantStudentAiRoute: typeof TenantStudentAiRoute
   TenantStudentCoursesRoute: typeof TenantStudentCoursesRouteWithChildren
   TenantStudentLiveSessionsRoute: typeof TenantStudentLiveSessionsRoute
   TenantStudentProfileRoute: typeof TenantStudentProfileRoute
@@ -1054,6 +1074,7 @@ interface TenantStudentRouteChildren {
 }
 
 const TenantStudentRouteChildren: TenantStudentRouteChildren = {
+  TenantStudentAiRoute: TenantStudentAiRoute,
   TenantStudentCoursesRoute: TenantStudentCoursesRouteWithChildren,
   TenantStudentLiveSessionsRoute: TenantStudentLiveSessionsRoute,
   TenantStudentProfileRoute: TenantStudentProfileRoute,

@@ -3,6 +3,12 @@ import type { EmailPasswordCredentials } from "@/types";
 import type { StudentProgress } from "@/schemas/student-progress";
 import type { User } from "@/schemas/user";
 import type {
+  AiChatThread,
+  AiDocument,
+  AiDifficulty,
+  AiPracticeQuizSession,
+} from "@/schemas/ai";
+import type {
   AdminInvitationPreview,
   AdminInvitationSummary,
   RedeemAdminInvitationInput,
@@ -36,6 +42,7 @@ import {
   extractTenantIdFromPath,
   resolveRoleHomeTarget,
 } from "@/utils/tenant-paths";
+import { aiStudy } from "@/schemas/ai";
 
 import { api } from "./api";
 
@@ -766,6 +773,154 @@ export function useChangePassword() {
       successMessage: "Your password has been updated successfully.",
     },
     mutationFn: api.$use.auth.changePassword,
+  });
+}
+
+export function useAiHealth(
+  options: Options<typeof query> = {},
+  query = queryOptions({
+    queryFn: async () => {
+      const { getAiHealthFn } = await import("@/server/ai");
+      const result = await getAiHealthFn();
+
+      return (
+        result ?? {
+          configured: false,
+          error: "AI health check returned no data.",
+          status: "unavailable",
+        }
+      );
+    },
+    queryKey: ["ai-health"],
+    retry: false,
+    staleTime: minutesToMilliseconds(10),
+  }),
+) {
+  return useQuery({ ...query, ...options });
+}
+
+export function useAiChatThread(
+  variables: { courseId?: null | string; lessonId?: null | string },
+  options: Options<typeof query> = {},
+  query = queryOptions({
+    queryFn: () =>
+      aiStudy.getChatThread({
+        courseId: variables.courseId,
+        lessonId: variables.lessonId,
+      }) as Promise<AiChatThread | null>,
+    queryKey: ["ai-chat-thread", variables.courseId ?? null, variables.lessonId ?? null],
+  }),
+) {
+  return useQuery({ ...query, ...options });
+}
+
+export function useAiDocuments(
+  variables: { courseId?: null | string; lessonId?: null | string },
+  options: Options<typeof query> = {},
+  query = queryOptions({
+    queryFn: () =>
+      aiStudy.listDocuments({
+        courseId: variables.courseId,
+        lessonId: variables.lessonId,
+      }) as Promise<AiDocument[]>,
+    queryKey: ["ai-documents", variables.courseId ?? null, variables.lessonId ?? null],
+  }),
+) {
+  return useQuery({ ...query, ...options });
+}
+
+export function useCreateAiDocument() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to upload AI document.",
+      successMessage: "AI document uploaded.",
+    },
+    mutationFn: (variables: {
+      courseId?: null | string;
+      file: File;
+      lessonId?: null | string;
+      title?: string;
+    }) => aiStudy.createDocument(variables),
+    onSuccess: async (document) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ai-documents", document.courseId ?? null, document.lessonId ?? null],
+      });
+    },
+  });
+}
+
+export function useGenerateAiPracticeQuiz() {
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to generate AI practice quiz.",
+      successMessage: "AI practice quiz generated.",
+    },
+    mutationFn: (variables: {
+      courseId: string;
+      difficulty: AiDifficulty;
+      lessonId?: null | string;
+      questionCount: number;
+    }) => aiStudy.generatePracticeQuiz(variables),
+  });
+}
+
+export function useListAiPracticeQuizSessions(
+  courseId?: null | string,
+  options: Options<typeof query> = {},
+  query = queryOptions({
+    enabled: courseId !== undefined,
+    queryFn: () =>
+      aiStudy.listPracticeQuizSessions(courseId) as Promise<
+        AiPracticeQuizSession[]
+      >,
+    queryKey: ["ai-practice-sessions", courseId ?? null],
+  }),
+) {
+  return useQuery({ ...query, ...options });
+}
+
+export function useSendAiChatMessage() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to send AI message.",
+    },
+    mutationFn: (variables: {
+      courseId?: null | string;
+      documentIds?: string[];
+      lessonId?: null | string;
+      message: string;
+      threadId?: null | string;
+    }) => aiStudy.sendChatMessage(variables),
+    onSuccess: async (thread, variables) => {
+      await queryClient.setQueryData(
+        ["ai-chat-thread", variables.courseId ?? null, variables.lessonId ?? null],
+        thread,
+      );
+    },
+  });
+}
+
+export function useSubmitAiPracticeQuiz() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to submit AI practice quiz.",
+      successMessage: "AI practice quiz submitted.",
+    },
+    mutationFn: (variables: {
+      answers: Array<{ questionId: string; selectedOptionId: string }>;
+      sessionId: string;
+    }) => aiStudy.submitPracticeQuiz(variables) as Promise<AiPracticeQuizSession>,
+    onSuccess: async (session) => {
+      await queryClient.invalidateQueries({
+        queryKey: ["ai-practice-sessions", session.courseId],
+      });
+    },
   });
 }
 

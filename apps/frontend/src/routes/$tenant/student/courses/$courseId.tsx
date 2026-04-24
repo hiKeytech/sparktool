@@ -1,6 +1,5 @@
 import {
   createFileRoute,
-  Link,
   Outlet,
   useNavigate,
   useParams,
@@ -28,6 +27,7 @@ import {
   IconCheck,
   IconClock,
   IconInfoCircle,
+  IconSparkles,
   IconStar,
   IconTrendingUp,
   IconUser, // Replacing IconGraduationCap as it doesn't exist in tabler
@@ -676,11 +676,30 @@ export function CourseDetails() {
                         You have access to this course
                       </Alert>
                       <Button
-                        component={Link}
-                        to="/$tenant/student/courses/$courseId/learn"
-                        params={{ courseId, tenant: tenant.id }}
+                        color="violet"
+                        fullWidth
+                        leftSection={<IconSparkles size={16} />}
+                        onClick={() =>
+                          navigate({
+                            params: { tenant: tenant.id },
+                            search: { courseId },
+                            to: "/$tenant/student/ai",
+                          })
+                        }
+                        variant="light"
+                      >
+                        Open AI Tutor
+                      </Button>
+                      <Button
                         className="bg-fun-green-600 hover:bg-fun-green-700"
                         fullWidth
+                        onClick={() =>
+                          navigate({
+                            params: { courseId, tenant: tenant.id },
+                            search: { lesson: undefined },
+                            to: "/$tenant/student/courses/$courseId/learn",
+                          })
+                        }
                         size="lg"
                       >
                         Continue Learning
