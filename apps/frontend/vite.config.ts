@@ -21,7 +21,13 @@ export default defineConfig({
     tsconfigPaths(),
     tailwindcss(),
     tanstackStart({ srcDirectory: "src" }),
-    nitro({ preset: "vercel", output: { dir: ".vercel/output" } }),
+    nitro({
+      preset: "vercel",
+      output: { dir: ".vercel/output" },
+      externals: {
+        inline: ["tslib", "react-remove-scroll", "react-remove-scroll-bar"],
+      },
+    }),
     react(),
   ],
   root: ".",
