@@ -47,6 +47,7 @@ build/Release
 .docusaurus
 .serverless/
 .firebase/
+.vercel/
 .tanstack/
 .vinxi
 .vuepress/dist
