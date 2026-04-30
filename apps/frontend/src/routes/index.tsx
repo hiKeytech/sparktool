@@ -90,13 +90,16 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
     : "Internal Admin";
 
   const metrics = [
-    { label: "ACCESS MODEL", value: accessModel },
-    { label: "AUTH ROUTES", value: authRouteCount.toString().padStart(2, "0") },
+    { label: "ADMIN ACCESS READY", value: accessModel },
     {
-      label: "CAPABILITIES",
+      label: "SYSTEM RUNNING SMOOTHLY",
+      value: authRouteCount.toString().padStart(2, "0"),
+    },
+    {
+      label: "CORE FEATURES AVAILABLE",
       value: highlights.length.toString().padStart(2, "0"),
     },
-    { label: "UPTIME TARGET", value: "99.9%" },
+    { label: "RELIABLE (99.9% UPTIME)", value: "99.9%" },
   ];
 
   return (
@@ -175,6 +178,21 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 {hero.secondaryCtaLabel}
               </Button>
             </div>
+
+            <div
+              className="max-w-2xl p-6 mt-12 border bg-white/5 border-white/10 rounded-2xl backdrop-blur-sm"
+              data-aos="fade-up"
+              data-aos-delay="150"
+            >
+              <p className="text-xs font-bold tracking-[0.25em] uppercase text-fun-green-300">
+                Why SparkTool exists
+              </p>
+              <p className="mt-4 text-base leading-relaxed text-white/70 sm:text-lg">
+                Managing different users, teams, or clients on one platform can
+                get confusing and risky. SparkTool keeps everything separate,
+                secure, and easy to control so you do not make costly mistakes.
+              </p>
+            </div>
           </div>
         </div>
 
@@ -218,11 +236,11 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 Platform Capabilities
               </p>
               <h2 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl text-stone-950">
-                Institutional Grade Infrastructure.
+                Built for Secure and Reliable Use.
               </h2>
               <p className="mt-6 text-lg font-light leading-relaxed text-stone-600">
-                Professional-grade environment to onboard, configure, and
-                operate learning mandates securely — with absolute confidence.
+                SparkTool is designed to handle multiple users and systems
+                without confusion or risk.
               </p>
             </div>
 
@@ -275,25 +293,25 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 className="mb-12 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl text-stone-950"
                 data-aos="fade-right"
               >
-                From Authentication to Live Progress, Structurally Complete.
+                From Login to Full Use - Step by Step.
               </h2>
 
               <div className="space-y-12">
                 {[
                   {
                     step: "01",
-                    title: "AUTHENTICATE ACCESS",
-                    body: "Users enter through a controlled authentication route aligned to the platform's approved, secure access model.",
+                    title: "SECURE LOGIN",
+                    body: "Users sign in safely and get the right access.",
                   },
                   {
                     step: "02",
-                    title: "SELECT LEARNING PATHWAY",
-                    body: "Highlighted priorities and guided entry cues point each user toward the correct organizational track immediately.",
+                    title: "CHOOSE WHAT TO DO",
+                    body: "Users select what they want to work on.",
                   },
                   {
                     step: "03",
-                    title: "EXECUTE MODULES",
-                    body: "Track engagement through a heavily structured experience. Progress is logged, timestamped, and auditable.",
+                    title: "GET THINGS DONE",
+                    body: "Actions are tracked and saved.",
                   },
                 ].map((item, i) => (
                   <div
@@ -332,7 +350,7 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 className="mb-12 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl text-stone-950"
                 data-aos="fade-left"
               >
-                Configuration Engine.
+                Simple System Setup.
               </h2>
 
               <div className="grid gap-4 sm:grid-cols-2">
@@ -383,20 +401,20 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
             ENTERPRISE DEPLOYMENT
           </p>
           <h2 className="mb-10 text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
-            Scale Your Operational Network.
+            Grow and manage your platform with ease.
           </h2>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
               className="w-full px-10 text-sm font-bold tracking-wider uppercase transition-all bg-white rounded-lg hover:bg-stone-200 text-stone-950 h-14 sm:w-auto"
               onClick={() => navigate({ to: "/login" })}
             >
-              Access Platform
+              Open Platform
             </Button>
             <Button
               className="w-full px-10 text-sm font-bold tracking-wider text-white uppercase transition-all bg-transparent border rounded-lg hover:bg-white/5 h-14 border-white/15 sm:w-auto"
               onClick={() => navigate({ to: "/login" })}
             >
-              Support Hub
+              Get Help
             </Button>
           </div>
 

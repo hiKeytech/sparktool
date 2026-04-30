@@ -18,13 +18,13 @@
     "loginPage": {
       "features": [
         {
-          "title": "Tenant Provisioning",
-          "description": "Create and configure tenant workspaces without exposing platform controls to tenant users.",
+          "title": "Set up users easily",
+          "description": "Add new users or teams quickly.",
           "icon": "IconBuilding"
         },
         {
-          "title": "Access Governance",
-          "description": "Review platform-wide access and keep operator workflows separate from tenant authentication.",
+          "title": "Control who sees what",
+          "description": "Decide who can view or edit different parts.",
           "icon": "IconShieldCheck"
         }
       ],
@@ -41,26 +41,26 @@
   },
   "marketing": {
     "eyebrow": "Platform workspace",
-    "heroTitle": "Operate SparkTool without leaking tenant concerns into the platform surface.",
-    "heroDescription": "Platform branding, auth rules, and operator messaging are resolved from persisted configuration so the platform can evolve independently from tenant experiences.",
+    "heroTitle": "Run your platform smoothly without mixing up user data or settings.",
+    "heroDescription": "SparkTool helps you manage different users, teams, or clients safely, all in one place. Everything stays organized, secure, and easy to control.",
     "highlights": [
       {
-        "title": "Separated access",
-        "description": "Platform operators sign in here. Tenant admins and learners continue from tenant-specific routes.",
+        "title": "Separate user spaces",
+        "description": "Each user or team has their own space, so nothing gets mixed up.",
         "icon": "IconShieldCheck"
       },
       {
-        "title": "DB-backed rendering",
-        "description": "Branding, login copy, and surface messaging come from stored configuration and are applied through CSS variables.",
+        "title": "Custom settings for each user",
+        "description": "You can change settings for one user without affecting others.",
         "icon": "IconDatabase"
       },
       {
-        "title": "Route-owned theming",
-        "description": "Platform and tenant entry points set their own CSS variables so each surface stays isolated and predictable.",
+        "title": "Flexible design control",
+        "description": "Easily customize how different parts of the platform look and behave.",
         "icon": "IconPalette"
       }
     ],
-    "primaryCtaLabel": "Platform Sign In",
-    "secondaryCtaLabel": "Review access"
+    "primaryCtaLabel": "Start Using Platform",
+    "secondaryCtaLabel": "Check Access"
   }
 }
