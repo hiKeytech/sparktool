@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   GraduationCap,
   LockKeyhole,
+  Play,
   type LucideIcon,
   ShieldCheck,
   Users,
@@ -77,6 +78,59 @@ const featureIconCycle: LucideIcon[] = [
   ShieldCheck,
   Users,
   GraduationCap,
+];
+
+const featuredCourses = [
+  {
+    title:
+      "Leveraging Cyber Threat Intelligence to Uncover New Phishing Tactics",
+    level: "Threat Analysis",
+    thumbnailUrl: "https://img.youtube.com/vi/WETG42T8lSk/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=WETG42T8lSk",
+  },
+  {
+    title: "How to get into Cybersecurity in 2025 (without Certifications)",
+    level: "Career Path",
+    thumbnailUrl: "https://img.youtube.com/vi/dT69CkHbiqM/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=dT69CkHbiqM",
+  },
+  {
+    title: "From The Army To 6 Figures In Cybersecurity! (Sr Analyst)",
+    level: "Career Story",
+    thumbnailUrl: "https://img.youtube.com/vi/9HpyV6WNWKI/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=9HpyV6WNWKI",
+  },
+  {
+    title:
+      "Cyber Security Training for Beginners: Get into Cybersecurity with Zero Experience",
+    level: "Foundations",
+    thumbnailUrl: "https://img.youtube.com/vi/8izo9zbGD3c/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=8izo9zbGD3c",
+  },
+  {
+    title: "Spring Boot Tutorial | Spring Data JPA",
+    level: "Backend Systems",
+    thumbnailUrl: "https://img.youtube.com/vi/8SGI_XS5OPw/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=8SGI_XS5OPw",
+  },
+  {
+    title: "Kubernetes Tutorial - Kubernetes Architecture Explained",
+    level: "Infrastructure",
+    thumbnailUrl: "https://img.youtube.com/vi/1vnA13v8PcA/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=1vnA13v8PcA",
+  },
+  {
+    title: "Microservices Using Spring Boot and Spring Cloud",
+    level: "Architecture",
+    thumbnailUrl: "https://img.youtube.com/vi/p485kUNpPvE/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=p485kUNpPvE",
+  },
+  {
+    title: "PostgreSQL: What is a Database",
+    level: "Data Systems",
+    thumbnailUrl: "https://img.youtube.com/vi/XQ_6G0iCyMQ/maxresdefault.jpg",
+    youtubeUrl: "https://www.youtube.com/watch?v=XQ_6G0iCyMQ",
+  },
 ];
 
 function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
@@ -380,6 +434,57 @@ function PlatformLandingPage({ platform }: PlatformLandingPageProps) {
                 })}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-white border-t border-b sm:py-32 border-stone-200/80">
+        <div className="px-6 mx-auto max-w-7xl lg:px-8">
+          <div className="max-w-3xl" data-aos="fade-up">
+            <p className="text-fun-green-700 text-xs font-bold uppercase tracking-[0.25em] mb-4">
+              Inside The Platform
+            </p>
+            <h2 className="text-4xl font-semibold leading-tight tracking-tight sm:text-5xl text-stone-950">
+              A look at the kind of learning experiences available inside.
+            </h2>
+            <p className="mt-6 text-lg font-light leading-relaxed text-stone-600">
+              Browse a few examples from the library to get a feel for the kind
+              of structured video learning the platform can support.
+            </p>
+          </div>
+
+          <div className="grid gap-6 mt-14 sm:grid-cols-2 xl:grid-cols-4">
+            {featuredCourses.map((course, index) => (
+              <button
+                key={course.youtubeUrl}
+                type="button"
+                className="overflow-hidden text-left transition-all duration-200 border group bg-white rounded-2xl border-stone-200/70 shadow-sm hover:-translate-y-1 hover:scale-[1.02] hover:border-stone-300 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-cyan-500 focus-visible:ring-offset-white"
+                onClick={() => navigate({ to: "/login" })}
+                data-aos="fade-up"
+                data-aos-delay={120 + index * 60}
+              >
+                <div
+                  className="relative h-48 overflow-hidden bg-center bg-cover border-b border-stone-200/70"
+                  style={{ backgroundImage: `url(${course.thumbnailUrl})` }}
+                >
+                  <div className="absolute inset-0 bg-linear-to-t from-black/35 via-black/10 to-transparent" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="inline-flex items-center justify-center w-12 h-12 transition-transform duration-200 rounded-full bg-white/90 text-stone-900 group-hover:scale-110">
+                      <Play size={18} className="ml-0.5" fill="currentColor" />
+                    </span>
+                  </div>
+                </div>
+
+                <div className="p-5">
+                  <p className="mb-3 text-[11px] font-bold tracking-[0.18em] uppercase text-stone-400">
+                    {course.level}
+                  </p>
+                  <h3 className="text-lg font-semibold tracking-tight text-stone-900 line-clamp-2">
+                    {course.title}
+                  </h3>
+                </div>
+              </button>
+            ))}
           </div>
         </div>
       </section>
