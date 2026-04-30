@@ -1,15 +1,22 @@
-import {
-  Anchor,
-  Button,
-  Group,
-  Text,
-  Title,
-  Paper,
-  Badge,
-} from "@mantine/core";
+import { Badge, Button, Group, Paper, Text, Title } from "@mantine/core";
 import { createFileRoute, Link, Navigate } from "@tanstack/react-router";
-import { ChevronRight, ShieldCheck, Database, LayoutGrid } from "lucide-react";
-import { type LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Atom,
+  Brain,
+  BriefcaseBusiness,
+  Calculator,
+  ChartColumn,
+  ChevronRight,
+  Cpu,
+  Globe,
+  Heart,
+  Monitor,
+  Palette,
+  ShieldCheck,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 
 import { useResolvedAuthState } from "@/providers/auth-provider";
 import type { Tenant } from "@/schemas/tenant-contract";
@@ -19,50 +26,149 @@ export const Route = createFileRoute("/$tenant/")({
   component: TenantLandingPage,
 });
 
-interface FeatureCardProps {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  delay: number;
-}
+const CURRENT_YEAR = new Date().getFullYear();
 
-function FeatureCard({
+const categoryIconMap: Record<string, LucideIcon> = {
+  briefcase: BriefcaseBusiness,
+  brain: Brain,
+  "chart-line": ChartColumn,
+  cpu: Cpu,
+  "device-desktop": Monitor,
+  heart: Heart,
+  users: Users,
+  math: Calculator,
+  atom: Atom,
+  palette: Palette,
+  globe: Globe,
+};
+
+function CategoryCard({
   icon: Icon,
   title,
   description,
   delay,
-}: FeatureCardProps) {
+}: {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  delay: number;
+}) {
   return (
     <Paper
       p="xl"
-      radius="xl"
-      className="bg-[#0c160f]/80 backdrop-blur-xl border border-[#1b7339]/20 hover:border-[#1b7339]/50 transition-all duration-500 overflow-hidden relative group h-full"
+      radius="lg"
+      className="h-full transition-all duration-300 bg-white border shadow-sm border-stone-200 hover:-translate-y-1 hover:border-stone-300 hover:shadow-md"
       data-aos="fade-up"
       data-aos-delay={delay}
     >
-      <div className="absolute inset-0 bg-linear-to-br from-[#1b7339]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-      <div className="relative z-10">
-        <div className="mb-6 inline-flex p-3 rounded-2xl bg-linear-to-br from-[#1b7339] to-[#0f4420] text-white shadow-lg shadow-[#1b7339]/20 ring-1 ring-white/10 group-hover:scale-110 transition-transform duration-500">
-          <Icon size={28} strokeWidth={1.5} />
-        </div>
-        <h3 className="mb-3 text-xl font-bold tracking-tight text-white">
-          {title}
-        </h3>
-        <p className="text-sm font-light leading-relaxed text-white/60 sm:text-base">
-          {description}
-        </p>
+      <div className="inline-flex items-center justify-center w-12 h-12 mb-6 text-white rounded-lg bg-fun-green-800">
+        <Icon size={22} strokeWidth={1.8} />
       </div>
+      <h3 className="mb-3 text-xl font-semibold tracking-tight text-stone-950">
+        {title}
+      </h3>
+      <p className="text-sm leading-relaxed text-stone-600 sm:text-base">
+        {description}
+      </p>
     </Paper>
   );
 }
 
-const CURRENT_YEAR = new Date().getFullYear();
+function StatCard({
+  label,
+  value,
+  delay,
+}: {
+  label: string;
+  value: string;
+  delay: number;
+}) {
+  return (
+    <div
+      className="p-6 bg-white border rounded-lg shadow-sm border-stone-200"
+      data-aos="fade-up"
+      data-aos-delay={delay}
+    >
+      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-stone-400">
+        {label}
+      </p>
+      <p className="mt-3 text-3xl font-semibold tracking-tight text-stone-950">
+        {value}
+      </p>
+    </div>
+  );
+}
+
+function TenantHeroPreview({
+  imageUrl,
+  imageAlt,
+  logoUrl,
+  logoAlt,
+}: {
+  imageUrl: string;
+  imageAlt: string;
+  logoUrl: string;
+  logoAlt: string;
+}) {
+  return (
+    <div className="relative" data-aos="fade-left" data-aos-delay="150">
+      <div className="overflow-hidden bg-white border rounded-lg shadow-xl border-stone-200">
+        <div className="relative h-105 bg-stone-100">
+          <img
+            src={imageUrl}
+            alt={imageAlt}
+            className="object-cover w-full h-full"
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-stone-950/35 via-stone-950/5 to-transparent" />
+          <div className="absolute inline-flex items-center gap-3 px-4 py-3 border rounded-lg shadow-sm left-6 top-6 border-white/60 bg-white/90 backdrop-blur">
+            <img
+              src={logoUrl}
+              alt={logoAlt}
+              className="object-contain w-10 h-10"
+            />
+            <div>
+              <p className="text-xs font-bold tracking-[0.18em] uppercase text-fun-green-800">
+                Learning Workspace
+              </p>
+              <p className="text-sm font-medium text-stone-700">
+                Structured, secure, and trackable delivery.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function TenantLandingPage() {
   const { tenant } = Route.useRouteContext() as { tenant: Tenant };
   const { loading, user } = useResolvedAuthState(tenant);
   const { portalName } = tenant.config.branding;
-  const { copyright, footerTagline } = tenant.config.publicSite;
+  const publicSite = tenant.config.publicSite;
+  const {
+    categories,
+    categorySectionTitle,
+    copyright,
+    featuredCoursesCtaLabel,
+    featuredCoursesTitle,
+    footerLogoAlt,
+    footerLogoUrl,
+    footerTagline,
+    heroBackgroundImageUrl,
+    heroDescription,
+    heroLogoAlt,
+    heroLogoUrl,
+    heroPrimaryCtaLabel,
+    heroSecondaryCtaLabel,
+    heroTitle,
+    missionCtaLabel,
+    missionDescription,
+    missionImageAlt,
+    missionImageUrl,
+    missionTitle,
+    stats,
+  } = publicSite;
 
   if (!loading && user) {
     return (
@@ -71,37 +177,36 @@ function TenantLandingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#070b09] selection:bg-[#1b7339]/30 font-sans flex flex-col font-light text-stone-200">
-      {/* ====================================================================
-          GLOBAL NAVIGATION
-          ==================================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-50 px-6 py-5 lg:px-8 bg-[#070b09]/80 backdrop-blur-md border-b border-white/5 transition-all">
+    <div className="flex flex-col min-h-screen font-sans text-stone-900 bg-stone-50 selection:bg-fun-green-500/20">
+      <header className="sticky top-0 z-50 px-6 py-4 border-b bg-white/95 backdrop-blur-sm border-stone-200/80 lg:px-8">
         <div className="flex items-center justify-between mx-auto max-w-7xl">
           <Group
             gap="sm"
             className="transition-opacity opacity-90 hover:opacity-100"
           >
-            <div className="w-8 h-8 rounded-lg bg-linear-to-tr from-[#1b7339] to-[#0f4420] flex items-center justify-center border border-white/10 shadow-lg">
-              <ShieldCheck size={18} className="text-white" />
-            </div>
+            <img
+              src={heroLogoUrl}
+              alt={heroLogoAlt}
+              className="object-contain w-10 h-10 rounded-md"
+            />
             <div className="flex flex-col">
-              <Text className="text-sm font-bold leading-none tracking-wide text-white">
+              <Text className="text-sm font-bold leading-none tracking-wide text-stone-950">
                 {portalName}
               </Text>
-              <Text className="text-[10px] text-white/50 uppercase tracking-[0.2em] font-medium leading-none mt-1">
-                Infrastructure
+              <Text className="mt-1 text-[10px] font-medium leading-none uppercase tracking-[0.2em] text-stone-500">
+                Tenant Workspace
               </Text>
             </div>
           </Group>
 
           <Group gap="md">
-            <Text className="hidden md:block text-xs uppercase tracking-widest text-[#1b7339] font-bold">
-              Secure Terminal
+            <Text className="hidden text-xs font-bold tracking-widest uppercase md:block text-fun-green-800">
+              Guided Learning Access
             </Text>
             <Link to="/$tenant/login" params={{ tenant: tenant.id }}>
               <Button
                 variant="outline"
-                className="border-white/20 text-white hover:bg-white hover:text-[#070b09] font-semibold text-xs uppercase tracking-wider h-10 px-6 rounded-xl transition-all"
+                className="h-10 px-6 text-xs font-semibold tracking-wider uppercase transition-all border rounded-md border-stone-300 text-stone-800 hover:bg-stone-100"
               >
                 Access Portal
               </Button>
@@ -110,140 +215,200 @@ function TenantLandingPage() {
         </div>
       </header>
 
-      {/* ====================================================================
-          HERO SECTION
-          ==================================================================== */}
-      <div className="relative flex items-center pt-32 pb-20 border-b grow lg:pt-48 lg:pb-32 border-white/5">
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_right,rgba(27,115,57,0.15),transparent_40%),linear-gradient(180deg,#070b09_0%,#0a140d_100%)]" />
-        <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+      <main className="flex-1">
+        <section className="relative overflow-hidden bg-white border-b border-stone-200">
+          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top_left,rgba(27,115,57,0.12),transparent_40%)]" />
+          <div className="relative px-6 pt-16 pb-20 mx-auto max-w-7xl lg:px-8 lg:pt-24 lg:pb-24">
+            <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+              <div data-aos="fade-up">
+                <Badge
+                  color="green"
+                  variant="light"
+                  size="sm"
+                  className="mb-6 tracking-[0.2em] uppercase font-bold"
+                >
+                  {tenant.name}
+                </Badge>
+                <Title className="max-w-3xl mb-8 text-5xl font-semibold leading-[1.05] tracking-tight text-stone-950 sm:text-6xl lg:text-7xl">
+                  {heroTitle}
+                </Title>
+                <p className="max-w-2xl text-lg leading-relaxed text-stone-600 sm:text-xl">
+                  {heroDescription}
+                </p>
 
-        <div className="relative z-10 flex flex-col items-center gap-16 px-6 mx-auto text-center max-w-7xl lg:px-8 sm:text-left md:flex-row">
-          <div className="flex-1 md:pr-12" data-aos="fade-up">
-            <Badge
-              color="green"
-              variant="outline"
-              size="sm"
-              className="mb-6 tracking-[0.2em] uppercase bg-[#1b7339]/10 border-[#1b7339]/30 text-[#1b7339] font-bold"
+                <Group className="mt-10">
+                  <Link to="/$tenant/login" params={{ tenant: tenant.id }}>
+                    <Button
+                      size="lg"
+                      rightSection={<ChevronRight size={18} />}
+                      className="px-8 text-xs font-bold tracking-wider text-white uppercase rounded-md h-14 bg-fun-green-800 hover:bg-fun-green-700"
+                    >
+                      {heroPrimaryCtaLabel}
+                    </Button>
+                  </Link>
+                  <Button
+                    component="a"
+                    href="#learning-overview"
+                    variant="light"
+                    size="lg"
+                    className="px-8 text-xs font-bold tracking-wider uppercase rounded-md h-14 bg-stone-100 text-stone-800 hover:bg-stone-200"
+                  >
+                    {heroSecondaryCtaLabel}
+                  </Button>
+                </Group>
+              </div>
+
+              <TenantHeroPreview
+                imageUrl={heroBackgroundImageUrl}
+                imageAlt={heroLogoAlt}
+                logoUrl={heroLogoUrl}
+                logoAlt={heroLogoAlt}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="px-6 py-16 mx-auto max-w-7xl lg:px-8 lg:py-20">
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {stats.map((stat, index) => (
+              <StatCard
+                key={`${stat.label}-${stat.value}`}
+                label={stat.label}
+                value={stat.value}
+                delay={index * 80}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section
+          id="learning-overview"
+          className="py-20 border-y bg-stone-100/70 border-stone-200"
+        >
+          <div className="grid items-center gap-12 px-6 mx-auto max-w-7xl lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:px-8">
+            <div
+              className="overflow-hidden bg-white border rounded-lg shadow-sm border-stone-200"
+              data-aos="fade-right"
             >
-              {tenant.name}
-            </Badge>
-            <Title className="text-5xl sm:text-6xl lg:text-[5rem] font-bold text-white leading-[1.1] tracking-tighter mb-8 max-w-3xl">
-              Knowledge{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-[#1b7339] to-[#34d399] font-serif italic pr-2">
-                Deployments
-              </span>{" "}
-              at Scale.
-            </Title>
-            <p className="max-w-2xl mt-4 mb-10 text-base font-light leading-relaxed sm:text-lg text-white/50">
-              Secure, multi-layered learning infrastructure built for structural
-              integrity and rapid onboarding across distributed agencies.
-            </p>
-            <Group className="justify-center sm:justify-start">
+              <img
+                src={missionImageUrl}
+                alt={missionImageAlt}
+                className="object-cover w-full h-full min-h-80"
+              />
+            </div>
+
+            <div data-aos="fade-left">
+              <p className="mb-4 text-xs font-bold tracking-[0.25em] uppercase text-fun-green-800">
+                Mission
+              </p>
+              <Title className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl">
+                {missionTitle}
+              </Title>
+              <Text className="max-w-2xl mt-6 text-lg leading-relaxed text-stone-600">
+                {missionDescription}
+              </Text>
               <Link to="/$tenant/login" params={{ tenant: tenant.id }}>
                 <Button
                   size="lg"
-                  rightSection={<ChevronRight size={18} />}
-                  className="bg-linear-to-br from-[#1b7339] to-[#0f4420] text-white hover:opacity-90 shadow-xl shadow-[#1b7339]/20 h-14 px-8 rounded-full font-bold uppercase tracking-wider text-xs transition-all hover:-translate-y-1"
+                  rightSection={<ArrowRight size={18} />}
+                  className="px-8 mt-8 text-xs font-bold tracking-wider text-white uppercase rounded-md h-14 bg-fun-green-800 hover:bg-fun-green-700"
                 >
-                  Authenticate Now
+                  {missionCtaLabel}
                 </Button>
               </Link>
-            </Group>
-          </div>
-
-          <div
-            className="flex-1 hidden md:block"
-            data-aos="zoom-in"
-            data-aos-delay="200"
-          >
-            <div className="relative w-full mx-auto cursor-pointer aspect-square max-w-125 group perspective-1000">
-              <div className="absolute inset-4 rounded-4xl bg-linear-to-tr from-[#1b7339]/20 to-transparent border border-white/10 backdrop-blur-xl rotate-10 group-hover:rotate-15 transition-all duration-700 ease-out shadow-2xl" />
-              <div className="absolute inset-8 rounded-4xl bg-linear-to-b from-[#1b7339]/40 to-[#070b09] border border-[#1b7339]/40 backdrop-blur-2xl -rotate-[5deg] group-hover:-rotate-[8deg] transition-all duration-700 ease-out p-8 flex flex-col justify-end shadow-2xl">
-                <div className="w-12 h-12 bg-white mb-6 rounded-xl shadow-[0_0_40px_rgba(255,255,255,0.4)]" />
-                <div className="w-1/3 h-2 mb-3 rounded-full bg-white/20" />
-                <div className="w-2/3 h-2 rounded-full bg-white/10" />
-              </div>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
 
-      {/* ====================================================================
-          BENTO GRID FEATURES
-          ==================================================================== */}
-      <div className="relative z-10 w-full px-6 py-24 mx-auto border-b lg:py-32 max-w-7xl lg:px-8 border-white/5">
-        <div className="mb-20 text-center">
-          <h2 className="text-[#1b7339] text-xs font-bold uppercase tracking-[0.25em] mb-4">
-            Engineered For Scale
-          </h2>
-          <h3 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Institutional Architecture
-          </h3>
-        </div>
+        <section className="px-6 py-20 mx-auto max-w-7xl lg:px-8 lg:py-24">
+          <div className="max-w-3xl mb-14" data-aos="fade-up">
+            <p className="mb-4 text-xs font-bold tracking-[0.25em] uppercase text-fun-green-800">
+              Learning Areas
+            </p>
+            <h2 className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl">
+              {categorySectionTitle}
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-stone-600">
+              Each workspace can organize content into clear tracks, with
+              categories that help learners discover the right starting point.
+            </p>
+          </div>
 
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <FeatureCard
-            icon={LayoutGrid}
-            title="Multi-Tenant Core"
-            description="Isolate operations with cryptographically discrete domains. Launch localized environments for separate departments instantly."
-            delay={0}
-          />
-          <FeatureCard
-            icon={ShieldCheck}
-            title="Sovereign Access"
-            description="Military-grade role-based access control. Ensure granular visibility bounds for administrative oversight vs generic consumption."
-            delay={150}
-          />
-          <FeatureCard
-            icon={Database}
-            title="Telemetry Streams"
-            description="Real-time analytics and metric rollups. Track knowledge propagation and compliance completion across network nodes."
-            delay={300}
-          />
-        </div>
-      </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {categories.map((category, index) => {
+              const Icon = categoryIconMap[category.icon] ?? ShieldCheck;
 
-      {/* ====================================================================
-          FOOTER
-          ==================================================================== */}
-      <footer className="relative bg-[#070b09] border-t border-transparent pt-16 pb-8">
+              return (
+                <CategoryCard
+                  key={`${category.icon}-${category.name}`}
+                  icon={Icon}
+                  title={category.name}
+                  description={`${category.name} content can be organized into guided lessons, structured modules, and trackable milestones for learners.`}
+                  delay={index * 90}
+                />
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="px-6 pb-24 mx-auto max-w-7xl lg:px-8 lg:pb-28">
+          <div
+            className="p-8 text-white border rounded-lg shadow-lg bg-fun-green-800 border-fun-green-900/80 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:p-10"
+            data-aos="fade-up"
+          >
+            <div className="max-w-3xl">
+              <p className="text-xs font-bold tracking-[0.22em] uppercase text-white/70">
+                Featured Learning
+              </p>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+                {featuredCoursesTitle}
+              </h2>
+              <p className="mt-4 text-base leading-relaxed text-white/75 sm:text-lg">
+                Enter the workspace to explore course collections, follow
+                structured lessons, and continue through guided learning paths.
+              </p>
+            </div>
+
+            <Link to="/$tenant/login" params={{ tenant: tenant.id }}>
+              <Button
+                size="lg"
+                rightSection={<ArrowRight size={18} />}
+                className="px-8 mt-8 text-xs font-bold tracking-wider uppercase bg-white rounded-md h-14 text-fun-green-900 hover:bg-stone-100 lg:mt-0"
+              >
+                {featuredCoursesCtaLabel}
+              </Button>
+            </Link>
+          </div>
+        </section>
+      </main>
+
+      <footer className="pt-16 pb-8 bg-white border-t border-stone-200">
         <div className="px-6 mx-auto max-w-7xl lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-8 pb-12 mb-8 border-b md:flex-row border-white/5">
+          <div className="flex flex-col items-center justify-between gap-8 pb-12 mb-8 border-b md:flex-row border-stone-200">
             <Group
               gap="sm"
-              className="transition-all duration-500 opacity-50 cursor-default grayscale hover:opacity-100 hover:grayscale-0"
+              className="transition-opacity opacity-80 hover:opacity-100"
             >
-              <div className="w-6 h-6 rounded-md bg-[#1b7339] flex items-center justify-center">
-                <ShieldCheck size={14} className="text-white" />
-              </div>
-              <Text className="text-sm font-bold tracking-wider text-white uppercase">
+              <img
+                src={footerLogoUrl}
+                alt={footerLogoAlt}
+                className="object-contain w-8 h-8 rounded-md"
+              />
+              <Text className="text-sm font-bold tracking-wider uppercase text-stone-950">
                 {portalName}
               </Text>
             </Group>
 
-            <Group gap="xl">
-              {[
-                "Compliance",
-                "Infrastructure",
-                "Security Policy",
-                "Telemetry",
-              ].map((link) => (
-                <Anchor
-                  key={link}
-                  href="#"
-                  className="text-[10px] uppercase tracking-widest text-white/40 hover:text-white font-bold transition-colors"
-                >
-                  {link}
-                </Anchor>
-              ))}
-            </Group>
+            <Text className="text-xs font-medium text-stone-500">
+              {footerTagline}
+            </Text>
           </div>
 
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <Text className="text-xs font-medium text-white/30">
-              &copy; {CURRENT_YEAR} {copyright}
+            <Text className="text-xs font-medium text-stone-500">
+              {copyright || `© ${CURRENT_YEAR} ${portalName}`}
             </Text>
-            <Text className="text-[10px] uppercase text-white/20 font-mono tracking-widest">
+            <Text className="font-mono text-[10px] uppercase tracking-widest text-stone-400">
               {footerTagline}
             </Text>
           </div>

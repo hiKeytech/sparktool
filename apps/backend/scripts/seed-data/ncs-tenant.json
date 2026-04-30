@@ -81,7 +81,7 @@
       "reports": true
     },
     "publicSite": {
-      "categorySectionTitle": "Explore The Renewed Hope Agenda Correctional Courses",
+      "categorySectionTitle": "Explore Learning Areas",
       "categories": [
         { "icon": "briefcase", "name": "Business" },
         { "icon": "brain", "name": "Artificial Intelligence" },
@@ -97,28 +97,28 @@
         { "icon": "math", "name": "Math and Logic" }
       ],
       "copyright": "© 2024 Federal Republic of Nigeria. All rights reserved.",
-      "featuredCoursesCtaLabel": "View All",
-      "featuredCoursesTitle": "Hot new releases",
+      "featuredCoursesCtaLabel": "Enter Workspace",
+      "featuredCoursesTitle": "Structured learning for correctional excellence",
       "footerLogoAlt": "Nigerian Coat of Arms",
       "footerLogoUrl": "/nigerian-coat-of-arms.svg",
-      "footerTagline": "Renewed Hope Agenda • Technology Education Platform",
+      "footerTagline": "Digital learning for correctional excellence",
       "heroBackgroundImageUrl": "/nigerian-correctional-service-staff.jpg",
-      "heroDescription": "The Renewed Hope Agenda brings comprehensive technology education to the Nigerian Correctional Service. This platform is built to enable and assist those in correctional centres to learn technology skills with our comprehensive e-learning platform.",
+      "heroDescription": "A secure learning environment for officers and staff to build practical digital skills, follow structured courses, and track progress with clarity.",
       "heroLogoAlt": "Nigerian Coat of Arms",
       "heroLogoUrl": "/nigerian-coat-of-arms.svg",
-      "heroPrimaryCtaLabel": "Start Learning Today",
-      "heroSecondaryCtaLabel": "Explore Courses",
+      "heroPrimaryCtaLabel": "Open Learning Portal",
+      "heroSecondaryCtaLabel": "Explore Learning Areas",
       "heroTitle": "Nigerian Correctional Service",
-      "missionCtaLabel": "Learn More About Our Mission",
-      "missionDescription": "Under the Renewed Hope Agenda, we are committed to transforming the Nigerian Correctional Service through cutting-edge technology education. Our platform ensures that every correctional officer has access to world-class digital skills training, supporting rehabilitation programs and modernizing correctional practices across Nigeria.",
+      "missionCtaLabel": "View Learning Mission",
+      "missionDescription": "The platform supports correctional excellence with structured digital training, practical course pathways, and measurable progress for officers, staff, and approved learners.",
       "missionImageAlt": "Nigerian Correctional Service Office",
       "missionImageUrl": "/nigerian-correctional-service-office.webp",
-      "missionTitle": "Empowering Correctional Excellence Through Technology",
+      "missionTitle": "Building capability through structured digital learning",
       "stats": [
-        { "label": "Active Students", "value": "3,500+" },
-        { "label": "Completed Courses", "value": "12,000+" },
-        { "label": "Expert Instructors", "value": "150+" },
-        { "label": "Success Rate", "value": "96%" }
+        { "label": "Active Learners", "value": "3,500+" },
+        { "label": "Courses Completed", "value": "12,000+" },
+        { "label": "Training Facilitators", "value": "150+" },
+        { "label": "Progress Visibility", "value": "96%" }
       ]
     }
   }
