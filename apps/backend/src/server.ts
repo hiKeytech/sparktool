@@ -174,6 +174,4 @@ app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
   res.status(status).json({ error: message });
 });
 
-app.listen(port, () => {
-  console.log(`sparktool-backend listening on http://localhost:${port}`);
-});
+app.listen(port);
