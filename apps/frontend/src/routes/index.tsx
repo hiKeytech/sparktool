@@ -773,10 +773,9 @@ function PlatformLandingPage() {
             >
               <form
                 className="space-y-6"
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  navigate({ to: "/login" });
-                }}
+                action="mailto:info@hikey.com.ng"
+                method="get"
+                encType="text/plain"
               >
                 <div className="grid gap-6 sm:grid-cols-2">
                   <TextInput
@@ -855,10 +854,10 @@ function PlatformLandingPage() {
                   type="submit"
                   className="w-full py-5 text-sm font-bold tracking-widest text-[#FDFDFD] uppercase transition-colors bg-[#0A2617] hover:bg-black mt-4 border border-black"
                 >
-                  Book My Demo
+                  Send Request
                 </button>
                 <p className="mt-4 text-xs font-bold tracking-widest text-center uppercase text-stone-400">
-                  Our team will get back to you within 1 business day.
+                  This will open your email client to send the request.
                 </p>
               </form>
             </div>
