@@ -872,7 +872,7 @@ function PlatformLandingPage() {
       */}
       <footer className="bg-[#0A2617] text-[#FDFDFD] py-16 lg:py-24">
         <div className="px-6 mx-auto lg:px-12 max-w-screen-2xl">
-          <div className="grid items-end gap-12 mb-16 md:grid-cols-2">
+          <div className="grid items-end gap-12 md:grid-cols-2">
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-8 h-8 bg-[#B3F2C7]" />
@@ -902,21 +902,6 @@ function PlatformLandingPage() {
                 className="text-sm font-bold tracking-widest uppercase text-[#B3F2C7] hover:text-white transition-colors"
               >
                 Book a Demo
-              </a>
-            </div>
-          </div>
-
-          <div className="pt-8 border-t border-[#FDFDFD]/20 flex flex-col md:flex-row items-center justify-between gap-6 text-xs font-bold tracking-widest uppercase text-[#B3F2C7]/60">
-            <p>
-              © {new Date().getFullYear()} SparkTool Infrastructure. All rights
-              reserved.
-            </p>
-            <div className="flex gap-8">
-              <a href="#" className="hover:text-[#FDFDFD] transition-colors">
-                Privacy Policy
-              </a>
-              <a href="#" className="hover:text-[#FDFDFD] transition-colors">
-                Terms of Use
               </a>
             </div>
           </div>
