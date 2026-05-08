@@ -10,7 +10,7 @@ export const adminInvitationStatusSchema = z.enum([
 ]);
 
 export const createTenantAdminInvitationInputSchema = z.object({
-  displayName: z.string().trim().min(2).optional().nullable(),
+  displayName: z.string().trim().min(2, "Display name is required"),
   email: z.email(),
 });
 
@@ -25,7 +25,7 @@ export const redeemAdminInvitationInputSchema = z.object({
 
 export const adminInvitationSchema = z.object({
   createdAt: z.number(),
-  displayName: z.string().trim().min(2).nullable().optional(),
+  displayName: z.string().trim().min(2, "Display name is required"),
   email: z.email(),
   expiresAt: z.number(),
   invitedByUserId: z.string().trim().min(1),
@@ -41,7 +41,7 @@ export const adminInvitationSchema = z.object({
 });
 
 export const adminInvitationPreviewSchema = z.object({
-  displayName: z.string().trim().min(2).nullable().optional(),
+  displayName: z.string().trim().min(2, "Display name is required"),
   email: z.email(),
   expiresAt: z.number(),
   role: adminInvitationRoleSchema,

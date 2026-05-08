@@ -160,7 +160,7 @@ authRouter.get("/invitations/:token", async (request, response) => {
   const invitation = await getInvitationOrThrow(request.params.token);
 
   response.json({
-    displayName: invitation.displayName ?? null,
+    displayName: invitation.displayName,
     email: invitation.email,
     expiresAt: invitation.expiresAt,
     role: invitation.role,

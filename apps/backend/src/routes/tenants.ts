@@ -22,7 +22,7 @@ function hashInvitationToken(token: string) {
 
 async function createAdminInvitation(input: {
   actorId: string;
-  displayName: null | string | undefined;
+  displayName: string;
   email: string;
   tenantId: string;
 }) {
@@ -31,7 +31,7 @@ async function createAdminInvitation(input: {
   const invitationToken = randomBytes(32).toString("hex");
   const invitation = await adminInvitationRepository.create({
     createdAt: now,
-    displayName: input.displayName?.trim() || null,
+    displayName: input.displayName.trim(),
     email: input.email.trim().toLowerCase(),
     expiresAt: now + TENANT_ADMIN_INVITE_TTL_MS,
     invitedByUserId: input.actorId,
@@ -60,7 +60,7 @@ async function createAdminInvitation(input: {
   return {
     invitation: {
       createdAt: invitation.createdAt,
-      displayName: invitation.displayName ?? null,
+      displayName: invitation.displayName,
       email: invitation.email,
       expiresAt: invitation.expiresAt,
       id: invitation.id,
@@ -105,7 +105,7 @@ tenantsRouter.get(
     response.json(
       invitations.map((invitation) => ({
         createdAt: invitation.createdAt,
-        displayName: invitation.displayName ?? null,
+        displayName: invitation.displayName,
         email: invitation.email,
         expiresAt: invitation.expiresAt,
         id: invitation.id,
@@ -227,7 +227,7 @@ tenantsRouter.get(
     response.json(
       invitations.map((invitation) => ({
         createdAt: invitation.createdAt,
-        displayName: invitation.displayName ?? null,
+        displayName: invitation.displayName,
         email: invitation.email,
         expiresAt: invitation.expiresAt,
         id: invitation.id,

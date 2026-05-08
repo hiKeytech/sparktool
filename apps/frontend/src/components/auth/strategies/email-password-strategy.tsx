@@ -99,10 +99,7 @@ export function EmailPasswordStrategy({
   const form = useForm<EmailPasswordFormValues>({
     initialValues: {
       confirmPassword: "",
-      displayName:
-        invitationPreview?.displayName ??
-        invitationPreview?.email.split("@")[0] ??
-        "",
+      displayName: "",
       email: invitationPreview?.email ?? "",
       password: "",
     },
@@ -112,15 +109,6 @@ export function EmailPasswordStrategy({
   useEffect(() => {
     if (!invitationPreview) {
       return;
-    }
-
-    if (!form.values.displayName?.trim()) {
-      form.setFieldValue(
-        "displayName",
-        invitationPreview.displayName ||
-          invitationPreview.email.split("@")[0] ||
-          "",
-      );
     }
 
     if (form.values.email !== invitationPreview.email) {
@@ -140,8 +128,7 @@ export function EmailPasswordStrategy({
 
       redeemInvitation({
         department: null,
-        displayName:
-          displayName || invitationPreview.email.split("@")[0] || "Admin",
+        displayName: displayName || invitationPreview.displayName,
         location: null,
         password: values.password,
         tenantId: invitationPreview.tenantId,

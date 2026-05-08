@@ -110,7 +110,7 @@ export const createTenantOnboardingFn = createServerFn({ method: "POST" })
 
     return api.post<TenantOnboardingResponse>("/api/tenants/onboard", {
       initialAdminInvitation: {
-        displayName: data.initialAdminInvitation.displayName?.trim() || null,
+        displayName: data.initialAdminInvitation.displayName.trim(),
         email: data.initialAdminInvitation.email.trim().toLowerCase(),
       },
       tenant: normalizeTenantRecord(data.tenant),

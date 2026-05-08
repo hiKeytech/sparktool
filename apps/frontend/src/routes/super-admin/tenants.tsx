@@ -267,7 +267,7 @@ function TenantsOverview() {
     createTenantOnboarding(
       {
         initialAdminInvitation: {
-          displayName: addForm.adminDisplayName || null,
+          displayName: addForm.adminDisplayName,
           email: addForm.adminEmail,
         },
         tenant: {
@@ -655,6 +655,7 @@ function TenantsOverview() {
             <TextInput
               label="Invitee Name"
               placeholder="e.g. Ada Nwosu"
+              required
               value={addForm.adminDisplayName}
               onChange={(e) =>
                 setAddForm((prev) => ({
@@ -692,6 +693,7 @@ function TenantsOverview() {
                   !addForm.name ||
                   !addForm.id ||
                   !addForm.domain ||
+                  !addForm.adminDisplayName ||
                   !addForm.adminEmail
                 }
                 onClick={handleAddSubmit}
