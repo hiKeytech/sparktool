@@ -28,14 +28,41 @@ interface EmailPasswordStrategyProps {
   restrictedDomains?: string[];
 }
 
-const baseSchema = z.object({
-  displayName: z.string().trim().optional(),
-  email: z.email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string().optional(),
+interface EmailPasswordFormValues extends Record<string, string> {
+  confirmPassword: string;
+  displayName: string;
+  email: string;
+  password: string;
+}
+
+const passwordSchema = z
+  .string()
+  .min(8, "Password must be at least 8 characters");
+
+const signInSchema = z.object({
+  email: z.email("Enter a valid email address"),
+  password: passwordSchema,
 });
 
-type EmailPasswordFormValues = z.infer<typeof baseSchema>;
+const accountSetupSchema = z
+  .object({
+    confirmPassword: z.string(),
+    displayName: z
+      .string()
+      .trim()
+      .min(2, "Display name must be at least 2 characters"),
+    password: passwordSchema,
+  })
+  .refine((values) => values.password === values.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+const signUpSchema = accountSetupSchema.and(
+  z.object({
+    email: z.email("Enter a valid email address"),
+  }),
+);
 
 export function EmailPasswordStrategy({
   allowSignup = false,
@@ -63,33 +90,13 @@ export function EmailPasswordStrategy({
     isError: isRedeemError,
   } = useRedeemAdminInvitation();
 
-  const schema = baseSchema.superRefine((values, context) => {
-    if (isInvitationMode || mode === "sign-up") {
-      if (!values.displayName) {
-        context.addIssue({
-          code: "custom",
-          message: "Display name is required",
-          path: ["displayName"],
-        });
-      } else if (values.displayName.trim().length < 2) {
-        context.addIssue({
-          code: "custom",
-          message: "Display name must be at least 2 characters",
-          path: ["displayName"],
-        });
-      }
+  const validationSchema = isInvitationMode
+    ? accountSetupSchema
+    : mode === "sign-up"
+      ? signUpSchema
+      : signInSchema;
 
-      if (values.password !== values.confirmPassword) {
-        context.addIssue({
-          code: "custom",
-          message: "Passwords do not match",
-          path: ["confirmPassword"],
-        });
-      }
-    }
-  });
-
-  const form = useForm({
+  const form = useForm<EmailPasswordFormValues>({
     initialValues: {
       confirmPassword: "",
       displayName:
@@ -99,7 +106,7 @@ export function EmailPasswordStrategy({
       email: invitationPreview?.email ?? "",
       password: "",
     },
-    validate: zod4Resolver(schema),
+    validate: zod4Resolver(validationSchema),
   });
 
   useEffect(() => {
@@ -107,15 +114,18 @@ export function EmailPasswordStrategy({
       return;
     }
 
-    form.setValues((currentValues) => ({
-      ...currentValues,
-      displayName:
-        currentValues.displayName?.trim() ||
+    if (!form.values.displayName?.trim()) {
+      form.setFieldValue(
+        "displayName",
         invitationPreview.displayName ||
-        invitationPreview.email.split("@")[0] ||
-        "",
-      email: invitationPreview.email,
-    }));
+          invitationPreview.email.split("@")[0] ||
+          "",
+      );
+    }
+
+    if (form.values.email !== invitationPreview.email) {
+      form.setFieldValue("email", invitationPreview.email);
+    }
   }, [form, invitationPreview]);
 
   const isBusy = isPending || isRedeemingInvitation;
@@ -123,7 +133,11 @@ export function EmailPasswordStrategy({
   const handleSubmit = (values: EmailPasswordFormValues) => {
     const displayName = values.displayName?.trim() || undefined;
 
-    if (isInvitationMode && invitationToken && invitationPreview) {
+    if (isInvitationMode) {
+      if (!invitationToken || !invitationPreview) {
+        return;
+      }
+
       redeemInvitation({
         department: null,
         displayName:
@@ -164,6 +178,12 @@ export function EmailPasswordStrategy({
         </Alert>
       )}
 
+      {isInvitationMode && !invitationPreview && !invitationError ? (
+        <Alert color="blue" mb="md" variant="light">
+          Loading invitation details...
+        </Alert>
+      ) : null}
+
       {isInvitationMode && invitationPreview ? (
         <Alert color="green" mb="md" variant="light">
           <Text fw={600} size="sm">
@@ -195,6 +215,7 @@ export function EmailPasswordStrategy({
               input: "border-stone-300 focus:border-fun-green-700",
               label: "mb-1 font-sans font-medium text-stone-900",
             }}
+            disabled={isInvitationMode && !hasInvitationPreview}
             label="Email"
             placeholder="your@email.com"
             readOnly={isInvitationMode && hasInvitationPreview}
@@ -224,7 +245,8 @@ export function EmailPasswordStrategy({
             />
           )}
           <Button
-            className="mt-2 bg-fun-green-800 text-white shadow-sm transition-colors duration-300 hover:bg-fun-green-700"
+            className="mt-2 text-white transition-colors duration-300 shadow-sm bg-fun-green-800 hover:bg-fun-green-700"
+            disabled={isInvitationMode && !hasInvitationPreview}
             fullWidth
             loading={isBusy}
             size="lg"
@@ -232,7 +254,9 @@ export function EmailPasswordStrategy({
           >
             <span className="font-sans font-medium tracking-wide">
               {isInvitationMode
-                ? label || "Accept invitation"
+                ? hasInvitationPreview
+                  ? label || "Accept invitation"
+                  : "Loading invitation"
                 : mode === "sign-up"
                   ? label || "Create account"
                   : label || "Sign in"}
