@@ -47,17 +47,27 @@ export const createCourseSchema = z.object({
   previewVideoUrl: z.string().min(1, "Video URL is required"),
 });
 
-export const createUserSchema = z.object({
-  department: z.string().optional(),
-  email: z.email("Invalid email address"),
-  fullName: z.string().min(2, "Full name must be at least 2 characters"),
-  location: z.string().optional(),
-  role: z.enum(["admin", "student"]),
-  studentId: z.string().min(3, "Student ID must be at least 3 characters").optional().or(z.literal("")),
-  temporaryPassword: z
-    .string()
-    .min(8, "Password must be at least 8 characters"),
-});
+export const createUserSchema = z
+  .object({
+    confirmPassword: z.string(),
+    department: z.string().optional(),
+    email: z.email("Invalid email address"),
+    fullName: z.string().min(2, "Full name must be at least 2 characters"),
+    location: z.string().optional(),
+    role: z.enum(["admin", "student"]),
+    studentId: z
+      .string()
+      .min(3, "Student ID must be at least 3 characters")
+      .optional()
+      .or(z.literal("")),
+    temporaryPassword: z
+      .string()
+      .min(8, "Password must be at least 8 characters"),
+  })
+  .refine((data) => data.temporaryPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
 
 export const courseFiltersSchema = z.object({
   difficulty: z.enum(["beginner", "intermediate", "advanced"]).optional(),
@@ -115,7 +125,7 @@ export const createQuizSchema = z.object({
 });
 
 export const createLiveSessionSchema = z.object({
-  courseId: z.string().min(1, "Please select a course"),
+  courseId: z.string().optional(),
   description: z.string().min(1, "Session description is required"),
   duration: z
     .number()
@@ -128,7 +138,7 @@ export const createLiveSessionSchema = z.object({
 });
 
 export const editLiveSessionSchema = z.object({
-  courseId: z.string().min(1, "Please select a course"),
+  courseId: z.string().optional(),
   description: z.string().min(1, "Session description is required"),
   duration: z
     .number()

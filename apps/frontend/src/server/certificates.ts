@@ -42,7 +42,9 @@ const updateCertificateInputSchema = z.object({
 export const createCertificateFn = createServerFn({ method: "POST" })
   .inputValidator(createCertificateInputSchema)
   .handler(async ({ data }) => {
-    return api.post<ApiIdResponse>("/api/certificates", data);
+    return api.post<ApiIdResponse>("/api/certificates", {
+      certificateData: data.data,
+    });
   });
 
 export const findCertificateFn = createServerFn({ method: "GET" })

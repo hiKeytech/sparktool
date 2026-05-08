@@ -20,7 +20,7 @@ import { useCreateLiveSession, useListCourses } from "@/services/hooks";
 import { DATE_PICKER_PRESETS, formatDateInput } from "@/utils/date-utils";
 
 const schema = z.object({
-  courseId: z.string().min(1, "Please select a course"),
+  courseId: z.string().optional(),
   description: z.string().min(1, "Session description is required"),
   duration: z
     .number()
@@ -49,7 +49,7 @@ export function CreateLiveSessionModal({
 
   const form = useForm<CreateLiveSession>({
     initialValues: {
-      courseId: "",
+      courseId: undefined,
       description: "",
       duration: 60,
       instructorName: user.displayName ?? "",
@@ -102,10 +102,11 @@ export function CreateLiveSessionModal({
         />
 
         <Select
+          clearable
           data={courseOptions}
+          description="Optional. Leave empty for a standalone session."
           label="Course"
-          placeholder="Select a course"
-          required
+          placeholder="Select a course if this session belongs to one"
           searchable
           {...form.getInputProps("courseId")}
         />

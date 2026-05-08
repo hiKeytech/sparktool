@@ -123,13 +123,18 @@ function StudentLiveSessionsPage() {
 
     try {
       await joinLiveSession.mutateAsync({
-        courseId: session.courseId,
         sessionId: session.id,
         studentId: user.uid,
       });
       setActiveSession(session);
     } catch (error) {
       console.error("Failed to join session:", error);
+    }
+  };
+
+  const handleOpenRecording = (session: LiveSession) => {
+    if (session.recordingUrl) {
+      window.open(session.recordingUrl, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -197,17 +202,28 @@ function StudentLiveSessionsPage() {
           <strong>Instructor:</strong> {session.instructorName}
         </Text>
 
-        {showJoinButton && canJoinSession(session) && (
-          <Button
-            className="bg-fun-green-800 hover:bg-fun-green-700"
-            fullWidth
-            leftSection={<IconVideo size={16} />}
-            loading={joinLiveSession.isPending}
-            onClick={() => handleJoinSession(session)}
-          >
-            Join Session
-          </Button>
-        )}
+        <Group grow>
+          {showJoinButton && canJoinSession(session) && (
+            <Button
+              className="bg-fun-green-800 hover:bg-fun-green-700"
+              fullWidth
+              leftSection={<IconVideo size={16} />}
+              loading={joinLiveSession.isPending}
+              onClick={() => handleJoinSession(session)}
+            >
+              Join Session
+            </Button>
+          )}
+          {getDisplayStatus(session) === "ended" && session.recordingUrl && (
+            <Button
+              fullWidth
+              onClick={() => handleOpenRecording(session)}
+              variant="light"
+            >
+              Watch Recording
+            </Button>
+          )}
+        </Group>
       </Stack>
     </Card>
   );

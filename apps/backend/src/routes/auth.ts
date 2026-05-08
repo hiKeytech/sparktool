@@ -9,6 +9,7 @@ import { activityLogRepository } from "../repositories/activity-log-repository.j
 import { adminInvitationRepository } from "../repositories/admin-invitation-repository.js";
 import { passwordAuthRepository } from "../repositories/password-auth-repository.js";
 import { userRepository } from "../repositories/user-repository.js";
+import { assertAllowedAuthDomain } from "../lib/auth-domain-policy.js";
 import {
   getActorFromSession,
   httpError,
@@ -51,14 +52,6 @@ async function getInvitationOrThrow(token: string) {
   return invitation;
 }
 
-function isDomainAllowed(email: string, restrictedDomains?: string[]) {
-  if (!restrictedDomains?.length) return true;
-  const normalized = email.trim().toLowerCase();
-  return restrictedDomains.some((d) =>
-    normalized.endsWith(d.trim().toLowerCase()),
-  );
-}
-
 /** POST /api/auth/sign-in */
 authRouter.post("/sign-in", async (request, response) => {
   const {
@@ -87,12 +80,11 @@ authRouter.post("/sign-in", async (request, response) => {
     ? authConfig.restrictedDomains
     : (authConfig?.domains ?? restrictedDomains);
 
-  if (!isDomainAllowed(normalizedEmail, domains)) {
-    throw httpError(
-      403,
-      `Unauthorized email domain. Expected one of: ${(domains ?? []).join(", ")}`,
-    );
-  }
+  assertAllowedAuthDomain({
+    email: normalizedEmail,
+    mode,
+    restrictedDomains: domains,
+  });
 
   if (mode === "sign-up") {
     if (!resolvedTenant) {

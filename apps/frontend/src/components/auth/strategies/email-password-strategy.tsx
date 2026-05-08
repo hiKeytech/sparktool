@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -39,14 +39,16 @@ type EmailPasswordFormValues = z.infer<typeof baseSchema>;
 
 export function EmailPasswordStrategy({
   allowSignup = false,
-  config: _config,
+  config,
   invitationError,
   invitationPreview,
   invitationToken,
   label,
   restrictedDomains,
 }: EmailPasswordStrategyProps) {
+  void config;
   const isInvitationMode = Boolean(invitationToken);
+  const hasInvitationPreview = Boolean(invitationPreview);
   const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
   const {
     mutate: signIn,
@@ -99,6 +101,22 @@ export function EmailPasswordStrategy({
     },
     validate: zod4Resolver(schema),
   });
+
+  useEffect(() => {
+    if (!invitationPreview) {
+      return;
+    }
+
+    form.setValues((currentValues) => ({
+      ...currentValues,
+      displayName:
+        currentValues.displayName?.trim() ||
+        invitationPreview.displayName ||
+        invitationPreview.email.split("@")[0] ||
+        "",
+      email: invitationPreview.email,
+    }));
+  }, [form, invitationPreview]);
 
   const isBusy = isPending || isRedeemingInvitation;
 
@@ -177,9 +195,9 @@ export function EmailPasswordStrategy({
               input: "border-stone-300 focus:border-fun-green-700",
               label: "mb-1 font-sans font-medium text-stone-900",
             }}
-            disabled={isInvitationMode}
             label="Email"
             placeholder="your@email.com"
+            readOnly={isInvitationMode && hasInvitationPreview}
             size="md"
             {...form.getInputProps("email")}
           />

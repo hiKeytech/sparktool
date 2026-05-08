@@ -7,6 +7,7 @@ import {
   IconCalendar,
   IconDots,
   IconEdit,
+  IconExternalLink,
   IconTrash,
   IconUsers,
   IconVideo,
@@ -17,6 +18,7 @@ export interface LiveSessionTableActions {
   onDelete: (sessionId: string) => void;
   onEdit: (sessionId: string) => void;
   onJoinMeeting: (session: LiveSession) => void;
+  onOpenRecording: (session: LiveSession) => void;
 }
 
 interface LiveSessionTableActionsProps {
@@ -33,7 +35,7 @@ const statusColors: Record<LiveSessionStatus, string> = {
 
 export function createLiveSessionColumns(
   actions: LiveSessionTableActions,
-  courses: { id: string; title: string }[] = []
+  courses: { id: string; title: string }[] = [],
 ): ColumnDef<LiveSession>[] {
   return [
     {
@@ -50,7 +52,7 @@ export function createLiveSessionColumns(
               </Text>
             )}
             <Text c="dimmed" size="xs">
-              {course?.title || "Unknown Course"}
+              {course?.title || "Standalone session"}
             </Text>
           </div>
         );
@@ -133,7 +135,7 @@ export function createLiveSessionColumns(
 }
 
 export function createLiveSessionTableFilters(
-  courses: { id: string; title: string }[] = []
+  courses: { id: string; title: string }[] = [],
 ) {
   return [
     {
@@ -181,6 +183,14 @@ function LiveSessionTableActions({
             onClick={() => actions.onJoinMeeting(session)}
           >
             Join Meeting
+          </Menu.Item>
+        )}
+        {session.recordingUrl && (
+          <Menu.Item
+            leftSection={<IconExternalLink size={14} />}
+            onClick={() => actions.onOpenRecording(session)}
+          >
+            Open Recording
           </Menu.Item>
         )}
         <Menu.Divider />

@@ -42,6 +42,20 @@ interface ReissuedLinkState {
   tenantName: string;
 }
 
+function buildInviteMailtoLink(input: ReissuedLinkState) {
+  const subject = `SparkTool administrator access for ${input.tenantName}`;
+  const body = [
+    `You have been invited to administer ${input.tenantName} on SparkTool.`,
+    "",
+    "Complete your account setup with the link below:",
+    input.inviteLink,
+    "",
+    "You must finish setup before you can sign in.",
+  ].join("\n");
+
+  return `mailto:${encodeURIComponent(input.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 export const Route = createFileRoute("/super-admin/invitations")({
   component: InvitationHistoryPage,
 });
@@ -131,6 +145,12 @@ function InvitationHistoryPage() {
           can audit the invitation and enforce redemption or revocation, but it
           cannot show the original link again. Reissuing creates a fresh token
           and invalidates the previous pending link.
+        </Alert>
+
+        <Alert color="yellow" icon={<Mail size={16} />} title="Delivery model">
+          SparkTool does not send administrator invitation emails automatically.
+          Pending administrators cannot sign in until the setup link is manually
+          shared and redeemed.
         </Alert>
 
         <Paper p="lg" radius="lg" withBorder>
@@ -308,24 +328,37 @@ function InvitationHistoryPage() {
             <Text c="dimmed" size="sm">
               A new invite has been issued for {reissuedLink?.email} in{" "}
               {reissuedLink?.tenantName}. Share the link below. The old pending
-              link is no longer the active onboarding path.
+              link is no longer the active onboarding path, and the
+              administrator still cannot sign in until this new link is
+              redeemed.
             </Text>
             <TextInput
               label="Administrator invite link"
               readOnly
               value={reissuedLink?.inviteLink ?? ""}
             />
-            <CopyButton value={reissuedLink?.inviteLink ?? ""}>
-              {({ copied, copy }) => (
-                <Button
-                  color="green"
-                  leftSection={<Mail size={16} />}
-                  onClick={copy}
-                >
-                  {copied ? "Invite link copied" : "Copy invite link"}
-                </Button>
-              )}
-            </CopyButton>
+            <Group grow>
+              <CopyButton value={reissuedLink?.inviteLink ?? ""}>
+                {({ copied, copy }) => (
+                  <Button
+                    color="green"
+                    leftSection={<Mail size={16} />}
+                    onClick={copy}
+                  >
+                    {copied ? "Invite link copied" : "Copy invite link"}
+                  </Button>
+                )}
+              </CopyButton>
+              <Button
+                component="a"
+                href={
+                  reissuedLink ? buildInviteMailtoLink(reissuedLink) : undefined
+                }
+                variant="default"
+              >
+                Draft email
+              </Button>
+            </Group>
           </Stack>
         </Modal>
       </Stack>
@@ -403,6 +436,9 @@ function OutcomeCell({ invitation }: { invitation: AdminInvitationSummary }) {
   return (
     <>
       <Text size="sm">Expires {formatRelativeTime(invitation.expiresAt)}</Text>
+      <Text c="dimmed" size="xs">
+        Sign-in stays unavailable until the invite is redeemed.
+      </Text>
       <Text c="dimmed" size="xs">
         {formatDateTime(invitation.expiresAt)}
       </Text>

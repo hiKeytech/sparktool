@@ -100,8 +100,6 @@ export function useTenantAdminInvitations(
 }
 
 export function useReissueTenantAdminInvitation() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to reissue administrator invitation.",
@@ -112,17 +110,10 @@ export function useReissueTenantAdminInvitation() {
         invitation: AdminInvitationSummary;
         invitationToken: string;
       }>,
-    onSuccess: async (_result, variables) => {
-      await queryClient.invalidateQueries({
-        queryKey: ["tenant-admin-invitations", variables.tenantId],
-      });
-    },
   });
 }
 
 export function useRevokeTenantAdminInvitation() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to revoke administrator invitation.",
@@ -132,11 +123,6 @@ export function useRevokeTenantAdminInvitation() {
       revokeTenantAdminInvitationFn({ data: variables }) as Promise<{
         success: true;
       }>,
-    onSuccess: async (_result, variables) => {
-      await queryClient.invalidateQueries({
-        queryKey: ["tenant-admin-invitations", variables.tenantId],
-      });
-    },
   });
 }
 // Course Progress Calculation Hooks
@@ -229,19 +215,12 @@ export function useCreateLessonResource() {
 }
 
 export function useCreateLiveSession() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to create live session. Please try again.",
       successMessage: "Live session created successfully.",
     },
     mutationFn: api.$use.liveSessions.create,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: api.liveSessions.list.$use(),
-      });
-    },
   });
 }
 
@@ -364,19 +343,12 @@ export function useDeleteLessonResource() {
 }
 
 export function useDeleteLiveSession() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to delete live session. Please try again.",
       successMessage: "Live session deleted successfully.",
     },
     mutationFn: api.$use.liveSessions.delete,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: api.liveSessions.list.$use(),
-      });
-    },
   });
 }
 
@@ -500,35 +472,21 @@ export function useGetLessonResource(
 }
 
 export function useJoinLiveSession() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to join live session. Please try again.",
       successMessage: "Successfully joined the live session.",
     },
     mutationFn: api.$use.liveSessions.join,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: api.liveSessions.list.$use(),
-      });
-    },
   });
 }
 
 export function useLeaveLiveSession() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to leave live session. Please try again.",
     },
     mutationFn: api.$use.liveSessions.leave,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: api.liveSessions.list.$use(),
-      });
-    },
   });
 }
 
@@ -808,7 +766,11 @@ export function useAiChatThread(
         courseId: variables.courseId,
         lessonId: variables.lessonId,
       }) as Promise<AiChatThread | null>,
-    queryKey: ["ai-chat-thread", variables.courseId ?? null, variables.lessonId ?? null],
+    queryKey: [
+      "ai-chat-thread",
+      variables.courseId ?? null,
+      variables.lessonId ?? null,
+    ],
   }),
 ) {
   return useQuery({ ...query, ...options });
@@ -823,15 +785,17 @@ export function useAiDocuments(
         courseId: variables.courseId,
         lessonId: variables.lessonId,
       }) as Promise<AiDocument[]>,
-    queryKey: ["ai-documents", variables.courseId ?? null, variables.lessonId ?? null],
+    queryKey: [
+      "ai-documents",
+      variables.courseId ?? null,
+      variables.lessonId ?? null,
+    ],
   }),
 ) {
   return useQuery({ ...query, ...options });
 }
 
 export function useCreateAiDocument() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to upload AI document.",
@@ -843,11 +807,6 @@ export function useCreateAiDocument() {
       lessonId?: null | string;
       title?: string;
     }) => aiStudy.createDocument(variables),
-    onSuccess: async (document) => {
-      await queryClient.invalidateQueries({
-        queryKey: ["ai-documents", document.courseId ?? null, document.lessonId ?? null],
-      });
-    },
   });
 }
 
@@ -897,7 +856,11 @@ export function useSendAiChatMessage() {
     }) => aiStudy.sendChatMessage(variables),
     onSuccess: async (thread, variables) => {
       await queryClient.setQueryData(
-        ["ai-chat-thread", variables.courseId ?? null, variables.lessonId ?? null],
+        [
+          "ai-chat-thread",
+          variables.courseId ?? null,
+          variables.lessonId ?? null,
+        ],
         thread,
       );
     },
@@ -905,8 +868,6 @@ export function useSendAiChatMessage() {
 }
 
 export function useSubmitAiPracticeQuiz() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to submit AI practice quiz.",
@@ -915,12 +876,8 @@ export function useSubmitAiPracticeQuiz() {
     mutationFn: (variables: {
       answers: Array<{ questionId: string; selectedOptionId: string }>;
       sessionId: string;
-    }) => aiStudy.submitPracticeQuiz(variables) as Promise<AiPracticeQuizSession>,
-    onSuccess: async (session) => {
-      await queryClient.invalidateQueries({
-        queryKey: ["ai-practice-sessions", session.courseId],
-      });
-    },
+    }) =>
+      aiStudy.submitPracticeQuiz(variables) as Promise<AiPracticeQuizSession>,
   });
 }
 
@@ -1072,19 +1029,12 @@ export function useUpdateLessonResource() {
 }
 
 export function useUpdateLiveSession() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     meta: {
       errorMessage: "Failed to update live session. Please try again.",
       successMessage: "Live session updated successfully.",
     },
     mutationFn: api.$use.liveSessions.update,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: api.liveSessions.list.$use(),
-      });
-    },
   });
 }
 

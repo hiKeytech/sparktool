@@ -10,7 +10,7 @@ import type { LiveSession } from "@/schemas/live-session";
 
 const createLiveSessionInputSchema = z.object({
   sessionData: z.object({
-    courseId: z.string().min(1),
+    courseId: z.string().min(1).optional(),
     description: z.string().min(1),
     duration: z.number(),
     instructorName: z.string().min(1),
@@ -59,7 +59,6 @@ export const findLiveSessionFn = createServerFn({ method: "GET" })
 export const joinLiveSessionFn = createServerFn({ method: "POST" })
   .inputValidator(
     z.object({
-      courseId: z.string().min(1),
       sessionId: z.string().min(1),
       studentId: z.string().min(1),
     }),
@@ -68,7 +67,6 @@ export const joinLiveSessionFn = createServerFn({ method: "POST" })
     return api.post<ApiSuccessResponse>(
       `/api/live-sessions/${data.sessionId}/join`,
       {
-        courseId: data.courseId,
         studentId: data.studentId,
       },
     );

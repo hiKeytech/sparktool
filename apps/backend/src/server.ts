@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { pathToFileURL } from "node:url";
 import cors from "cors";
 import express, {
   type NextFunction,
@@ -37,141 +38,159 @@ import { dashboardRouter } from "./routes/dashboard.js";
 import { lessonResourcesRouter } from "./routes/lesson-resources.js";
 import { aiRouter } from "./routes/ai.js";
 
-const app = express();
-const port = Number(process.env.PORT || 4000);
+export function createApp() {
+  const app = express();
 
-app.set("trust proxy", 1);
-app.use(helmet());
-app.use(cors());
-app.use(express.json());
-app.use(sessionMiddleware);
+  app.set("trust proxy", 1);
+  app.use(helmet());
+  app.use(cors());
+  app.use(express.json());
+  app.use(sessionMiddleware);
 
-app.get("/health", (_request, response) => {
-  response.json({
-    db: getMongoConnectionStatus(),
-    service: "sparktool-backend",
-    status: "ok",
-    timestamp: Date.now(),
-  });
-});
-
-app.get("/ready", async (_request, response) => {
-  try {
-    await pingMongo();
-
+  app.get("/health", (_request, response) => {
     response.json({
       db: getMongoConnectionStatus(),
       service: "sparktool-backend",
-      status: "ready",
+      status: "ok",
       timestamp: Date.now(),
     });
-  } catch {
-    response.status(503).json({
-      db: getMongoConnectionStatus(),
-      error: "MongoDB is unavailable",
-      service: "sparktool-backend",
-      status: "not_ready",
-      timestamp: Date.now(),
-    });
-  }
-});
-
-app.get("/api/platform-config", async (_request, response) => {
-  const config = await PlatformConfigService.getPlatformConfig();
-
-  if (!config) {
-    response.status(404).json({ error: "Platform config not found" });
-    return;
-  }
-
-  response.json(config);
-});
-
-app.patch("/api/platform-config", requireSession, async (request, response) => {
-  const actor = await getActorFromSession(request);
-
-  if (!actor || actor.role !== "super-admin") {
-    throw httpError(
-      403,
-      "Only platform administrators can update platform config.",
-    );
-  }
-
-  const updated = await PlatformConfigService.updatePlatformConfig({
-    ...request.body,
-    id: "platform",
   });
 
-  if (!updated) {
-    throw httpError(500, "Failed to update platform config.");
-  }
+  app.get("/ready", async (_request, response) => {
+    try {
+      await pingMongo();
 
-  response.json(updated);
-});
+      response.json({
+        db: getMongoConnectionStatus(),
+        service: "sparktool-backend",
+        status: "ready",
+        timestamp: Date.now(),
+      });
+    } catch {
+      response.status(503).json({
+        db: getMongoConnectionStatus(),
+        error: "MongoDB is unavailable",
+        service: "sparktool-backend",
+        status: "not_ready",
+        timestamp: Date.now(),
+      });
+    }
+  });
 
-app.get("/api/tenants/:tenantId", async (request, response) => {
-  const tenant = await TenantService.getTenantById(request.params.tenantId);
+  app.get("/api/platform-config", async (_request, response) => {
+    const config = await PlatformConfigService.getPlatformConfig();
 
-  if (!tenant) {
-    response.status(404).json({ error: "Tenant not found" });
-    return;
-  }
+    if (!config) {
+      response.status(404).json({ error: "Platform config not found" });
+      return;
+    }
 
-  response.json(tenant);
-});
+    response.json(config);
+  });
 
-app.get("/api/tenants/by-host", async (request, response) => {
-  const host = request.hostname;
+  app.patch(
+    "/api/platform-config",
+    requireSession,
+    async (request, response) => {
+      const actor = await getActorFromSession(request);
 
-  if (!host) {
-    response.status(400).json({ error: "A valid host query is required" });
-    return;
-  }
+      if (!actor || actor.role !== "super-admin") {
+        throw httpError(
+          403,
+          "Only platform administrators can update platform config.",
+        );
+      }
 
-  const tenant = await TenantService.getTenantByHost(host);
+      const updated = await PlatformConfigService.updatePlatformConfig({
+        ...request.body,
+        id: "platform",
+      });
 
-  if (!tenant) {
-    response.status(404).json({ error: "Tenant not found" });
-    return;
-  }
+      if (!updated) {
+        throw httpError(500, "Failed to update platform config.");
+      }
 
-  response.json(tenant);
-});
+      response.json(updated);
+    },
+  );
 
-// ─── API routers ─────────────────────────────────────────────────────────────
+  app.get("/api/tenants/:tenantId", async (request, response) => {
+    const tenant = await TenantService.getTenantById(request.params.tenantId);
 
-app.use("/api/tenants", tenantsRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/users", usersRouter);
-app.use("/api/courses/:courseId/sections/reorder", sectionsRouter);
-app.use("/api/courses/:courseId/sections", sectionsRouter);
-app.use("/api/courses/:courseId/lessons", courseLessonsRouter);
-app.use("/api/sections/:sectionId/lessons/reorder", lessonsRouter);
-app.use("/api/sections/:sectionId/lessons", lessonsRouter);
-app.use("/api/sections", sectionByIdRouter);
-app.use("/api/lessons", lessonByIdRouter);
-app.use("/api/courses", coursesRouter);
-app.use("/api/course-quizzes", courseQuizzesRouter);
-app.use("/api/quizzes", quizzesRouter);
-app.use("/api/quiz-attempts", quizAttemptsRouter);
-app.use("/api/lesson-progress", lessonProgressRouter);
-app.use("/api/student-progress", studentProgressRouter);
-app.use("/api/certificates", certificatesRouter);
-app.use("/api/live-sessions", liveSessionsRouter);
-app.use("/api/notifications", notificationsRouter);
-app.use("/api/activity-logs", activityLogsRouter);
-app.use("/api/dashboard", dashboardRouter);
-app.use("/api/lesson-resources", lessonResourcesRouter);
-app.use("/api/ai", aiRouter);
+    if (!tenant) {
+      response.status(404).json({ error: "Tenant not found" });
+      return;
+    }
 
-// ─── global error handler ────────────────────────────────────────────────────
+    response.json(tenant);
+  });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  const status = (err as { status?: number })?.status ?? 500;
-  const message =
-    (err as { message?: string })?.message ?? "Internal Server Error";
-  res.status(status).json({ error: message });
-});
+  app.get("/api/tenants/by-host", async (request, response) => {
+    const host = request.hostname;
 
-app.listen(port);
+    if (!host) {
+      response.status(400).json({ error: "A valid host query is required" });
+      return;
+    }
+
+    const tenant = await TenantService.getTenantByHost(host);
+
+    if (!tenant) {
+      response.status(404).json({ error: "Tenant not found" });
+      return;
+    }
+
+    response.json(tenant);
+  });
+
+  // ─── API routers ───────────────────────────────────────────────────────────
+
+  app.use("/api/tenants", tenantsRouter);
+  app.use("/api/auth", authRouter);
+  app.use("/api/users", usersRouter);
+  app.use("/api/courses/:courseId/sections/reorder", sectionsRouter);
+  app.use("/api/courses/:courseId/sections", sectionsRouter);
+  app.use("/api/courses/:courseId/lessons", courseLessonsRouter);
+  app.use("/api/sections/:sectionId/lessons/reorder", lessonsRouter);
+  app.use("/api/sections/:sectionId/lessons", lessonsRouter);
+  app.use("/api/sections", sectionByIdRouter);
+  app.use("/api/lessons", lessonByIdRouter);
+  app.use("/api/courses", coursesRouter);
+  app.use("/api/course-quizzes", courseQuizzesRouter);
+  app.use("/api/quizzes", quizzesRouter);
+  app.use("/api/quiz-attempts", quizAttemptsRouter);
+  app.use("/api/lesson-progress", lessonProgressRouter);
+  app.use("/api/student-progress", studentProgressRouter);
+  app.use("/api/certificates", certificatesRouter);
+  app.use("/api/live-sessions", liveSessionsRouter);
+  app.use("/api/notifications", notificationsRouter);
+  app.use("/api/activity-logs", activityLogsRouter);
+  app.use("/api/dashboard", dashboardRouter);
+  app.use("/api/lesson-resources", lessonResourcesRouter);
+  app.use("/api/ai", aiRouter);
+
+  // ─── global error handler ──────────────────────────────────────────────────
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app.use((err: unknown, _req: Request, res: Response, _next: NextFunction) => {
+    const status = (err as { status?: number })?.status ?? 500;
+    const message =
+      (err as { message?: string })?.message ?? "Internal Server Error";
+    res.status(status).json({ error: message });
+  });
+
+  return app;
+}
+
+export function startServer(port = Number(process.env.PORT || 4000)) {
+  const app = createApp();
+  return app.listen(port);
+}
+
+const entryFileUrl = process.argv[1]
+  ? pathToFileURL(process.argv[1]).href
+  : null;
+
+if (entryFileUrl === import.meta.url) {
+  startServer();
+}

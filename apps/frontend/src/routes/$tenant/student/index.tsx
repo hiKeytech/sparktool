@@ -23,7 +23,7 @@ import {
 import { NotificationsDrawer } from "@/components/notifications";
 import { NCSLogo } from "@/components/shared/ncs-logo";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
-import { useUserProgress } from "@/services/hooks";
+import { useListCourses, useUserProgress } from "@/services/hooks";
 import type { Tenant } from "@/schemas/tenant-contract";
 
 export const Route = createFileRoute("/$tenant/student/")({
@@ -38,11 +38,16 @@ function StudentDashboard() {
     notificationsOpened,
     { close: closeNotifications, open: openNotifications },
   ] = useDisclosure(false);
+  const { data: courses = [] } = useListCourses(tenant.id);
 
   const { data: userProgress, isLoading: progressLoading } = useUserProgress(
     tenant.id,
     user?.uid,
   );
+
+  const getCourseTitle = (courseId: string) =>
+    courses.find((course) => course.id === courseId)?.title ||
+    "Untitled course";
 
   const completedCourses =
     userProgress?.filter(({ status }) => status === "completed").length || 0;
@@ -187,7 +192,7 @@ function StudentDashboard() {
                         <Group justify="space-between" mb="xs">
                           <div>
                             <Text className="text-gray-800" fw={500}>
-                              {index + 1}. Course {progress.courseId}
+                              {index + 1}. {getCourseTitle(progress.courseId)}
                             </Text>
                             <Text c="dimmed" size="sm">
                               Status: {progress.status}
@@ -296,7 +301,7 @@ function StudentDashboard() {
                         Course Progress Updated
                       </Text>
                       <Text className="mb-2 text-gray-600" size="sm">
-                        Course {progress.courseId} -{" "}
+                        {getCourseTitle(progress.courseId)} -{" "}
                         {progress.completionPercentage}% complete
                       </Text>
                       <Group gap="xs">

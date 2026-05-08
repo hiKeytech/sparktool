@@ -29,6 +29,7 @@ function CreateUser() {
 
   const form = useForm<CreateUserFormData>({
     initialValues: {
+      confirmPassword: "",
       department: "",
       email: "",
       fullName: "",
@@ -122,6 +123,12 @@ function CreateUser() {
                 placeholder="Create an initial password"
                 required
                 {...form.getInputProps("temporaryPassword")}
+              />
+              <PasswordInput
+                label="Confirm Temporary Password"
+                placeholder="Re-enter the temporary password"
+                required
+                {...form.getInputProps("confirmPassword")}
               />
 
               <Group justify="flex-end" mt="md">

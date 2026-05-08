@@ -119,6 +119,11 @@ function AdminLiveSessions() {
         window.open(session.jitsiMeetUrl, "_blank", "noopener,noreferrer");
       }
     },
+    onOpenRecording: (session: LiveSession) => {
+      if (session.recordingUrl) {
+        window.open(session.recordingUrl, "_blank", "noopener,noreferrer");
+      }
+    },
   };
 
   const handleCreateSession = () => {

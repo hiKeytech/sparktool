@@ -9,7 +9,7 @@ export const liveSessionStatusSchema = z.enum([
 export type LiveSessionStatus = z.infer<typeof liveSessionStatusSchema>;
 
 export const liveSessionSchema = z.object({
-  courseId: z.string(),
+  courseId: z.string().optional(),
   createdAt: z.number().default(() => Date.now()),
   description: z.string(),
   duration: z.number(),
@@ -30,14 +30,14 @@ export const liveSessionSchema = z.object({
 
 export type LiveSession = z.infer<typeof liveSessionSchema>;
 
-export const createLiveSessionSchema = liveSessionSchema.pick({
-  courseId: true,
-  description: true,
-  duration: true,
-  instructorName: true,
-  maxParticipants: true,
-  scheduledAt: true,
-  title: true,
+export const createLiveSessionSchema = z.object({
+  courseId: z.string().optional(),
+  description: z.string(),
+  duration: z.number(),
+  instructorName: z.string(),
+  maxParticipants: z.number().optional(),
+  scheduledAt: z.string(),
+  title: z.string(),
 });
 
 export type CreateLiveSession = z.infer<typeof createLiveSessionSchema>;
@@ -72,11 +72,7 @@ export const liveSessions = {
     const { findLiveSessionFn } = await import("@/server/live-sessions");
     return findLiveSessionFn({ data: sessionId });
   },
-  join: async (variables: {
-    courseId: string;
-    sessionId: string;
-    studentId: string;
-  }) => {
+  join: async (variables: { sessionId: string; studentId: string }) => {
     const { joinLiveSessionFn } = await import("@/server/live-sessions");
     return joinLiveSessionFn({ data: variables });
   },

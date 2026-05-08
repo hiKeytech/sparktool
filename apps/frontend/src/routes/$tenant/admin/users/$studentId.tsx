@@ -51,6 +51,7 @@ import { DataTable } from "@/components/shared/data-table";
 import { createStudentProgressTableColumns } from "@/components/shared/data-table/student-progress-table-config";
 import {
   useGetCertificates,
+  useListCourses,
   useListActivityLogs,
   useUser,
   useUserProgress,
@@ -79,6 +80,7 @@ export function StudentDetails() {
     tenant.id,
     studentId || "",
   );
+  const { data: courses = [] } = useListCourses(tenant.id);
   const { data: activityLogs = [], isLoading: activityLoading } =
     useListActivityLogs(tenant.id, studentId || "");
   const { data: certificates = [], isLoading: certificatesLoading } =
@@ -127,6 +129,13 @@ export function StudentDetails() {
       default:
         return <IconActivity size={16} />;
     }
+  }
+
+  function getCourseTitle(courseId: string) {
+    return (
+      courses.find((course) => course.id === courseId)?.title ||
+      "Untitled course"
+    );
   }
 
   if (isLoading) {
@@ -428,7 +437,7 @@ export function StudentDetails() {
                       <div className="mb-4" key={courseProgress.courseId}>
                         <Group className="mb-1" justify="space-between">
                           <Text size="sm">
-                            Course {courseProgress.courseId}
+                            {getCourseTitle(courseProgress.courseId)}
                           </Text>
                           <Text c="dimmed" size="sm">
                             {Math.round(courseProgress.completionPercentage)}%

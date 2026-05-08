@@ -105,3 +105,17 @@ export async function pingMongo() {
   const db = await getMongoDb();
   await db.command({ ping: 1 });
 }
+
+export async function closeMongoClient() {
+  const client = globalThis.__sparktoolMongoClient__;
+
+  globalThis.__sparktoolMongoClient__ = undefined;
+  globalThis.__sparktoolMongoClientPromise__ = undefined;
+  mongoConnectionStatus.ready = false;
+
+  if (!client) {
+    return;
+  }
+
+  await client.close();
+}

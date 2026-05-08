@@ -51,8 +51,34 @@ interface OnboardingResult {
 
 type InvitationRecordMap = Record<string, AdminInvitationSummary[]>;
 
+const moduleLabels = {
+  certificates: "Certificates",
+  gamification: "Gamification",
+  liveClasses: "Live classes",
+  messaging: "Messaging",
+  reports: "Reports",
+} satisfies Record<keyof Tenant["config"]["modules"], string>;
+
 function toDataUrl(svg: string) {
   return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
+}
+
+function buildInviteMailtoLink(input: {
+  inviteLink: string;
+  inviteeEmail: string;
+  tenantName: string;
+}) {
+  const subject = `SparkTool administrator access for ${input.tenantName}`;
+  const body = [
+    `You have been invited to administer ${input.tenantName} on SparkTool.`,
+    "",
+    "Complete your account setup with the link below:",
+    input.inviteLink,
+    "",
+    "You must finish setup before you can sign in.",
+  ].join("\n");
+
+  return `mailto:${encodeURIComponent(input.inviteeEmail)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 }
 
 function escapeSvgText(value: string) {
@@ -149,11 +175,11 @@ function buildDefaultConfig(name: string, allowSignup: boolean) {
     },
     dashboard: { layout: "modern" as const, widgets: [] },
     modules: {
-      certificates: false,
+      certificates: true,
       gamification: false,
-      liveClasses: false,
+      liveClasses: true,
       messaging: false,
-      reports: false,
+      reports: true,
     },
     publicSite: {
       categorySectionTitle: "Explore Learning Areas",
@@ -686,20 +712,35 @@ function TenantsOverview() {
             <Text c="dimmed" size="sm">
               {onboardingResult?.tenantName} is now provisioned. Share this
               one-time invite with {onboardingResult?.inviteeEmail} so they can
-              create the first tenant admin account.
+              create the first tenant admin account. SparkTool does not send
+              this email automatically yet, so the administrator cannot sign in
+              until this setup link is delivered and redeemed.
             </Text>
             <TextInput
               label="Administrator invite link"
               readOnly
               value={onboardingResult?.inviteLink ?? ""}
             />
-            <CopyButton value={onboardingResult?.inviteLink ?? ""}>
-              {({ copied, copy }) => (
-                <Button color="green" onClick={copy}>
-                  {copied ? "Invite link copied" : "Copy invite link"}
-                </Button>
-              )}
-            </CopyButton>
+            <Group grow>
+              <CopyButton value={onboardingResult?.inviteLink ?? ""}>
+                {({ copied, copy }) => (
+                  <Button color="green" onClick={copy}>
+                    {copied ? "Invite link copied" : "Copy invite link"}
+                  </Button>
+                )}
+              </CopyButton>
+              <Button
+                component="a"
+                href={
+                  onboardingResult
+                    ? buildInviteMailtoLink(onboardingResult)
+                    : undefined
+                }
+                variant="default"
+              >
+                Draft email
+              </Button>
+            </Group>
           </Stack>
         </Modal>
 
@@ -716,6 +757,27 @@ function TenantsOverview() {
               onChange={(e) =>
                 setEditTenant((prev) =>
                   prev ? { ...prev, name: e.currentTarget.value } : prev,
+                )
+              }
+            />
+            <TextInput
+              label="Portal Name"
+              description="Displayed across the tenant login and workspace surfaces"
+              value={editTenant?.config.branding.portalName ?? ""}
+              onChange={(e) =>
+                setEditTenant((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        config: {
+                          ...prev.config,
+                          branding: {
+                            ...prev.config.branding,
+                            portalName: e.currentTarget.value,
+                          },
+                        },
+                      }
+                    : prev,
                 )
               }
             />
@@ -768,6 +830,48 @@ function TenantsOverview() {
                 )
               }
             />
+            <div className="space-y-3">
+              <div>
+                <Text fw={600} size="sm">
+                  Enabled Modules
+                </Text>
+                <Text c="dimmed" size="xs">
+                  Controls the baseline footprint shown in the registry for this
+                  tenant.
+                </Text>
+              </div>
+              <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
+                {Object.entries(moduleLabels).map(
+                  ([moduleKey, moduleLabel]) => (
+                    <Switch
+                      key={moduleKey}
+                      checked={
+                        editTenant?.config.modules[
+                          moduleKey as keyof Tenant["config"]["modules"]
+                        ] ?? false
+                      }
+                      label={moduleLabel}
+                      onChange={(event) =>
+                        setEditTenant((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                config: {
+                                  ...prev.config,
+                                  modules: {
+                                    ...prev.config.modules,
+                                    [moduleKey]: event.currentTarget.checked,
+                                  },
+                                },
+                              }
+                            : prev,
+                        )
+                      }
+                    />
+                  ),
+                )}
+              </SimpleGrid>
+            </div>
             <Group justify="flex-end" mt="md">
               <Button variant="default" onClick={() => setEditTenant(null)}>
                 Cancel
@@ -851,6 +955,9 @@ function TenantInviteCell({
   return (
     <div>
       <Text size="sm">{invitation.email}</Text>
+      <Text c="dimmed" size="xs">
+        Sign-in stays unavailable until this invite is redeemed.
+      </Text>
       <Text c="dimmed" size="xs">
         Expires {formatRelativeTime(invitation.expiresAt)}
       </Text>

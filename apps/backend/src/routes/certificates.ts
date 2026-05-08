@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { z } from "zod";
 
 import { activityLogRepository } from "../repositories/activity-log-repository.js";
 import { certificateRepository } from "../repositories/certificate-repository.js";
@@ -12,6 +13,37 @@ import {
 import { requireSession, requireTenantSession } from "../middleware/session.js";
 
 export const certificatesRouter = Router();
+
+const certificateLogEntrySchema = z.object({
+  at: z.number().nullable().optional(),
+  by: z.string().nullable().optional(),
+  name: z.string().nullable().optional(),
+  photoUrl: z.string().nullable().optional(),
+});
+
+const certificateDataSchema = z.object({
+  completionDate: z.number().nullable(),
+  courseId: z.string().min(1),
+  courseName: z.string().nullable(),
+  downloadCount: z.number().nullable(),
+  instructorName: z.string().nullable(),
+  issued: certificateLogEntrySchema.nullable().optional(),
+  modified: certificateLogEntrySchema.nullable().optional(),
+  status: z.enum(["issued", "pending", "revoked"]),
+  studentId: z.string().min(1),
+  studentName: z.string().nullable(),
+  tenantId: z.string().optional(),
+});
+
+const createCertificateRequestSchema = z.union([
+  z.object({
+    certificateData: certificateDataSchema,
+  }),
+  z.object({
+    data: certificateDataSchema,
+    userId: z.string().optional(),
+  }),
+]);
 
 /** GET /api/certificates */
 certificatesRouter.get("/", requireTenantSession, async (request, response) => {
@@ -61,7 +93,16 @@ certificatesRouter.post(
     assertAdminAccess(actor);
     const tenantId = request.session.activeTenantId!;
 
-    const { certificateData } = request.body;
+    const parseResult = createCertificateRequestSchema.safeParse(request.body);
+    if (!parseResult.success) {
+      throw httpError(400, "Invalid certificate payload.");
+    }
+
+    const certificateData =
+      "certificateData" in parseResult.data
+        ? parseResult.data.certificateData
+        : parseResult.data.data;
+
     const student = await userRepository.getById(certificateData.studentId);
     if (!student || !userHasTenantAccess(student, tenantId)) {
       throw httpError(403, "Student does not belong to the current tenant.");

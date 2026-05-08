@@ -15,7 +15,7 @@ import {
 } from "@mantine/core";
 import { IconBook, IconClock } from "@tabler/icons-react";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
-import { useListStudentProgress } from "@/services/hooks";
+import { useListCourses, useListStudentProgress } from "@/services/hooks";
 import type { Tenant } from "@/schemas/tenant-contract";
 
 export const Route = createFileRoute("/$tenant/student/progress")({
@@ -25,10 +25,15 @@ export const Route = createFileRoute("/$tenant/student/progress")({
 function StudentProgress() {
   const { tenant } = Route.useRouteContext() as { tenant: Tenant };
   const { user } = useAuthContext();
+  const { data: courses = [] } = useListCourses(tenant.id);
   const { data: progressData, isLoading } = useListStudentProgress(
     tenant.id,
     user?.uid,
   );
+
+  const getCourseTitle = (courseId: string) =>
+    courses.find((course) => course.id === courseId)?.title ||
+    "Untitled course";
 
   const completedCourses =
     progressData?.filter(({ status }) => status === "completed").length || 0;
@@ -203,7 +208,7 @@ function StudentProgress() {
                   >
                     <Group justify="space-between" mb="xs">
                       <Text fw={500} size="sm">
-                        Course {progress.courseId}
+                        {getCourseTitle(progress.courseId)}
                       </Text>
                       <Badge
                         color={
