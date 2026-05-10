@@ -45,6 +45,18 @@ const createCertificateRequestSchema = z.union([
   }),
 ]);
 
+function normalizeCertificateLogEntry(
+  entry: null | z.infer<typeof certificateLogEntrySchema> | undefined,
+  fallback: z.infer<typeof certificateLogEntrySchema>,
+) {
+  return {
+    at: entry?.at ?? fallback.at ?? Date.now(),
+    by: entry?.by ?? fallback.by ?? null,
+    name: entry?.name ?? fallback.name ?? null,
+    photoUrl: entry?.photoUrl ?? fallback.photoUrl ?? null,
+  };
+}
+
 /** GET /api/certificates */
 certificatesRouter.get("/", requireTenantSession, async (request, response) => {
   const actor = await getActorFromSession(request);
@@ -108,9 +120,19 @@ certificatesRouter.post(
       throw httpError(403, "Student does not belong to the current tenant.");
     }
 
+    const issued = normalizeCertificateLogEntry(certificateData.issued, {
+      at: Date.now(),
+      by: actor.id,
+      name: actor.displayName,
+      photoUrl: actor.photoURL || null,
+    });
+
     const created = await certificateRepository.create({
       ...certificateData,
-      issuedAt: Date.now(),
+      issued,
+      modified: certificateData.modified
+        ? normalizeCertificateLogEntry(certificateData.modified, issued)
+        : null,
       tenantId,
     });
     if (!created) throw httpError(500, "Failed to create certificate.");
