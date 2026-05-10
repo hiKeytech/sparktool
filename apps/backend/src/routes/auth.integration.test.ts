@@ -6,13 +6,25 @@ import test from "node:test";
 import type { AddressInfo } from "node:net";
 import { defaults as ironDefaults, seal } from "iron-webcrypto";
 
-import type { AdminInvitationPreview } from "sparktool-contracts/invitation";
+import type {
+  AdminInvitation,
+  AdminInvitationPreview,
+} from "sparktool-contracts/invitation";
 import type { SessionData } from "sparktool-contracts/session";
+import type { User } from "sparktool-contracts/user";
 
 import { closeMongoClient, getMongoDb } from "../db/mongo.js";
 import { createApp } from "../server.js";
 
 const tenantId = "nigerian-correctional-service";
+
+type AdminInvitationDocument = AdminInvitation & { _id: string };
+type ActivityLogCleanupDocument = {
+  invitedEmail?: string;
+  userId?: null | string;
+};
+type PasswordAuthCleanupDocument = { userId: string };
+type UserDocument = User & { _id: string };
 
 async function startIntegrationServer() {
   const app = createApp();
@@ -71,6 +83,13 @@ async function createSessionCookie(sessionData: SessionData) {
 test("invited admin can preview, redeem, and sign in even outside restricted domains", async () => {
   const { baseUrl, server } = await startIntegrationServer();
   const db = await getMongoDb();
+  const activityLogs =
+    db.collection<ActivityLogCleanupDocument>("activityLogs");
+  const adminInvitations =
+    db.collection<AdminInvitationDocument>("adminInvitations");
+  const passwordAuth =
+    db.collection<PasswordAuthCleanupDocument>("passwordAuth");
+  const users = db.collection<UserDocument>("users");
   const invitationId = randomUUID();
   const token = createInvitationToken();
   const tokenHash = createHash("sha256").update(token).digest("hex");
@@ -78,7 +97,7 @@ test("invited admin can preview, redeem, and sign in even outside restricted dom
   const now = Date.now();
   let userId: null | string = null;
 
-  await db.collection("adminInvitations").insertOne({
+  await adminInvitations.insertOne({
     _id: invitationId,
     createdAt: now,
     displayName: "Integration Admin",
@@ -161,16 +180,10 @@ test("invited admin can preview, redeem, and sign in even outside restricted dom
     assert.deepEqual(signInPayload.userData.tenantIds, [tenantId]);
   } finally {
     await Promise.all([
-      db.collection("adminInvitations").deleteOne({ _id: invitationId }),
-      userId
-        ? db.collection("activityLogs").deleteMany({ userId })
-        : Promise.resolve(),
-      userId
-        ? db.collection("passwordAuth").deleteOne({ userId })
-        : Promise.resolve(),
-      userId
-        ? db.collection("users").deleteOne({ _id: userId })
-        : Promise.resolve(),
+      adminInvitations.deleteOne({ _id: invitationId }),
+      userId ? activityLogs.deleteMany({ userId }) : Promise.resolve(),
+      userId ? passwordAuth.deleteOne({ userId }) : Promise.resolve(),
+      userId ? users.deleteOne({ _id: userId }) : Promise.resolve(),
     ]);
 
     await stopIntegrationServer(server);
@@ -180,6 +193,13 @@ test("invited admin can preview, redeem, and sign in even outside restricted dom
 test("reissuing an invitation revokes the previous token and activates the fresh token", async () => {
   const { baseUrl, server } = await startIntegrationServer();
   const db = await getMongoDb();
+  const activityLogs =
+    db.collection<ActivityLogCleanupDocument>("activityLogs");
+  const adminInvitations =
+    db.collection<AdminInvitationDocument>("adminInvitations");
+  const passwordAuth =
+    db.collection<PasswordAuthCleanupDocument>("passwordAuth");
+  const users = db.collection<UserDocument>("users");
   const invitationId = randomUUID();
   const originalToken = createInvitationToken();
   const originalTokenHash = createHash("sha256")
@@ -191,7 +211,7 @@ test("reissuing an invitation revokes the previous token and activates the fresh
   const actorEmail = `super-admin-${Date.now()}@example.com`;
   let createdUserId: null | string = null;
 
-  await db.collection("users").insertOne({
+  await users.insertOne({
     _id: actorId,
     certificatesEarned: 0,
     completedCourses: [],
@@ -215,7 +235,7 @@ test("reissuing an invitation revokes the previous token and activates the fresh
     updatedAt: now,
   });
 
-  await db.collection("adminInvitations").insertOne({
+  await adminInvitations.insertOne({
     _id: invitationId,
     createdAt: now,
     displayName: "Reissue Admin",
@@ -328,15 +348,15 @@ test("reissuing an invitation revokes the previous token and activates the fresh
     });
     assert.equal(signInResponse.status, 200);
 
-    const originalInvitation = await db
-      .collection("adminInvitations")
-      .findOne({ _id: invitationId });
+    const originalInvitation = await adminInvitations.findOne({
+      _id: invitationId,
+    });
     assert.equal(originalInvitation?.status, "revoked");
     assert.equal(typeof originalInvitation?.revokedAt, "number");
   } finally {
     await Promise.all([
-      db.collection("adminInvitations").deleteMany({ email }),
-      db.collection("activityLogs").deleteMany({
+      adminInvitations.deleteMany({ email }),
+      activityLogs.deleteMany({
         $or: [
           { invitedEmail: email },
           { userId: actorId },
@@ -344,12 +364,12 @@ test("reissuing an invitation revokes the previous token and activates the fresh
         ],
       }),
       createdUserId
-        ? db.collection("passwordAuth").deleteOne({ userId: createdUserId })
+        ? passwordAuth.deleteOne({ userId: createdUserId })
         : Promise.resolve(),
       createdUserId
-        ? db.collection("users").deleteOne({ _id: createdUserId })
+        ? users.deleteOne({ _id: createdUserId })
         : Promise.resolve(),
-      db.collection("users").deleteOne({ _id: actorId }),
+      users.deleteOne({ _id: actorId }),
     ]);
 
     await stopIntegrationServer(server);
