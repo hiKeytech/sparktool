@@ -15,7 +15,7 @@ Required environment variables:
 - `MONGODB_URI`
 - `MONGODB_DB_NAME` optional, defaults to `sparktool`
 
-The seed data lives in [apps/backend/scripts/seed-data/ncs-tenant.json](/Users/ibnlanre/Desktop/workspace/sparktool/apps/backend/scripts/seed-data/ncs-tenant.json).
+The seed data lives in `apps/backend/scripts/seed-data/ncs-tenant.json`.
 
 **What It Creates**
 
