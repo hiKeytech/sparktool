@@ -40,7 +40,7 @@ import {
 import { motion } from "framer-motion";
 
 import { NotificationBell } from "@/components/notifications";
-import { NCSLogo } from "@/components/shared/ncs-logo";
+import { TenantLogo } from "@/components/shared/tenant-logo";
 import { AuthScope, type ResolvedAuthState } from "@/providers/auth-provider";
 import { useSignOut } from "@/services/hooks";
 import { buildTenantPath } from "@/utils/tenant-paths";
@@ -54,6 +54,10 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
   const tenantSlug = tenantParam!;
 
   const { user } = auth;
+  const branding = auth.tenant?.config.branding;
+  const portalName = branding?.portalName ?? auth.tenant?.name ?? "SparkTool";
+  const logoAlt = `${portalName} logo`;
+  const logoUrl = branding?.logoUrl;
   const { mutateAsync } = useSignOut();
 
   const [opened, { close, toggle }] = useDisclosure();
@@ -184,9 +188,9 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
       path: buildTenantPath(tenantSlug, "/admin/certificates"),
     },
     {
-      description: "Platform configuration",
+      description: "Branding, access, and portal settings",
       icon: IconSettings,
-      label: "System Settings",
+      label: "Settings",
       path: buildTenantPath(tenantSlug, "/admin/settings"),
     },
   ];
@@ -248,14 +252,19 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                   size="sm"
                 />
                 <Group gap="sm">
-                  <NCSLogo size={44} />
+                  <TenantLogo
+                    alt={logoAlt}
+                    fallbackLabel={portalName}
+                    size={44}
+                    src={logoUrl}
+                  />
                   <div>
                     <Text
                       className="hidden text-white sm:block"
                       fw={700}
                       size="lg"
                     >
-                      Nigerian Correctional Service
+                      {portalName}
                     </Text>
                     <Badge
                       className="hidden sm:block"
@@ -263,7 +272,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                       size="xs"
                       variant="light"
                     >
-                      Admin Portal
+                      Admin
                     </Badge>
                   </div>
                 </Group>

@@ -129,13 +129,14 @@ function AdminSecurity() {
                   </Alert>
                   <Group justify="space-between" align="center">
                     <div>
-                      <Text fw={500}>Two-Factor Authentication (2FA)</Text>
+                      <Text fw={500}>Two-Factor Authentication</Text>
                       <Text size="sm" c="dimmed">
-                        Managed at the platform level for administrator accounts
+                        Contact your platform administrator to enable or manage
+                        two-factor authentication.
                       </Text>
                     </div>
                     <Button disabled variant="light">
-                      Managed by Platform Admins
+                      Not available
                     </Button>
                   </Group>
                 </Stack>
@@ -163,10 +164,9 @@ function AdminSecurity() {
                     </Text>
                   </div>
                 </Group>
-                <Alert color="blue" title="Session visibility">
-                  Additional session management is not yet exposed in the tenant
-                  admin API. This page shows the verified active session instead
-                  of placeholder devices.
+                <Alert color="blue" title="Active session">
+                  Showing your current sign-in session. Contact support to view
+                  or revoke other sessions.
                 </Alert>
               </Stack>
             </Paper>

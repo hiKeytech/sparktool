@@ -126,7 +126,7 @@ function buildTenantIllustrationDataUrl(name: string) {
       <rect x="744" y="220" width="220" height="280" rx="28" fill="#f4faf6" stroke="#d5e7db" stroke-width="2"/>
       <rect x="784" y="268" width="140" height="140" rx="28" fill="#d7eadf"/>
       <text x="184" y="286" font-family="Inter, Arial, sans-serif" font-size="52" font-weight="700" fill="#ffffff">${safeName}</text>
-      <text x="184" y="398" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500" fill="#37644d">Tenant workspace on SparkTool</text>
+      <text x="184" y="398" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="500" fill="#37644d">Learning portal on SparkTool</text>
     </svg>
   `);
 }
@@ -149,24 +149,23 @@ function buildDefaultConfig(name: string, allowSignup: boolean) {
       loginPage: {
         features: [
           {
-            description:
-              "Role-scoped access for learners and tenant operators.",
+            description: "Role-based access for learners and administrators.",
             icon: "shield",
-            title: "Secure tenant access",
+            title: "Secure access",
           },
           {
             description:
-              "Tenant-specific branding and controls managed from SparkTool.",
+              "Branding and access controls managed for your organization.",
             icon: "users",
-            title: "Isolated workspace",
+            title: "Organization identity",
           },
         ],
-        footnote: "Use your official tenant URL to sign in.",
+        footnote: "Use your organization's portal link to sign in.",
         formDescription:
-          "Enter your official credentials to access this tenant workspace.",
+          "Enter your official credentials to access your learning portal.",
         formTitle: "Sign In",
         heading: name,
-        subheading: `${name} operates on SparkTool's multi-tenant learning infrastructure.`,
+        subheading: `${name} uses SparkTool to deliver secure, guided digital learning.`,
       },
       logoUrl: badgeUrl,
       portalName: name,
@@ -191,22 +190,22 @@ function buildDefaultConfig(name: string, allowSignup: boolean) {
       ],
       copyright: `© ${new Date().getFullYear()} ${name}. Powered by SparkTool.`,
       featuredCoursesCtaLabel: "Enter Workspace",
-      featuredCoursesTitle: "Structured learning for every workspace",
+      featuredCoursesTitle: "Structured learning for every team",
       footerLogoAlt: `${name} logo`,
       footerLogoUrl: badgeUrl,
-      footerTagline: `${name} digital learning workspace`,
+      footerTagline: `${name} digital learning portal`,
       heroBackgroundImageUrl: illustrationUrl,
-      heroDescription: `${name} delivers structured digital learning with guided courses, clear progress tracking, and tenant-specific access.`,
+      heroDescription: `${name} delivers structured digital learning with guided courses, clear progress tracking, and role-based access.`,
       heroLogoAlt: `${name} logo`,
       heroLogoUrl: badgeUrl,
       heroPrimaryCtaLabel: "Open Learning Portal",
       heroSecondaryCtaLabel: "Explore Learning Areas",
       heroTitle: name,
       missionCtaLabel: "View Learning Mission",
-      missionDescription: `${name} uses SparkTool to deliver organized learning paths, clear role-based access, and measurable progress across its workspace.`,
+      missionDescription: `${name} uses SparkTool to deliver organized learning paths, clear role-based access, and measurable progress across every learner journey.`,
       missionImageAlt: `${name} mission graphic`,
       missionImageUrl: illustrationUrl,
-      missionTitle: "Organized learning for every workspace",
+      missionTitle: "Organized learning for every team",
       stats: [
         { label: "Courses", value: "0" },
         { label: "Tracks", value: "0" },
@@ -594,7 +593,7 @@ function TenantsOverview() {
             />
             <TextInput
               label="Tenant ID (Slug)"
-              placeholder="e.g. nigerian-correctional-service"
+              placeholder="e.g. lagos-public-service-academy"
               required
               value={addForm.id}
               onChange={(e) =>
@@ -607,7 +606,7 @@ function TenantsOverview() {
             />
             <TextInput
               label="Primary Domain"
-              placeholder="e.g. corrections.gov.ng"
+              placeholder="e.g. academy.example.org"
               required
               value={addForm.domain}
               onChange={(e) =>

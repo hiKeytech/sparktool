@@ -2,23 +2,24 @@ import type { CertificateData } from "@/schemas/certificates";
 import { formatDate } from "@/utils/date-utils";
 
 import {
-    Badge,
-    Button,
-    Card,
-    Group,
-    SimpleGrid,
-    Stack,
-    Text,
-    ThemeIcon,
-    Title,
+  Badge,
+  Button,
+  Card,
+  Group,
+  SimpleGrid,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
 } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { IconCalendar, IconCertificate, IconEye } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 
 import { CertificatePreview } from "@/components/certificates/certificate-preview";
+import { useAuthContext } from "@/providers/auth-provider";
 
-import { NCSLogo } from "../shared/ncs-logo";
+import { TenantLogo } from "../shared/tenant-logo";
 import { PendingOverlay } from "../shared/pending-overlay";
 
 interface StudentCertificatesProps {
@@ -30,6 +31,11 @@ export function StudentCertificates({
   certificates,
   isLoading = false,
 }: StudentCertificatesProps) {
+  const { tenant } = useAuthContext();
+  const portalName = tenant?.config.branding.portalName ?? "SparkTool";
+  const logoAlt = `${portalName} logo`;
+  const logoUrl = tenant?.config.branding.logoUrl;
+
   const handlePreview = (certificate: CertificateData) => {
     modals.open({
       children: (
@@ -43,8 +49,6 @@ export function StudentCertificates({
       title: "Certificate Preview",
     });
   };
-
-
 
   const getStatusBadge = (status: CertificateData["status"]) => {
     switch (status) {
@@ -95,13 +99,18 @@ export function StudentCertificates({
               <Group align="flex-start" justify="space-between" mb="md">
                 <div className="flex-1">
                   <Group gap="md" mb="md">
-                    <NCSLogo size={44} />
+                    <TenantLogo
+                      alt={logoAlt}
+                      fallbackLabel={portalName}
+                      size={44}
+                      src={logoUrl}
+                    />
                     <div>
                       <Title className="mb-1" order={4}>
                         {certificate.courseName}
                       </Title>
                       <Text c="dimmed" size="sm">
-                        Certificate of Completion
+                        {portalName} Certificate of Completion
                       </Text>
                     </div>
                   </Group>
@@ -112,7 +121,7 @@ export function StudentCertificates({
                       <Text c="dimmed" size="sm">
                         Issued:{" "}
                         {formatDate(
-                          certificate.issued?.at || certificate.completionDate
+                          certificate.issued?.at || certificate.completionDate,
                         )}
                       </Text>
                     </Group>

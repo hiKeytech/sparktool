@@ -13,7 +13,10 @@ import {
   IconPhone,
 } from "@tabler/icons-react";
 
-import { NCSLogo } from "@/components/shared/ncs-logo";
+import { TenantLogo } from "@/components/shared/tenant-logo";
+
+const platformName = "SparkTool";
+const platformTagline = "Flexible digital learning for every organization";
 
 export function PublicFooter() {
   function handlePublicNavigation(path: string) {
@@ -21,7 +24,7 @@ export function PublicFooter() {
   }
 
   const quickLinks = [
-    { href: "/about", label: "About NCS" },
+    { href: "/about", label: "About SparkTool" },
     { href: "/courses", label: "Course Catalog" },
     { href: "/guidelines", label: "Guidelines" },
     { href: "/contact", label: "Contact" },
@@ -42,19 +45,19 @@ export function PublicFooter() {
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Stack gap="md">
               <Group gap="sm">
-                <NCSLogo size={44} />
+                <TenantLogo fallbackLabel={platformName} size={44} />
                 <div>
                   <Text className="text-white" fw={700} size="lg">
-                    Nigerian Correctional Service
+                    {platformName}
                   </Text>
                   <Text className="text-gray-400" size="sm">
-                    Nigerian Correctional Service
+                    {platformTagline}
                   </Text>
                 </div>
               </Group>
               <Text className="max-w-sm text-gray-300" size="sm">
-                Empowering correctional service professionals with cutting-edge
-                technology skills through comprehensive e-learning programs.
+                Build branded learning workspaces with role-based access,
+                structured progress tracking, and certificate-ready programs.
               </Text>
             </Stack>
           </Grid.Col>
@@ -109,28 +112,28 @@ export function PublicFooter() {
                 <Group gap="sm">
                   <IconMapPin className="text-fun-green-400" size={16} />
                   <Text className="text-gray-300" size="sm">
-                    Nigerian Correctional Service
+                    SparkTool Platform
                   </Text>
                 </Group>
 
                 <Group gap="sm">
                   <IconAddressBook className="text-fun-green-400" size={16} />
                   <Text className="text-gray-300" size="sm">
-                    Bill Clinton Drive, Airport Road, Abuja
+                    Organization-managed deployment
                   </Text>
                 </Group>
 
                 <Group gap="sm">
                   <IconPhone className="text-fun-green-400" size={16} />
                   <Text className="text-gray-300" size="sm">
-                    +234 708 7086 005
+                    Available through your workspace administrator
                   </Text>
                 </Group>
 
                 <Group gap="sm">
                   <IconMail className="text-fun-green-400" size={16} />
                   <Text className="text-gray-300" size="sm">
-                    techforward@corrections.gov.ng
+                    support@sparktool.io
                   </Text>
                 </Group>
               </Stack>
@@ -144,7 +147,7 @@ export function PublicFooter() {
         <Container py="md" size="xl">
           <Group justify="space-between">
             <Text className="text-gray-400" size="sm">
-              © 2024 Nigerian Correctional Service. All rights reserved.
+              © 2026 SparkTool. All rights reserved.
             </Text>
             <Text className="text-gray-400" size="sm">
               Built with security and accessibility in mind

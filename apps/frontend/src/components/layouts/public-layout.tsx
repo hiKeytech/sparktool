@@ -13,9 +13,12 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconLogin } from "@tabler/icons-react";
 import { Outlet, useNavigate } from "@tanstack/react-router";
 
-import { NCSLogo } from "@/components/shared/ncs-logo";
+import { TenantLogo } from "@/components/shared/tenant-logo";
 
 import { PublicFooter } from "./public-footer";
+
+const platformName = "SparkTool";
+const platformTagline = "Learning platform for modern organizations";
 
 export function PublicLayout() {
   const [drawerOpened, { close: closeDrawer, toggle: toggleDrawer }] =
@@ -51,17 +54,17 @@ export function PublicLayout() {
               className="flex items-center gap-3 transition-opacity hover:opacity-80"
               onClick={handleHome}
             >
-              <NCSLogo size={44} />
+              <TenantLogo fallbackLabel={platformName} size={44} />
               <div>
                 <Text
                   className="leading-tight text-gray-800"
                   fw={700}
                   size="lg"
                 >
-                  Nigerian Correctional Service
+                  {platformName}
                 </Text>
                 <Text className="leading-tight text-gray-600" size="xs">
-                  Nigerian Correctional Service
+                  {platformTagline}
                 </Text>
               </div>
             </UnstyledButton>
@@ -108,10 +111,10 @@ export function PublicLayout() {
         size="sm"
         title={
           <Group gap="sm">
-            <NCSLogo size={44} />
+            <TenantLogo fallbackLabel={platformName} size={44} />
             <div>
               <Text className="text-gray-800" fw={600} size="sm">
-                Nigerian Correctional Service
+                {platformName}
               </Text>
             </div>
           </Group>

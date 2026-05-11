@@ -10,6 +10,7 @@ import { tenantRepository } from "../repositories/tenant-repository.js";
 import { userRepository } from "../repositories/user-repository.js";
 
 import { getActorFromSession, httpError } from "../lib/request-helpers.js";
+import { userHasTenantAccess } from "../lib/request-helpers.js";
 import { requireSession } from "../middleware/session.js";
 
 export const tenantsRouter = Router();
@@ -81,6 +82,25 @@ function requireSuperAdmin(
   if (!actor || actor.role !== "super-admin") {
     throw httpError(403, "Only platform administrators can manage tenants.");
   }
+  return actor;
+}
+
+function requireTenantManager(
+  actor: Awaited<ReturnType<typeof getActorFromSession>>,
+  tenantId: string,
+) {
+  if (!actor) {
+    throw httpError(403, "You do not have permission to manage tenants.");
+  }
+
+  if (actor.role === "super-admin") {
+    return actor;
+  }
+
+  if (actor.role !== "admin" || !userHasTenantAccess(actor, tenantId)) {
+    throw httpError(403, "You do not have permission to update this tenant.");
+  }
+
   return actor;
 }
 
@@ -322,11 +342,10 @@ tenantsRouter.post(
 /** PATCH /api/tenants/:tenantId */
 tenantsRouter.patch("/:tenantId", requireSession, async (request, response) => {
   const actor = await getActorFromSession(request);
-  requireSuperAdmin(actor);
+  const tenantId = request.params.tenantId as string;
+  requireTenantManager(actor, tenantId);
 
-  const existing = await tenantRepository.getById(
-    request.params.tenantId as string,
-  );
+  const existing = await tenantRepository.getById(tenantId);
   if (!existing) throw httpError(404, "Tenant not found.");
 
   const nextTenant = request.body;
@@ -338,10 +357,7 @@ tenantsRouter.patch("/:tenantId", requireSession, async (request, response) => {
     }
   }
 
-  const updated = await tenantRepository.update(
-    request.params.tenantId as string,
-    nextTenant,
-  );
+  const updated = await tenantRepository.update(tenantId, nextTenant);
   if (!updated) throw httpError(500, "Failed to update tenant.");
 
   response.json(updated);

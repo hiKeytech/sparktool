@@ -28,6 +28,7 @@ interface LoginShellProps {
   formTitle: string;
   heroHeading: string;
   heroSubheading: string;
+  initialAuthMode?: "sign-in" | "sign-up";
   invitationError?: string | null;
   invitationPreview?: null | AdminInvitationPreview;
   invitationToken?: string;
@@ -50,6 +51,7 @@ export function LoginShell({
   formTitle,
   heroHeading,
   heroSubheading,
+  initialAuthMode,
   invitationError,
   invitationPreview,
   invitationToken,
@@ -60,7 +62,7 @@ export function LoginShell({
     : auth.domains;
 
   return (
-    <div className="flex min-h-screen bg-stone-50 font-sans selection:bg-fun-green-500/30">
+    <div className="flex min-h-screen font-sans bg-stone-50 selection:bg-fun-green-500/30">
       {/* 
         ========================================================================
         LEFT PANEL (COMMAND SUITE STYLE)
@@ -75,21 +77,18 @@ export function LoginShell({
 
         {/* Top Header / Portal Name */}
         <div className="relative z-10 flex items-center space-x-4">
-          <div className="flex items-center justify-center p-2 rounded-xl h-12 w-12 bg-white/5 border border-white/10 backdrop-blur-md">
+          <div className="flex items-center justify-center w-12 h-12 p-2 border rounded-xl bg-white/5 border-white/10 backdrop-blur-md">
             <ShieldCheck size={26} className="text-fun-green-400" />
           </div>
           <div className="flex flex-col">
             <span className="font-sans text-xl font-bold tracking-wide">
               {portalName}
             </span>
-            <span className="font-sans text-[10px] tracking-[0.2em] uppercase text-white/50 font-medium">
-              Authentication Gateway
-            </span>
           </div>
         </div>
 
         {/* Center Content: Branding & Features */}
-        <div className="relative z-10 my-auto pt-12">
+        <div className="relative z-10 pt-12 my-auto">
           {/* Branding */}
           <motion.div
             animate={{ opacity: 1, y: 0 }}
@@ -112,7 +111,7 @@ export function LoginShell({
 
           {/* Features */}
           {features.length > 0 && (
-            <div className="space-y-8 max-w-md">
+            <div className="max-w-md space-y-8">
               {features.map((feature, index) => {
                 const Icon = iconMap[feature.icon] || iconMap.default;
                 return (
@@ -125,13 +124,13 @@ export function LoginShell({
                       duration: 0.8,
                       ease: [0.19, 1, 0.22, 1],
                     }}
-                    className="group flex gap-5 items-start"
+                    className="flex items-start gap-5 group"
                   >
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition-colors duration-300 group-hover:bg-white/10 group-hover:text-fun-green-400 group-hover:border-white/20 backdrop-blur-sm">
+                    <div className="flex items-center justify-center transition-colors duration-300 border h-11 w-11 shrink-0 rounded-xl border-white/10 bg-white/5 text-white/60 group-hover:bg-white/10 group-hover:text-fun-green-400 group-hover:border-white/20 backdrop-blur-sm">
                       <Icon size={20} strokeWidth={1.5} />
                     </div>
                     <div className="flex flex-col pt-0.5">
-                      <h3 className="font-semibold tracking-wide text-white text-sm">
+                      <h3 className="text-sm font-semibold tracking-wide text-white">
                         {feature.title}
                       </h3>
                       <p className="mt-1 text-sm font-light leading-relaxed text-white/50">
@@ -169,7 +168,7 @@ export function LoginShell({
             <div className="flex items-center justify-center p-1.5 rounded-lg bg-white/5 border border-white/10">
               <ShieldCheck size={20} className="text-fun-green-400" />
             </div>
-            <span className="font-sans font-semibold tracking-wide text-sm">
+            <span className="font-sans text-sm font-semibold tracking-wide">
               {portalName}
             </span>
           </div>
@@ -177,19 +176,19 @@ export function LoginShell({
 
         <motion.div
           animate={{ opacity: 1, x: 0 }}
-          className="mx-auto w-full max-w-md px-6 sm:px-12 xl:px-0 py-24 lg:py-0"
+          className="w-full max-w-md px-6 py-24 mx-auto sm:px-12 xl:px-0 lg:py-0"
           initial={{ opacity: 0, x: 20 }}
           transition={{ duration: 0.6, ease: [0.19, 1, 0.22, 1] }}
         >
           <Stack gap="xl">
             <div className="text-center lg:text-left">
-              <div className="inline-flex lg:hidden items-center justify-center w-12 h-12 rounded-xl bg-fun-green-50 border border-fun-green-100 text-fun-green-700 mb-6">
+              <div className="inline-flex items-center justify-center w-12 h-12 mb-6 border lg:hidden rounded-xl bg-fun-green-50 border-fun-green-100 text-fun-green-700">
                 <LockKeyhole size={24} strokeWidth={1.5} />
               </div>
               <h1 className="mb-3 font-sans text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl text-balance">
                 {formTitle}
               </h1>
-              <Text className="font-sans text-base text-stone-600 leading-relaxed font-light">
+              <Text className="font-sans text-base font-light leading-relaxed text-stone-600">
                 {formDescription}
               </Text>
             </div>
@@ -197,6 +196,7 @@ export function LoginShell({
             <div className="mt-4">
               <AuthStrategyResolver
                 allowSignup={auth.allowSignup}
+                initialMode={initialAuthMode}
                 invitationError={invitationError}
                 invitationPreview={invitationPreview}
                 invitationToken={invitationToken}
@@ -206,7 +206,7 @@ export function LoginShell({
             </div>
 
             {footnote ? (
-              <Text className="mt-6 text-center lg:text-left font-sans text-xs text-stone-500 max-w-sm mx-auto lg:mx-0">
+              <Text className="max-w-sm mx-auto mt-6 font-sans text-xs text-center lg:text-left text-stone-500 lg:mx-0">
                 {footnote}
               </Text>
             ) : null}

@@ -1,15 +1,15 @@
 ---
 applyTo: "**"
-description: This document provides technical standards and best practices to ensure consistency, maintainability, and optimal user experience (especially regarding security and performance) for the **Nigerian Correctional Service** e-learning platform.
+description: This document provides technical standards and best practices to ensure consistency, maintainability, and optimal user experience for the SparkTool multi-tenant learning platform.
 ---
 
-# 🇳🇬 Nigerian Correctional Service E-Learning Platform Technical Guidelines
+# SparkTool Learning Platform Technical Guidelines
 
 ---
 
 ## 🏛️ Overview & Project Context
 
-This manual outlines the technical standards and best practices for building the secure, internal, government-owned **Nigerian Correctional Service** e-learning platform. These guidelines ensure consistency, security, maintainability, and optimal user experience (UX) for both students and administrative staff, leveraging the mandated technology stack.
+This manual outlines the technical standards and best practices for building the secure, tenant-aware SparkTool learning platform. These guidelines ensure consistency, security, maintainability, and optimal user experience (UX) for both learners and administrators across branded tenant workspaces.
 
 ## 1. Styling & Design Standards
 
@@ -18,7 +18,7 @@ This manual outlines the technical standards and best practices for building the
 - **Mantine:** Use the **Mantine component library** for all base UI elements (Buttons, Inputs, Cards, Layouts, Tables, Modals, Notifications). This ensures rapid development and built-in accessibility.
 - **Tailwind CSS:** Use Tailwind utility classes primarily for:
   - **Customizing Mantine components** (overriding defaults).
-  - Implementing the **Green, White, Green** color palette (especially the deep NCS green).
+  - Implementing the established SparkTool green palette and tenant branding tokens.
   - Handling complex layout adjustments and responsive design.
   - Applying utility-first styling where Mantine's built-in styles are insufficient.
 
@@ -145,7 +145,7 @@ This is the entire experience for the student user, focused on learning, progres
 
 ### III. Admin Portal
 
-This is the "mission control" for NCS staff, focused on management, monitoring, and content.
+This is the mission control for tenant staff, focused on management, monitoring, and content.
 
 10. **Admin Dashboard (Home):** The admin's landing page. It shows high-level, aggregate data: "Total Active Students," "Certificates Issued," "Most Popular Courses," and a "Recent Activity" feed. (We designed this).
 11. **User Management Page (List):** A powerful table view of all students on the platform. It must be searchable, sortable, and filterable (e.g., "Show all students in the 'Software Engineering' path"). (We designed this).

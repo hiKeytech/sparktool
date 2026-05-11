@@ -11,7 +11,8 @@ This repository was created from the full git history of `apps/sparktool` in the
 - `packages/contracts`: shared tenant and platform configuration contracts
 - `packages/server-core`: shared server-side tenant and platform config persistence/services
 - `docs`: product and migration notes carried forward from the original app
-fixed
+  fixed
+
 ## Current State
 
 The repository shape is now ready for a proper frontend/backend split, but the extraction is intentionally staged:
@@ -37,5 +38,5 @@ pnpm typecheck
 For tenant seeding during the extraction period:
 
 ```bash
-pnpm --filter sparktool-backend seed:ncs
+pnpm --filter sparktool-backend seed:sample
 ```

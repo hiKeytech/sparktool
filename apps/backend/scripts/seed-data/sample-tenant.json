@@ -1,0 +1,121 @@
+{
+  "id": "sample-academy",
+  "name": "Sample Academy",
+  "domain": "sample-academy.sparktool.local",
+  "subscriptionStatus": "active",
+  "config": {
+    "auth": {
+      "allowSignup": true,
+      "domains": ["sampleacademy.org"],
+      "restrictedDomains": ["sampleacademy.org"],
+      "strategies": [
+        {
+          "config": {},
+          "label": "Sign in",
+          "type": "email-password"
+        }
+      ]
+    },
+    "branding": {
+      "faviconUrl": "/sparktool-badge.svg",
+      "fontFamily": "Inter, sans-serif",
+      "loginPage": {
+        "footnote": "Use your portal link to sign in or create a learner account.",
+        "formDescription": "Access structured learning, certificates, and live sessions from your organization's learning portal.",
+        "formTitle": "Sign In",
+        "heading": "Sample Academy Learning Portal",
+        "subheading": "A neutral sample portal for validating SparkTool's guided learning experience.",
+        "features": [
+          {
+            "title": "Organization branding",
+            "description": "Validate how each portal controls its own identity, copy, and sign-in experience.",
+            "icon": "IconUsers"
+          },
+          {
+            "title": "Certificate-ready learning",
+            "description": "Test course completion, verifiable credentials, and learner progress without product-specific branding.",
+            "icon": "IconCertificate"
+          },
+          {
+            "title": "Live session workflows",
+            "description": "Confirm scheduling, joining, and attendance flows inside an organization-specific learning environment.",
+            "icon": "IconVideo"
+          }
+        ]
+      },
+      "logoUrl": "/sparktool-badge.svg",
+      "portalName": "Sample Academy",
+      "primaryColor": "#1b7339",
+      "secondaryColor": "#eef6f1"
+    },
+    "dashboard": {
+      "layout": "modern",
+      "widgets": [
+        {
+          "id": "recent-courses",
+          "position": { "h": 4, "w": 6, "x": 0, "y": 0 },
+          "visibility": ["student", "admin"]
+        },
+        {
+          "id": "learning-progress",
+          "position": { "h": 4, "w": 6, "x": 6, "y": 0 },
+          "visibility": ["student"]
+        },
+        {
+          "id": "upcoming-live-sessions",
+          "position": { "h": 4, "w": 12, "x": 0, "y": 4 },
+          "visibility": ["student", "admin"]
+        }
+      ]
+    },
+    "liveSessions": {
+      "appName": "Sample Academy Live Session",
+      "joinWindowMinutes": 15,
+      "supportEmail": "support@sampleacademy.org"
+    },
+    "modules": {
+      "certificates": true,
+      "gamification": false,
+      "liveClasses": true,
+      "messaging": false,
+      "reports": true
+    },
+    "publicSite": {
+      "categorySectionTitle": "Explore Learning Areas",
+      "categories": [
+        { "icon": "briefcase", "name": "Business" },
+        { "icon": "brain", "name": "Artificial Intelligence" },
+        { "icon": "chart-line", "name": "Data Science" },
+        { "icon": "cpu", "name": "Computer Science" },
+        { "icon": "device-desktop", "name": "Information Technology" },
+        { "icon": "heart", "name": "Personal Development" },
+        { "icon": "globe", "name": "Language Learning" },
+        { "icon": "users", "name": "Leadership" }
+      ],
+      "copyright": "© 2026 Sample Academy. Powered by SparkTool.",
+      "featuredCoursesCtaLabel": "Enter Workspace",
+      "featuredCoursesTitle": "Structured learning for every team",
+      "footerLogoAlt": "Sample Academy logo",
+      "footerLogoUrl": "/sparktool-badge.svg",
+      "footerTagline": "Organization-branded digital learning powered by SparkTool",
+      "heroBackgroundImageUrl": "/sparktool-learning-hero.svg",
+      "heroDescription": "A neutral sample portal for validating self-service registration, branded experiences, and guided learning journeys.",
+      "heroLogoAlt": "Sample Academy logo",
+      "heroLogoUrl": "/sparktool-badge.svg",
+      "heroPrimaryCtaLabel": "Open Learning Portal",
+      "heroSecondaryCtaLabel": "Explore Learning Areas",
+      "heroTitle": "Sample Academy",
+      "missionCtaLabel": "View Learning Mission",
+      "missionDescription": "This sample portal demonstrates how SparkTool supports role-based access, branded landing pages, and measurable learner progress.",
+      "missionImageAlt": "Sample Academy learning portal",
+      "missionImageUrl": "/sparktool-learning-hero.svg",
+      "missionTitle": "Organized learning for every learner",
+      "stats": [
+        { "label": "Active Learners", "value": "240" },
+        { "label": "Courses Completed", "value": "1,280" },
+        { "label": "Facilitators", "value": "18" },
+        { "label": "Verification Rate", "value": "99%" }
+      ]
+    }
+  }
+}

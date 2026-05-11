@@ -9,6 +9,7 @@ import { LoginShell } from "@/components/auth/login-shell";
 export const Route = createFileRoute("/$tenant/login")({
   validateSearch: z.object({
     invite: z.string().optional(),
+    mode: z.enum(["sign-in", "sign-up"]).optional(),
     redirect: z.string().optional(),
   }),
   component: TenantLoginRoute,
@@ -16,7 +17,7 @@ export const Route = createFileRoute("/$tenant/login")({
 
 function TenantLoginRoute() {
   const { tenant } = Route.useRouteContext() as { tenant: Tenant };
-  const { invite } = Route.useSearch();
+  const { invite, mode } = Route.useSearch();
   const { loading, user } = useResolvedAuthState(tenant);
   const { data: invitationPreview, error: invitationError } =
     useTenantAdminInvitation(tenant.id, invite);
@@ -30,6 +31,7 @@ function TenantLoginRoute() {
   return (
     <TenantLoginPage
       invitationError={invite ? (invitationError?.message ?? null) : null}
+      initialAuthMode={mode}
       invitationPreview={invitationPreview ?? null}
       invitationToken={invite}
       tenant={tenant}
@@ -38,6 +40,7 @@ function TenantLoginRoute() {
 }
 
 interface TenantLoginPageProps {
+  initialAuthMode?: "sign-in" | "sign-up";
   invitationError: null | string;
   invitationPreview: ReturnType<typeof useTenantAdminInvitation>["data"] | null;
   invitationToken?: string;
@@ -45,6 +48,7 @@ interface TenantLoginPageProps {
 }
 
 function TenantLoginPage({
+  initialAuthMode,
   invitationError,
   invitationPreview,
   invitationToken,
@@ -62,6 +66,7 @@ function TenantLoginPage({
       formTitle={loginPage.formTitle}
       heroHeading={loginPage.heading}
       heroSubheading={loginPage.subheading}
+      initialAuthMode={initialAuthMode}
       invitationError={invitationError}
       invitationPreview={invitationPreview}
       invitationToken={invitationToken}

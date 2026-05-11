@@ -1,0 +1,16 @@
+[
+  {
+    "displayName": "Sample Academy Admin",
+    "email": "admin@sampleacademy.org",
+    "password": "AdminPass123!",
+    "role": "admin",
+    "tenantIds": ["sample-academy"]
+  },
+  {
+    "displayName": "Sample Academy Student",
+    "email": "student@sampleacademy.org",
+    "password": "StudentPass123!",
+    "role": "student",
+    "tenantIds": ["sample-academy"]
+  }
+]
