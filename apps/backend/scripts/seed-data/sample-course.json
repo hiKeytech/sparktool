@@ -1,7 +1,7 @@
 {
-  "id": "ncs-live-session-readiness",
+  "id": "sample-live-session-readiness",
   "title": "Live Session Readiness Drill",
-  "description": "A lightweight course used to validate live-session scheduling and student join flow.",
+  "description": "A lightweight course used to validate live-session scheduling and learner join flow.",
   "shortDescription": "Fixture course for live-session testing.",
   "category": "Operations",
   "difficulty": "beginner",
@@ -9,17 +9,17 @@
   "hasCertificate": false,
   "instructors": [
     {
-      "name": "NCS Training Control",
+      "name": "Sample Academy Training Control",
       "title": "Training Coordinator",
-      "email": "admin@corrections.gov.ng",
+      "email": "admin@sampleacademy.org",
       "biography": "Coordinates live training readiness and operational drills."
     }
   ],
   "language": "en",
   "learningObjectives": [
-    "Confirm tenant admin can schedule a live session",
-    "Confirm tenant student can see and join the session",
-    "Confirm Jitsi session launches inside the tenant context"
+    "Confirm tenant admins can schedule a live session",
+    "Confirm learners can see and join the session",
+    "Confirm the live room launches inside the tenant context"
   ],
   "level": "beginner",
   "prerequisites": [],
@@ -28,9 +28,9 @@
   "published": true,
   "publishedAt": 0,
   "sections": [],
-  "tags": ["live-session", "testing", "ncs"],
-  "tenantId": "nigerian-correctional-service",
-  "thumbnailUrl": "/nigerian-correctional-service-staff.jpg",
+  "tags": ["live-session", "testing", "sample"],
+  "tenantId": "sample-academy",
+  "thumbnailUrl": "/sparktool-learning-hero.svg",
   "totalLessons": 0,
   "totalQuizzes": 0
 }

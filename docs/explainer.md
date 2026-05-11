@@ -1,12 +1,12 @@
-**NCS E-Learning Platform – Complete System Explanation**
+**SparkTool Platform – Complete System Explanation**
 
-**What is the NCS E-Learning Platform?**
+**What is SparkTool?**
 
-The NCS E-Learning Platform is a comprehensive digital learning management system designed specifically for the Nigerian Correctional Service (NCS) in partnership with Galaxy Backbone. Built by HiKey, this platform brings technology education and professional development to correctional centres across Nigeria as part of the Renewed Hope Agenda.
+SparkTool is a multi-tenant digital learning management system for organizations that need structured courses, verifiable certificates, live sessions, and role-based administration in one workspace.
 
-The platform enables inmates and correctional staff to access structured educational content, complete courses, earn verifiable certificates, and participate in live virtual classes—all within a secure, monitored environment designed for institutional use.
+The platform enables learners and administrators to access structured educational content, complete courses, earn verifiable certificates, and participate in live virtual classes within a secure, monitored tenant environment.
 
-The core philosophy behind the platform is rehabilitation through education, digital skills empowerment, and transparent progress tracking, ensuring that learning activities are measurable, verifiable, and aligned with rehabilitation goals.
+The core philosophy behind the platform is measurable learning delivery, tenant-specific branding, and transparent progress tracking, ensuring that learning activities are configurable, verifiable, and aligned with organizational goals.
 
 **How the System Works**
 
@@ -74,7 +74,7 @@ Upon successful course completion, the platform generates digital certificates t
 - Course title and description
 - Completion date
 - Unique certificate ID
-- NCS branding and official seal
+- tenant branding and a unique verification record
 
 Certificates are stored in the system and can be downloaded as PDFs. A public verification page allows anyone to verify certificate authenticity by entering the certificate ID.
 
@@ -154,11 +154,11 @@ The platform supports multi-tenant deployment, allowing different organizations 
 - Custom dashboard layouts and widgets
 - Subscription status management
 
-The Nigerian Correctional Service operates as a dedicated tenant with NCS-specific branding and configuration.
+Each organization operates as a dedicated tenant with its own branding and configuration.
 
 **Technical Architecture**
 
-The NCS E-Learning Platform is built as a secure, cloud-based web application using modern technologies:
+SparkTool is built as a secure, cloud-based web application using modern technologies:
 
 **Frontend:**
 
@@ -196,18 +196,18 @@ The platform supports a range of stakeholders:
 
 **Competitive Advantages**
 
-Unlike generic learning management systems, the NCS E-Learning Platform is purpose-built for correctional education with:
+Unlike generic learning management systems, SparkTool is purpose-built for tenant-aware learning delivery with:
 
 - **End-to-end visibility** from course creation to certificate verification
 - **Institutional-grade security** appropriate for correctional environments
-- **Nigerian government branding** aligned with official NCS identity
+- **Tenant-specific branding** aligned with each workspace identity
 - **Offline-friendly design** considerations for environments with limited connectivity
 - **Verifiable credentials** supporting post-release employment
 - **Comprehensive analytics** enabling evidence-based programming decisions
 
 **How Organizations Use the Platform**
 
-The Nigerian Correctional Service uses the platform across their facilities:
+Organizations typically use the platform through this flow:
 
 1. **Onboarding:** Inmates and staff are registered in the system with appropriate role assignments
 2. **Course Enrollment:** Students browse the catalog and enroll in relevant courses
@@ -236,6 +236,4 @@ Over time, the platform becomes a central record of educational achievement, sup
 
 **Summary**
 
-The NCS E-Learning Platform represents a significant investment in rehabilitation through education. By bringing comprehensive technology education to correctional centres, the platform supports the Renewed Hope Agenda's vision of preparing inmates for successful reintegration into society while providing professional development opportunities for correctional staff.
-
-Built by HiKey in partnership with Galaxy Backbone, the platform combines modern learning management capabilities with government-grade security and Nigerian institutional branding, creating a purpose-built solution for correctional education.
+SparkTool combines tenant-scoped branding, structured learning, live delivery, certificates, and operational analytics in one product. It is designed for organizations that need a configurable learning workspace without hardcoding customer identity into the platform itself.

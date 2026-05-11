@@ -6,7 +6,10 @@ import { readFile } from "node:fs/promises";
 
 const mongoUri = process.env.MONGODB_URI;
 const mongoDbName = process.env.MONGODB_DB_NAME || "sparktool";
-const courseSeedUrl = new URL("./seed-data/ncs-course.json", import.meta.url);
+const courseSeedUrl = new URL(
+  "./seed-data/sample-course.json",
+  import.meta.url,
+);
 const platformAdminSeedUrl = new URL(
   "./seed-data/platform-admin.json",
   import.meta.url,
@@ -15,8 +18,8 @@ const platformSeedUrl = new URL(
   "./seed-data/platform-config.json",
   import.meta.url,
 );
-const seedFileUrl = new URL("./seed-data/ncs-tenant.json", import.meta.url);
-const usersSeedUrl = new URL("./seed-data/ncs-users.json", import.meta.url);
+const seedFileUrl = new URL("./seed-data/sample-tenant.json", import.meta.url);
+const usersSeedUrl = new URL("./seed-data/sample-users.json", import.meta.url);
 
 async function loadCourseSeed() {
   const raw = await readFile(courseSeedUrl, "utf8");
@@ -166,7 +169,7 @@ async function seedTenant() {
           createdAt: Date.now(),
           createdBy: `${tenant.id}-admin-admin`,
           createdByMeta: {
-            name: "NCS Tenant Admin",
+            name: "Sample Academy Admin",
             photoUrl: "",
           },
           enrollmentCount: 0,
@@ -188,8 +191,8 @@ async function seedTenant() {
     console.log(`Tenant route: /${tenant.id}`);
     console.log(`Admin live sessions: /${tenant.id}/admin/live-sessions`);
     console.log(`Student live sessions: /${tenant.id}/student/live-sessions`);
-    console.log("Admin login: admin@corrections.gov.ng / AdminPass123!");
-    console.log("Student login: student@corrections.gov.ng / StudentPass123!");
+    console.log("Admin login: admin@sampleacademy.org / AdminPass123!");
+    console.log("Student login: student@sampleacademy.org / StudentPass123!");
   } finally {
     await client.close();
   }

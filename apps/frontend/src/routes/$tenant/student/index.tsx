@@ -21,7 +21,7 @@ import {
   IconTrendingUp,
 } from "@tabler/icons-react";
 import { NotificationsDrawer } from "@/components/notifications";
-import { NCSLogo } from "@/components/shared/ncs-logo";
+import { TenantLogo } from "@/components/shared/tenant-logo";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
 import { useListCourses, useUserProgress } from "@/services/hooks";
 import type { Tenant } from "@/schemas/tenant-contract";
@@ -33,6 +33,9 @@ export const Route = createFileRoute("/$tenant/student/")({
 function StudentDashboard() {
   const { tenant } = Route.useRouteContext() as { tenant: Tenant };
   const { user } = useAuthContext();
+  const portalName = tenant.config.branding.portalName;
+  const logoAlt = `${portalName} logo`;
+  const logoUrl = tenant.config.branding.logoUrl;
   const navigate = useNavigate();
   const [
     notificationsOpened,
@@ -75,7 +78,7 @@ function StudentDashboard() {
               </Avatar>
               <div>
                 <Text c="dimmed" size="sm">
-                  Home / Portal
+                  Home
                 </Text>
                 <Title className="text-gray-800" order={2}>
                   Welcome back, {user?.displayName}
@@ -228,7 +231,7 @@ function StudentDashboard() {
               </div>
             )}
 
-            {/* NCS Branding Card */}
+            {/* Tenant Branding Card */}
             <div data-aos="fade-up" data-aos-delay="300">
               <Card
                 className="text-center bg-gray-50"
@@ -237,10 +240,15 @@ function StudentDashboard() {
                 withBorder
               >
                 <div className="flex items-center justify-center w-16 h-16 mx-auto mb-3 rounded-full bg-fun-green-100">
-                  <NCSLogo size={44} />
+                  <TenantLogo
+                    alt={logoAlt}
+                    fallbackLabel={portalName}
+                    size={44}
+                    src={logoUrl}
+                  />
                 </div>
                 <Title className="mb-1 text-gray-800" order={4}>
-                  Nigerian Correctional Service
+                  {portalName}
                 </Title>
                 <Text c="dimmed" size="sm">
                   E-Learning Platform

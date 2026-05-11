@@ -16,7 +16,7 @@ import type { User } from "sparktool-contracts/user";
 import { closeMongoClient, getMongoDb } from "../db/mongo.js";
 import { createApp } from "../server.js";
 
-const tenantId = "nigerian-correctional-service";
+const tenantId = "sample-academy";
 
 type AdminInvitationDocument = AdminInvitation & { _id: string };
 type ActivityLogCleanupDocument = {

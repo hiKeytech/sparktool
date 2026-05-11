@@ -5,6 +5,8 @@ import { IconDownload } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useRef } from "react";
 
+import { useAuthContext } from "@/providers/auth-provider";
+
 import { CertificateTemplate } from "./certificate-template";
 
 import html2canvas from "html2canvas";
@@ -20,6 +22,10 @@ export function CertificatePreview({
   onClose,
 }: CertificatePreviewProps) {
   const certificateRef = useRef<HTMLDivElement>(null);
+  const { tenant } = useAuthContext();
+  const institutionName =
+    tenant?.config.branding.portalName ?? tenant?.name ?? "SparkTool";
+  const logoUrl = tenant?.config.branding.logoUrl;
 
   if (!certificate) {
     return (
@@ -71,7 +77,12 @@ export function CertificatePreview({
         }}
         transition={{ duration: 0.5 }}
       >
-        <CertificateTemplate certificate={certificate} ref={certificateRef} />
+        <CertificateTemplate
+          certificate={certificate}
+          institutionName={institutionName}
+          logoUrl={logoUrl}
+          ref={certificateRef}
+        />
       </motion.div>
 
       {/* Action Buttons */}

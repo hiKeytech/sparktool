@@ -8,7 +8,7 @@ test("allows invited or existing users to sign in even when email falls outside 
     assertAllowedAuthDomain({
       email: "admin@example.com",
       mode: "sign-in",
-      restrictedDomains: ["corrections.gov.ng"],
+      restrictedDomains: ["sampleacademy.org"],
     });
   });
 });
@@ -19,11 +19,11 @@ test("rejects self-sign-up when email falls outside restricted domains", () => {
       assertAllowedAuthDomain({
         email: "admin@example.com",
         mode: "sign-up",
-        restrictedDomains: ["corrections.gov.ng"],
+        restrictedDomains: ["sampleacademy.org"],
       });
     },
     {
-      message: "Unauthorized email domain. Expected one of: corrections.gov.ng",
+      message: "Unauthorized email domain. Expected one of: sampleacademy.org",
     },
   );
 });
@@ -31,9 +31,9 @@ test("rejects self-sign-up when email falls outside restricted domains", () => {
 test("allows self-sign-up when email matches a restricted domain", () => {
   assert.doesNotThrow(() => {
     assertAllowedAuthDomain({
-      email: "admin@corrections.gov.ng",
+      email: "admin@sampleacademy.org",
       mode: "sign-up",
-      restrictedDomains: ["corrections.gov.ng"],
+      restrictedDomains: ["sampleacademy.org"],
     });
   });
 });

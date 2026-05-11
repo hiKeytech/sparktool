@@ -21,6 +21,7 @@ import { formatDateTime } from "@/utils/date-utils";
 interface EmailPasswordStrategyProps {
   allowSignup?: boolean;
   config: Record<string, unknown>;
+  initialMode?: "sign-in" | "sign-up";
   invitationError?: string | null;
   invitationPreview?: null | AdminInvitationPreview;
   invitationToken?: string;
@@ -67,6 +68,7 @@ const signUpSchema = accountSetupSchema.and(
 export function EmailPasswordStrategy({
   allowSignup = false,
   config,
+  initialMode,
   invitationError,
   invitationPreview,
   invitationToken,
@@ -76,7 +78,9 @@ export function EmailPasswordStrategy({
   void config;
   const isInvitationMode = Boolean(invitationToken);
   const hasInvitationPreview = Boolean(invitationPreview);
-  const [mode, setMode] = useState<"sign-in" | "sign-up">("sign-in");
+  const [mode, setMode] = useState<"sign-in" | "sign-up">(
+    allowSignup && initialMode === "sign-up" ? "sign-up" : "sign-in",
+  );
   const {
     mutate: signIn,
     isPending,
@@ -115,6 +119,19 @@ export function EmailPasswordStrategy({
       form.setFieldValue("email", invitationPreview.email);
     }
   }, [form, invitationPreview]);
+
+  useEffect(() => {
+    if (isInvitationMode) {
+      return;
+    }
+
+    if (allowSignup && initialMode === "sign-up") {
+      setMode("sign-up");
+      return;
+    }
+
+    setMode("sign-in");
+  }, [allowSignup, initialMode, isInvitationMode]);
 
   const isBusy = isPending || isRedeemingInvitation;
 

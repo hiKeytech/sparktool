@@ -65,8 +65,8 @@ function CertificateVerification(_props: CertificateVerificationProps) {
               Certificate Verification
             </Title>
             <Text size="lg" className="text-gray-600">
-              Verify the authenticity of certificates issued by the Nigerian
-              Correctional Service TechForward Program
+              Verify the authenticity of certificates issued through SparkTool
+              workspaces
             </Text>
           </div>
 
@@ -76,7 +76,7 @@ function CertificateVerification(_props: CertificateVerificationProps) {
               <Stack gap="md">
                 <TextInput
                   label="Certificate ID"
-                  placeholder="Enter certificate ID (e.g., NCS-REACT-2024-001)"
+                  placeholder="Enter certificate ID (e.g., CERT-REACT-2024-001)"
                   value={certificateId}
                   onChange={(e) => {
                     setCertificateId(e.target.value);
@@ -133,8 +133,8 @@ function CertificateVerification(_props: CertificateVerificationProps) {
                     "The certificate ID you entered could not be found in our records. Please check the ID and try again."}
                 </Text>
                 <Text size="sm" mt="sm" c="dimmed">
-                  If you believe this is an error, please contact the Nigerian
-                  Correctional Service TechForward Program administration.
+                  If you believe this is an error, please contact the issuing
+                  workspace administrator.
                 </Text>
               </Alert>
             </div>
@@ -218,8 +218,7 @@ function CertificateVerification(_props: CertificateVerificationProps) {
                     >
                       <Text size="sm">
                         This certificate has been verified as authentic and was
-                        issued by the Nigerian Correctional Service TechForward
-                        Program.
+                        issued through a SparkTool workspace.
                       </Text>
                     </Alert>
                   </Stack>
@@ -240,18 +239,16 @@ function CertificateVerification(_props: CertificateVerificationProps) {
                 </Group>
 
                 <Text size="sm" className="text-blue-700">
-                  All certificates issued by the Nigerian Correctional Service
-                  TechForward Program are digitally secured and can be verified
-                  through this official verification system. Each certificate
+                  Certificates issued through SparkTool are digitally secured
+                  and can be verified through this system. Each certificate
                   contains a unique credential ID that can be used to confirm
-                  its authenticity.
+                  authenticity.
                 </Text>
 
                 <Text size="sm" className="text-blue-700">
-                  For additional verification assistance, contact the program
-                  administration at{" "}
+                  For additional verification assistance, contact support at{" "}
                   <Text component="span" fw={500}>
-                    techforward@corrections.gov.ng
+                    support@sparktool.io
                   </Text>
                 </Text>
               </Stack>

@@ -38,6 +38,12 @@ export function DuplicateCourseModal({
   });
 
   const handleDuplicate = () => {
+    const tenantId = user.tenantIds?.[0];
+
+    if (!tenantId) {
+      return;
+    }
+
     const duplicatedCourseData = {
       category: course.category,
       description: course.description,
@@ -61,7 +67,7 @@ export function DuplicateCourseModal({
     createCourse.mutate(
       {
         courseData: duplicatedCourseData,
-        tenantId: user.tenantIds?.[0] || "ncs",
+        tenantId,
         userId: user.uid,
       },
       {

@@ -4,6 +4,7 @@ import { EmailPasswordStrategy } from "./strategies/email-password-strategy";
 
 interface AuthStrategyResolverProps {
   allowSignup?: boolean;
+  initialMode?: "sign-in" | "sign-up";
   invitationError?: string | null;
   invitationPreview?: null | AdminInvitationPreview;
   invitationToken?: string;
@@ -17,6 +18,7 @@ interface AuthStrategyResolverProps {
 
 export function AuthStrategyResolver({
   allowSignup = false,
+  initialMode,
   invitationError,
   invitationPreview,
   invitationToken,
@@ -36,6 +38,7 @@ export function AuthStrategyResolver({
               <EmailPasswordStrategy
                 allowSignup={allowSignup}
                 config={strategy.config}
+                initialMode={initialMode}
                 invitationError={invitationError}
                 invitationPreview={invitationPreview}
                 invitationToken={invitationToken}

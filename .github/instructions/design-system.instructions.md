@@ -1,34 +1,34 @@
 ---
 applyTo: "**/*.ts,**/*.tsx"
-description: A comprehensive guide to creating interfaces that blend **official Nigerian Government trust** with a **motivational, progressive** user experience.
+description: A comprehensive guide to creating interfaces that blend trusted institutional clarity with a motivational, progressive user experience.
 ---
 
-# 🇳🇬 Design System Documentation: Nigerian Correctional Service
+# Design System Documentation: SparkTool
 
-**Nigerian Correctional Service E-Learning Platform**
+**SparkTool Multi-Tenant Learning Platform**
 
 ---
 
-### **1. Core Philosophy: "Official Trust & Progressive Focus"**
+### **1. Core Philosophy: "Trusted Clarity & Progressive Focus"**
 
-Our design system is built to convey **trust, security, and a clear path toward progress** within the official framework of the Nigerian Correctional Service. The guiding principle is **"Clarity, Authority, and Achievement,"** using a clean, modern aesthetic rooted in the national colors.
+Our design system is built to convey trust, security, and a clear path toward progress for institutional learning environments. The guiding principle is **"Clarity, Authority, and Achievement,"** using a clean, modern aesthetic rooted in the platform's green-led brand system.
 
 #### **Key Tenets:**
 
-- **Official Authority:** Visuals reinforce the platform's governmental ownership and security (Green, White, Green).
+- **Trusted Authority:** Visuals reinforce the platform's professionalism, reliability, and secure operation.
 - **Motivation & Progression:** The design must clearly indicate where the user is and what they need to do next, fostering a sense of accomplishment.
 - **Uncluttered Focus:** Content (especially videos) is prioritized. The interface must be distraction-free.
 - **Accessibility & Simplicity:** The platform must be usable by all, regardless of technical background.
 
 ---
 
-### **2. Color System: "Green, White, Green Authority"**
+### **2. Color System: "Green-Led Authority"**
 
-The color system is mandated by the Nigerian Government branding, prioritizing the official Green and White, with high-contrast supporting colors for action and data.
+The color system prioritizes the platform's green identity, balanced neutrals, and high-contrast accents for action and data.
 
 #### **Color Palettes & Usage**
 
-- **Primary Authority (NCS Green):** The deep, dark green (e.g., `#006838` or a dark forest green variant like **fun-green-800**). Used for headers, primary buttons, high-impact progress indicators, and key branding elements.
+- **Primary Authority:** The deep, dark green (e.g., `#006838` or a dark forest green variant like **fun-green-800**). Used for headers, primary buttons, high-impact progress indicators, and key branding elements.
 - **Foundation Palette (White & Gray):** The workhorse of our design. **White** for main content backgrounds (cards, pages). **Gray (stone-50 to stone-200)** for secondary backgrounds, borders, and dividers.
 - **Accent Palette (High-Vis Blue/Cyan):** Used sparingly (~10%) for high-impact elements like notification badges, focus rings, and secondary progress indicators where Green would be too heavy. (e.g., **cyan-500**).
 
@@ -56,7 +56,7 @@ Our typography is clean, modern, and highly readable, prioritizing clarity over 
 
 #### **Hierarchy & Best Practices**
 
-- **Hierarchy:** Use bold weight, size, and the NCS Green (or stone-900) to establish a clear visual hierarchy.
+- **Hierarchy:** Use bold weight, size, and the primary green (or stone-900) to establish a clear visual hierarchy.
 - **Line Height:** Maintain a standard line height (`leading-normal` or `leading-relaxed`).
 - **Reading Width:** Maintain a sensible content width (e.g., `max-w-prose` for long text blocks).
 
@@ -89,7 +89,7 @@ Cards and surfaces are clean white rectangles with subtle elevation.
 
 ### **5. Interactivity & User Feedback**
 
-Interactive elements must clearly utilize the NCS Green for primary actions and provide high-contrast feedback.
+Interactive elements must clearly utilize the primary green for primary actions and provide high-contrast feedback.
 
 #### **Mantine Component Integration**
 
@@ -131,7 +131,7 @@ Use the 4px base unit from Tailwind/Mantine for spacing consistency.
 ### **8. Iconography: "Functional Minimalism"**
 
 - **Style:** Prefer **filled** icons over outline to add weight and clarity.
-- **Color:** Icons should typically use the **NCS Green (fun-green-800)** when indicating success, progress, or main features, or **stone-700** for navigation.
+- **Color:** Icons should typically use the primary green (fun-green-800) when indicating success, progress, or main features, or **stone-700** for navigation.
 
 ---
 

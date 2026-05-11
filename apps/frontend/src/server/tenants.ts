@@ -14,7 +14,10 @@ import {
   type AdminInvitationSummary,
 } from "sparktool-contracts/invitation";
 import { api } from "@/lib/api-client";
-import { requireAuthenticatedUser } from "@/server/tenant-context";
+import {
+  requireAuthenticatedUser,
+  userHasTenantAccess,
+} from "@/server/tenant-context";
 
 type Tenant = z.infer<typeof tenantSchema>;
 type TenantOnboardingResponse = {
@@ -95,6 +98,20 @@ async function requireSuperAdmin() {
   return actor;
 }
 
+async function requireTenantUpdateAccess(tenantId: string) {
+  const actor = await requireAuthenticatedUser();
+
+  if (actor.role === "super-admin") {
+    return actor;
+  }
+
+  if (actor.role !== "admin" || !userHasTenantAccess(actor, tenantId)) {
+    throw new Error("You do not have permission to update this tenant.");
+  }
+
+  return actor;
+}
+
 export const createTenantFn = createServerFn({ method: "POST" })
   .inputValidator(createTenantInputSchema)
   .handler(async ({ data }) => {
@@ -134,7 +151,7 @@ export const listTenantsFn = createServerFn({ method: "GET" }).handler(
 export const updateTenantFn = createServerFn({ method: "POST" })
   .inputValidator(updateTenantInputSchema)
   .handler(async ({ data }) => {
-    await requireSuperAdmin();
+    await requireTenantUpdateAccess(data.tenantId);
 
     const existingTenant = await api.get<z.infer<typeof tenantSchema>>(
       `/api/tenants/${data.tenantId}`,

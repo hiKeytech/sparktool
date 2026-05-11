@@ -31,7 +31,7 @@ import {
 } from "@tanstack/react-router";
 
 import { NotificationBell } from "@/components/notifications";
-import { NCSLogo } from "@/components/shared/ncs-logo";
+import { TenantLogo } from "@/components/shared/tenant-logo";
 import { AuthScope, type ResolvedAuthState } from "@/providers/auth-provider";
 import { useSignOut } from "@/services/hooks";
 import { buildTenantPath } from "@/utils/tenant-paths";
@@ -47,6 +47,10 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
   const tenantSlug = tenantParam!;
 
   const { user } = auth;
+  const branding = auth.tenant?.config.branding;
+  const portalName = branding?.portalName ?? auth.tenant?.name ?? "SparkTool";
+  const logoAlt = `${portalName} logo`;
+  const logoUrl = branding?.logoUrl;
   const { mutate } = useSignOut();
 
   const navigate = useNavigate();
@@ -184,13 +188,18 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
                   size="sm"
                 />
                 <Group gap="sm">
-                  <NCSLogo size={44} />
+                  <TenantLogo
+                    alt={logoAlt}
+                    fallbackLabel={portalName}
+                    size={44}
+                    src={logoUrl}
+                  />
                   <Text
                     className="hidden text-white sm:block"
                     fw={700}
                     size="xl"
                   >
-                    Nigerian Correctional Service
+                    {portalName}
                   </Text>
                 </Group>
               </Group>

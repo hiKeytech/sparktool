@@ -104,11 +104,13 @@ function TenantHeroPreview({
   imageAlt,
   logoUrl,
   logoAlt,
+  portalName,
 }: {
   imageUrl: string;
   imageAlt: string;
   logoUrl: string;
   logoAlt: string;
+  portalName: string;
 }) {
   return (
     <div className="relative" data-aos="fade-left" data-aos-delay="150">
@@ -128,10 +130,10 @@ function TenantHeroPreview({
             />
             <div>
               <p className="text-xs font-bold tracking-[0.18em] uppercase text-fun-green-800">
-                Learning Workspace
+                {portalName}
               </p>
               <p className="text-sm font-medium text-stone-700">
-                Structured, secure, and trackable delivery.
+                Courses, progress, and live sessions.
               </p>
             </div>
           </div>
@@ -144,6 +146,7 @@ function TenantHeroPreview({
 function TenantLandingPage() {
   const { tenant } = Route.useRouteContext() as { tenant: Tenant };
   const { loading, user } = useResolvedAuthState(tenant);
+  const allowSignup = tenant.config.auth.allowSignup;
   const { portalName } = tenant.config.branding;
   const publicSite = tenant.config.publicSite;
   const {
@@ -194,14 +197,14 @@ function TenantLandingPage() {
                 {portalName}
               </Text>
               <Text className="mt-1 text-[10px] font-medium leading-none uppercase tracking-[0.2em] text-stone-500">
-                Tenant Workspace
+                Learning Portal
               </Text>
             </div>
           </Group>
 
           <Group gap="md">
             <Text className="hidden text-xs font-bold tracking-widest uppercase md:block text-fun-green-800">
-              Guided Learning Access
+              Explore Courses
             </Text>
             <Link to="/$tenant/login" params={{ tenant: tenant.id }}>
               <Button
@@ -256,6 +259,26 @@ function TenantLandingPage() {
                     {heroSecondaryCtaLabel}
                   </Button>
                 </Group>
+
+                {allowSignup ? (
+                  <Group className="mt-4" gap="sm">
+                    <Text className="text-sm font-medium text-stone-600">
+                      New learner?
+                    </Text>
+                    <Link
+                      params={{ tenant: tenant.id }}
+                      search={{ mode: "sign-up" }}
+                      to="/$tenant/login"
+                    >
+                      <Button
+                        variant="subtle"
+                        className="px-0 text-xs font-bold tracking-wider uppercase text-fun-green-800 hover:bg-transparent hover:text-fun-green-700"
+                      >
+                        Create student account
+                      </Button>
+                    </Link>
+                  </Group>
+                ) : null}
               </div>
 
               <TenantHeroPreview
@@ -263,6 +286,7 @@ function TenantLandingPage() {
                 imageAlt={heroLogoAlt}
                 logoUrl={heroLogoUrl}
                 logoAlt={heroLogoAlt}
+                portalName={portalName}
               />
             </div>
           </div>
@@ -329,8 +353,8 @@ function TenantLandingPage() {
               {categorySectionTitle}
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-stone-600">
-              Each workspace can organize content into clear tracks, with
-              categories that help learners discover the right starting point.
+              Browse learning areas to find courses that match your goals and
+              get started at your own pace.
             </p>
           </div>
 
@@ -343,7 +367,7 @@ function TenantLandingPage() {
                   key={`${category.icon}-${category.name}`}
                   icon={Icon}
                   title={category.name}
-                  description={`${category.name} content can be organized into guided lessons, structured modules, and trackable milestones for learners.`}
+                  description={`Explore ${category.name} courses with step-by-step lessons and clear progress tracking.`}
                   delay={index * 90}
                 />
               );
@@ -364,8 +388,8 @@ function TenantLandingPage() {
                 {featuredCoursesTitle}
               </h2>
               <p className="mt-4 text-base leading-relaxed text-white/75 sm:text-lg">
-                Enter the workspace to explore course collections, follow
-                structured lessons, and continue through guided learning paths.
+                Sign in to explore course collections, follow structured
+                lessons, and continue through guided learning paths.
               </p>
             </div>
 
