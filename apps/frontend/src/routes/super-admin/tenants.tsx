@@ -145,6 +145,7 @@ function buildDefaultConfig(name: string, allowSignup: boolean) {
       ],
     },
     branding: {
+      colorScheme: "light" as const,
       fontFamily: "Inter, sans-serif",
       loginPage: {
         features: [

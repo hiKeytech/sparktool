@@ -46,7 +46,7 @@ export function PublicLayout() {
 
   return (
     <AppShell header={{ height: 70 }} padding={0}>
-      <AppShell.Header className="border-b border-gray-200 bg-white/95 backdrop-blur">
+      <AppShell.Header className="border-b backdrop-blur border-(--app-border) bg-(--app-surface-elevated)">
         <Container size="xl">
           <Group h={70} justify="space-between">
             {/* Logo */}
@@ -57,13 +57,16 @@ export function PublicLayout() {
               <TenantLogo fallbackLabel={platformName} size={44} />
               <div>
                 <Text
-                  className="leading-tight text-gray-800"
+                  className="leading-tight text-(--app-text)"
                   fw={700}
                   size="lg"
                 >
                   {platformName}
                 </Text>
-                <Text className="leading-tight text-gray-600" size="xs">
+                <Text
+                  className="leading-tight text-(--app-text-muted)"
+                  size="xs"
+                >
                   {platformTagline}
                 </Text>
               </div>
@@ -73,7 +76,7 @@ export function PublicLayout() {
             <Group gap="xl" visibleFrom="md">
               {navigationItems.map((item) => (
                 <UnstyledButton
-                  className="font-medium text-gray-700 transition-colors hover:text-fun-green-600"
+                  className="font-medium transition-colors text-(--app-text-muted) hover:text-fun-green-600"
                   key={item.label}
                   onClick={() => handlePublicNavigation(item.href)}
                 >
@@ -113,7 +116,7 @@ export function PublicLayout() {
           <Group gap="sm">
             <TenantLogo fallbackLabel={platformName} size={44} />
             <div>
-              <Text className="text-gray-800" fw={600} size="sm">
+              <Text className="text-(--app-text)" fw={600} size="sm">
                 {platformName}
               </Text>
             </div>
@@ -123,7 +126,7 @@ export function PublicLayout() {
         <Stack gap="lg">
           {navigationItems.map((item) => (
             <UnstyledButton
-              className="py-2 font-medium text-gray-700 hover:text-fun-green-600"
+              className="py-2 font-medium text-(--app-text-muted) hover:text-fun-green-600"
               key={item.label}
               onClick={() => {
                 handlePublicNavigation(item.href);
@@ -134,7 +137,7 @@ export function PublicLayout() {
             </UnstyledButton>
           ))}
 
-          <div className="pt-4 mt-4 border-t border-gray-200">
+          <div className="pt-4 mt-4 border-t border-(--app-border)">
             <Button
               className="bg-fun-green-600 hover:bg-fun-green-700"
               fullWidth

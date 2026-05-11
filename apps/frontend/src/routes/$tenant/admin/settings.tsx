@@ -10,6 +10,7 @@ import {
   Container,
   Group,
   Paper,
+  Select,
   SimpleGrid,
   Stack,
   Switch,
@@ -29,8 +30,26 @@ import type { Tenant } from "@/schemas/tenant-contract";
 import { useUpdateTenant } from "@/services/hooks";
 import { applyBrandingTheme } from "@/utils/branding-theme";
 
+const hexColorPattern = /^#(?:[\da-fA-F]{3}){1,2}$/;
+
+function normalizeHexColorInput(value: string) {
+  const normalized = value.trim();
+  const shortHexMatch = /^#([\da-fA-F]{3})$/.exec(normalized);
+
+  if (shortHexMatch) {
+    return `#${shortHexMatch[1]
+      .split("")
+      .map((channel) => `${channel}${channel}`)
+      .join("")
+      .toLowerCase()}`;
+  }
+
+  return normalized.toLowerCase();
+}
+
 const tenantSettingsSchema = z.object({
   allowSignup: z.boolean(),
+  colorScheme: z.enum(["light", "dark"]),
   copyright: z.string().trim().min(1, "Copyright text is required"),
   featuredCoursesCtaLabel: z
     .string()
@@ -69,9 +88,15 @@ const tenantSettingsSchema = z.object({
   supportEmail: z.email("Enter a valid support email").or(z.literal("")),
   logoUrl: z.string().trim().min(1, "Logo URL is required"),
   portalName: z.string().trim().min(1, "Portal name is required"),
-  primaryColor: z.string().trim().min(1, "Primary color is required"),
+  primaryColor: z
+    .string()
+    .trim()
+    .regex(hexColorPattern, "Enter a valid hex color like #1b7339"),
   restrictedDomains: z.string().trim(),
-  secondaryColor: z.string().trim().min(1, "Secondary color is required"),
+  secondaryColor: z
+    .string()
+    .trim()
+    .regex(hexColorPattern, "Enter a valid hex color like #eef6f1"),
 });
 
 type TenantSettingsFormValues = z.infer<typeof tenantSettingsSchema>;
@@ -85,6 +110,7 @@ function getRestrictedDomains(tenant: Tenant) {
 function mapTenantToFormValues(tenant: Tenant): TenantSettingsFormValues {
   return {
     allowSignup: tenant.config.auth.allowSignup,
+    colorScheme: tenant.config.branding.colorScheme,
     copyright: tenant.config.publicSite.copyright,
     featuredCoursesCtaLabel: tenant.config.publicSite.featuredCoursesCtaLabel,
     featuredCoursesTitle: tenant.config.publicSite.featuredCoursesTitle,
@@ -143,6 +169,8 @@ function AdminSettings() {
 
   const saveChanges = form.onSubmit(async (values) => {
     const domains = parseDomains(values.restrictedDomains);
+    const primaryColor = normalizeHexColorInput(values.primaryColor);
+    const secondaryColor = normalizeHexColorInput(values.secondaryColor);
     const updatedTenant = await updateTenant.mutateAsync({
       tenantData: {
         config: {
@@ -163,10 +191,11 @@ function AdminSettings() {
               heading: values.loginHeading,
               subheading: values.loginSubheading,
             },
+            colorScheme: values.colorScheme,
             logoUrl: values.logoUrl,
             portalName: values.portalName,
-            primaryColor: values.primaryColor,
-            secondaryColor: values.secondaryColor,
+            primaryColor,
+            secondaryColor,
           },
           publicSite: {
             ...tenant.config.publicSite,
@@ -239,6 +268,14 @@ function AdminSettings() {
                     label="Portal name"
                     {...form.getInputProps("portalName")}
                   />
+                  <Select
+                    data={[
+                      { label: "Light", value: "light" },
+                      { label: "Dark", value: "dark" },
+                    ]}
+                    label="Appearance"
+                    {...form.getInputProps("colorScheme")}
+                  />
                   <TextInput
                     label="Logo URL"
                     {...form.getInputProps("logoUrl")}
@@ -249,11 +286,15 @@ function AdminSettings() {
                   />
                   <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                     <TextInput
+                      description="Use a hex value like #1b7339"
                       label="Primary color"
+                      placeholder="#1b7339"
                       {...form.getInputProps("primaryColor")}
                     />
                     <TextInput
+                      description="Use a hex value like #eef6f1"
                       label="Secondary color"
+                      placeholder="#eef6f1"
                       {...form.getInputProps("secondaryColor")}
                     />
                   </SimpleGrid>

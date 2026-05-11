@@ -23,10 +23,8 @@ export default defineConfig({
     tanstackStart({ srcDirectory: "src" }),
     nitro({
       preset: "vercel",
+      noExternals: ["tslib", "react-remove-scroll", "react-remove-scroll-bar"],
       output: { dir: ".vercel/output" },
-      externals: {
-        inline: ["tslib", "react-remove-scroll", "react-remove-scroll-bar"],
-      },
     }),
     react(),
   ],

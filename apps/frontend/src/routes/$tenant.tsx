@@ -42,12 +42,12 @@ function TenantLookupError() {
   }, []);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-stone-50 px-6 py-12">
-      <div className="w-full max-w-lg rounded-lg border border-stone-200 bg-white p-8 shadow-sm">
-        <h1 className="font-sans text-2xl font-semibold text-stone-900">
+    <div className="flex min-h-screen items-center justify-center bg-(--app-bg) px-6 py-12">
+      <div className="w-full max-w-lg rounded-lg border bg-(--app-surface) border-(--app-border) p-8 shadow-sm">
+        <h1 className="font-sans text-2xl font-semibold text-(--app-text)">
           Tenant not found
         </h1>
-        <p className="mt-3 font-sans text-sm leading-6 text-stone-600">
+        <p className="mt-3 font-sans text-sm leading-6 text-(--app-text-muted)">
           The tenant URL you visited does not match any configured workspace.
           Check the address and try again, or return to the platform entry.
         </p>
