@@ -121,27 +121,6 @@ function AdminSecurity() {
                   </Group>
                 </Stack>
               </Paper>
-
-              <Paper p="xl" radius="md" withBorder>
-                <Stack gap="md">
-                  <Title order={4}>Extra sign-in protection</Title>
-                  <Alert color="blue" title="Extra protection">
-                    Add another confirmation step to help protect your account.
-                  </Alert>
-                  <Group justify="space-between" align="center">
-                    <div>
-                      <Text fw={500}>Extra sign-in protection</Text>
-                      <Text size="sm" c="dimmed">
-                        Contact your platform admin if you want help turning
-                        this on.
-                      </Text>
-                    </div>
-                    <Button disabled variant="light">
-                      Coming soon
-                    </Button>
-                  </Group>
-                </Stack>
-              </Paper>
             </Stack>
           </Grid.Col>
 
@@ -160,7 +139,7 @@ function AdminSecurity() {
                     <Text size="sm" fw={500}>
                       {user?.email || "Admin sign-in"}
                     </Text>
-                    <Text size="xs" c="green">
+                    <Text size="xs" c="brand">
                       Current Session
                     </Text>
                     <Text c="dimmed" size="xs">
@@ -168,7 +147,7 @@ function AdminSecurity() {
                     </Text>
                   </div>
                 </Group>
-                <Alert color="blue" title="Current sign-in">
+                <Alert color="brand" title="Current sign-in">
                   This shows the device you are using now. Contact support if
                   you need help with other sign-ins.
                 </Alert>

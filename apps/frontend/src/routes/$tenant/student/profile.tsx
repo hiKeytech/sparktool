@@ -558,22 +558,6 @@ function UserProfile() {
                 <Divider />
 
                 <div>
-                  <Group justify="space-between" mb="md">
-                    <div>
-                      <Text fw={500}>Extra sign-in protection</Text>
-                      <Text c="dimmed" size="sm">
-                        Add another step to help protect your account
-                      </Text>
-                    </div>
-                    <Button color="gray" disabled variant="outline">
-                      Coming soon
-                    </Button>
-                  </Group>
-                </div>
-
-                <Divider />
-
-                <div>
                   <Text fw={500} mb="md">
                     Account Activity
                   </Text>
