@@ -61,16 +61,15 @@ function TelemetryOverview() {
       <Stack gap="xl">
         <div>
           <Badge color="green" variant="light">
-            Derived platform signals
+            Platform activity
           </Badge>
           <Title mt="sm" order={1}>
-            Operational Signals
+            Activity
           </Title>
           <Text c="dimmed" maw={760} mt="sm">
-            SparkTool does not yet expose a dedicated platform telemetry API.
-            This page therefore reports operational signals derived from the
-            real tenant registry and global identity store instead of pretending
-            to have CPU, storage, or request-rate data.
+            This page gives you a high-level view of account activity and
+            organization coverage across SparkTool. It is based on real
+            organization and admin data.
           </Text>
         </div>
 
@@ -90,18 +89,21 @@ function TelemetryOverview() {
           <SignalStat label="Coverage" value={`${coverageRate}%`} />
         </SimpleGrid>
 
-        <Alert color="blue" icon={<Activity size={16} />} title="Signal source">
-          These figures are computed from real tenants and user accounts. They
-          should be treated as governance and coverage signals, not
-          infrastructure telemetry.
+        <Alert
+          color="blue"
+          icon={<Activity size={16} />}
+          title="About these numbers"
+        >
+          These numbers come from real organizations and user accounts. They
+          help you understand usage and coverage across SparkTool.
         </Alert>
 
         <SimpleGrid cols={{ base: 1, xl: 2 }} spacing="md">
           <Paper p="lg" radius="lg" withBorder>
             <Group justify="space-between" mb="md">
-              <Title order={3}>Tenant Distribution</Title>
+              <Title order={3}>Organization spread</Title>
               <Badge color="green" variant="light">
-                {tenants.length} tenants
+                {tenants.length} organizations
               </Badge>
             </Group>
             <Stack gap="md">

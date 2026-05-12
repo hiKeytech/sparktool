@@ -510,7 +510,10 @@ function CourseBuilder() {
               </SortableContext>
             </DndContext>
           ) : (
-            <Card className="border border-dashed border-stone-300" p="xl">
+            <Card
+              className="border border-dashed border-(--app-border-strong)"
+              p="xl"
+            >
               <Stack align="center" gap="md">
                 <Text c="dimmed" size="lg" ta="center">
                   No sections yet. Start building your course structure.
@@ -864,13 +867,13 @@ function SortableSection({
       case "video":
         return <IconVideo className="text-blue-600" size={16} />;
       default:
-        return <IconFileText className="text-gray-600" size={16} />;
+        return <IconFileText className="text-(--app-text-muted)" size={16} />;
     }
   };
 
   return (
     <Card
-      className={`mb-4 border-2 ${isDragging ? "border-fun-green-300" : "border-stone-200"}`}
+      className={`mb-4 border-2 ${isDragging ? "border-fun-green-300" : "border-(--app-border)"}`}
       p="md"
       ref={setNodeRef}
       style={style}
@@ -981,7 +984,7 @@ function SortableSection({
         <Stack gap="xs" ml="xl">
           {section.lessons.map((lesson) => (
             <Card
-              className="border border-stone-100 bg-stone-50"
+              className="border bg-(--app-surface-soft) border-(--app-border)"
               key={lesson.id}
               p="sm"
               withBorder
@@ -1062,7 +1065,10 @@ function SortableSection({
           ))}
 
           {section.lessons.length === 0 && (
-            <Card className="border border-dashed border-stone-300" p="md">
+            <Card
+              className="border border-dashed border-(--app-border-strong)"
+              p="md"
+            >
               <Text c="dimmed" size="sm" ta="center">
                 No lessons in this section yet.{" "}
                 <Text

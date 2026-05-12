@@ -503,7 +503,7 @@ function QuizAssessment() {
                           <Stack gap="md">
                             {currentQuestion.options.map((option, index) => (
                               <Radio
-                                className="p-3 transition-colors border rounded-lg border-stone-200 hover:bg-stone-50"
+                                className="p-3 transition-colors border rounded-lg border-(--app-border) hover:bg-(--app-surface-soft)"
                                 key={index}
                                 label={option}
                                 size="md"
@@ -532,7 +532,7 @@ function QuizAssessment() {
                           <Group gap="xl">
                             {currentQuestion.options.map((option, index) => (
                               <Radio
-                                className="p-4 transition-colors border rounded-lg border-stone-200 hover:bg-stone-50"
+                                className="p-4 transition-colors border rounded-lg border-(--app-border) hover:bg-(--app-surface-soft)"
                                 key={index}
                                 label={option}
                                 size="lg"

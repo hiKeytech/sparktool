@@ -34,10 +34,10 @@ const navItems: NavItem[] = [
   },
   {
     icon: BarChart3,
-    label: "Operational Signals",
+    label: "Activity",
     path: "/super-admin/telemetry",
   },
-  { icon: Settings, label: "Platform Policy", path: "/super-admin/settings" },
+  { icon: Settings, label: "Platform Settings", path: "/super-admin/settings" },
 ];
 
 export function SuperAdminSidebar() {

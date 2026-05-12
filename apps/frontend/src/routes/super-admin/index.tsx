@@ -107,15 +107,14 @@ function SuperAdminDashboard() {
                   SparkTool Platform
                 </Badge>
                 <Text c="dimmed" size="sm">
-                  Multi-tenant control plane
+                  Shared admin view
                 </Text>
               </Group>
               <Title order={1}>Platform Overview</Title>
               <Text c="dimmed" maw={760} mt="sm">
-                {user?.displayName || "Platform administrator"}, this view
-                tracks tenant coverage, administrator ownership, and account
-                health across SparkTool. It is intentionally platform-wide, not
-                tied to any single tenant.
+                {user?.displayName || "Platform administrator"}, this page gives
+                you a shared view of organizations, admins, and account activity
+                across SparkTool.
               </Text>
             </div>
           </Group>
@@ -123,28 +122,28 @@ function SuperAdminDashboard() {
 
         <SimpleGrid cols={{ base: 1, md: 2, xl: 4 }} spacing="md">
           <OverviewStat
-            description="Tenants currently serving learners"
+            description="Organizations currently in use"
             icon={Building2}
             label="Active Tenants"
             tone="green"
             value={String(activeTenants.length)}
           />
           <OverviewStat
-            description="SparkTool-wide operator accounts"
+            description="Admins who manage the whole platform"
             icon={ShieldCheck}
             label="Platform Admins"
             tone="blue"
             value={String(platformAdmins.length)}
           />
           <OverviewStat
-            description="Tenant-scoped administrators"
+            description="Admins assigned to organizations"
             icon={UserCog}
             label="Tenant Admins"
             tone="orange"
             value={String(tenantAdmins.length)}
           />
           <OverviewStat
-            description="Active tenants with assigned administrators"
+            description="Active organizations with assigned admins"
             icon={Globe2}
             label="Coverage"
             tone="violet"
@@ -167,8 +166,8 @@ function SuperAdminDashboard() {
               </Group>
               <Title order={3}>Administrator Directory</Title>
               <Text c="dimmed" mt="sm" size="sm">
-                Manage {platformAdmins.length + tenantAdmins.length}{" "}
-                administrator accounts across platform and tenant scopes.
+                Manage {platformAdmins.length + tenantAdmins.length} admin
+                accounts across the platform and each organization.
               </Text>
             </Paper>
           </Link>
@@ -185,10 +184,10 @@ function SuperAdminDashboard() {
                 </ThemeIcon>
                 <ArrowRight size={16} className="text-stone-400" />
               </Group>
-              <Title order={3}>Tenant Registry</Title>
+              <Title order={3}>Organizations</Title>
               <Text c="dimmed" mt="sm" size="sm">
-                Review subscription status, access posture, and configuration
-                readiness for {tenants.length} tenants.
+                Review sign-up settings, subscriptions, and setup progress for
+                {tenants.length} organizations.
               </Text>
             </Paper>
           </Link>
@@ -205,10 +204,9 @@ function SuperAdminDashboard() {
                 </ThemeIcon>
                 <ArrowRight size={16} className="text-stone-400" />
               </Group>
-              <Title order={3}>Operational Signals</Title>
+              <Title order={3}>Activity</Title>
               <Text c="dimmed" mt="sm" size="sm">
-                Inspect account activity, coverage gaps, and tenant distribution
-                using real registry data.
+                Review account activity, coverage gaps, and organization trends.
               </Text>
             </Paper>
           </Link>
@@ -227,19 +225,19 @@ function SuperAdminDashboard() {
           <Alert
             color="green"
             icon={<ShieldCheck size={16} />}
-            title="Platform posture"
+            title="Everything looks good"
           >
-            No immediate tenant coverage or administrator ownership gaps were
-            detected from the current platform registry.
+            No immediate gaps were found in organization coverage or admin
+            ownership.
           </Alert>
         )}
 
         <SimpleGrid cols={{ base: 1, xl: 2 }} spacing="md">
           <Paper p="lg" radius="lg" withBorder>
             <Group justify="space-between" mb="md">
-              <Title order={3}>Tenant Coverage Snapshot</Title>
+              <Title order={3}>Organization snapshot</Title>
               <Badge color="green" variant="light">
-                {tenants.length} tenants
+                {tenants.length} organizations
               </Badge>
             </Group>
             <Table highlightOnHover verticalSpacing="sm">
@@ -301,8 +299,8 @@ function SuperAdminDashboard() {
             <Stack gap="sm">
               {attentionItems.length === 0 ? (
                 <Text c="dimmed" size="sm">
-                  No platform blockers are currently derived from tenant and
-                  account registry data.
+                  No urgent follow-up items were found from the current
+                  organization and account data.
                 </Text>
               ) : (
                 attentionItems.map((item) => (
@@ -553,6 +551,6 @@ function resolveTenantName(
   tenantId: null | string | undefined,
   tenants: Tenant[],
 ) {
-  if (!tenantId) return "Platform-wide";
+  if (!tenantId) return "All organizations";
   return tenants.find((entry) => entry.id === tenantId)?.name || tenantId;
 }

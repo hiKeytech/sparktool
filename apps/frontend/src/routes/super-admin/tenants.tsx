@@ -322,16 +322,15 @@ function TenantsOverview() {
         <Group align="flex-start" justify="space-between">
           <div>
             <Badge color="green" variant="light">
-              Multi-tenant registry
+              Organizations
             </Badge>
             <Title mt="sm" order={1}>
-              Tenants
+              Organizations
             </Title>
             <Text c="dimmed" maw={760} mt="sm">
-              SparkTool tenants are isolated workspaces with their own domain,
-              branding, and access policy. This page manages registry-level
-              information and the bootstrap configuration each tenant starts
-              from.
+              Each organization has its own sign-in link, branding, and access
+              settings. Use this page to manage the shared details each one
+              starts with.
             </Text>
           </div>
           <Button
@@ -375,9 +374,9 @@ function TenantsOverview() {
 
         <Paper p="lg" radius="lg" withBorder>
           <Group justify="space-between" mb="md">
-            <Title order={3}>Tenant Registry</Title>
+            <Title order={3}>Organization list</Title>
             <Text c="dimmed" size="sm">
-              Domains, access policy, and module footprint
+              Sign-in links, sign-up settings, and enabled features
             </Text>
           </Group>
 
@@ -403,7 +402,7 @@ function TenantsOverview() {
                     Domain
                   </Table.Th>
                   <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
-                    Access Policy
+                    Sign-up
                   </Table.Th>
                   <Table.Th className="text-xs font-semibold tracking-wide text-stone-500">
                     Modules
@@ -442,13 +441,13 @@ function TenantsOverview() {
                     <Table.Td>
                       <Text size="sm">
                         {tenant.config.auth.allowSignup
-                          ? "Self-service enabled"
+                          ? "Open sign-up"
                           : "Invite only"}
                       </Text>
                       <Text c="dimmed" size="xs">
                         {tenant.config.auth.restrictedDomains.length > 0
-                          ? `${tenant.config.auth.restrictedDomains.length} restricted domain${tenant.config.auth.restrictedDomains.length === 1 ? "" : "s"}`
-                          : "No explicit domain lock"}
+                          ? `${tenant.config.auth.restrictedDomains.length} email domain rule${tenant.config.auth.restrictedDomains.length === 1 ? "" : "s"}`
+                          : "Any email domain can sign up"}
                       </Text>
                     </Table.Td>
                     <Table.Td>
@@ -645,11 +644,10 @@ function TenantsOverview() {
             />
             <div className="pt-2">
               <Text fw={600} size="sm">
-                Initial Tenant Administrator Invite
+                First admin invite
               </Text>
               <Text c="dimmed" size="xs">
-                This email receives the first admin redemption link for the new
-                tenant workspace.
+                This email gets the first invite link for the new organization.
               </Text>
             </div>
             <TextInput
@@ -698,7 +696,7 @@ function TenantsOverview() {
                 }
                 onClick={handleAddSubmit}
               >
-                Create Tenant and Invite Admin
+                Create organization and invite admin
               </Button>
             </Group>
           </div>
@@ -707,19 +705,18 @@ function TenantsOverview() {
         <Modal
           opened={onboardingResult !== null}
           onClose={() => setOnboardingResult(null)}
-          title="Administrator Invite Ready"
+          title="Admin invite ready"
           centered
         >
           <Stack gap="md">
             <Text c="dimmed" size="sm">
-              {onboardingResult?.tenantName} is now provisioned. Share this
-              one-time invite with {onboardingResult?.inviteeEmail} so they can
-              create the first tenant admin account. SparkTool does not send
-              this email automatically yet, so the administrator cannot sign in
-              until this setup link is delivered and redeemed.
+              {onboardingResult?.tenantName} is ready. Share this one-time link
+              with {onboardingResult?.inviteeEmail} so they can create the first
+              admin account. SparkTool does not send this email automatically
+              yet, so they will need this link to finish setup.
             </Text>
             <TextInput
-              label="Administrator invite link"
+              label="Admin invite link"
               readOnly
               value={onboardingResult?.inviteLink ?? ""}
             />
@@ -764,7 +761,7 @@ function TenantsOverview() {
             />
             <TextInput
               label="Portal Name"
-              description="Displayed across the tenant login and workspace surfaces"
+              description="Shown on this organization's sign-in page and learning space"
               value={editTenant?.config.branding.portalName ?? ""}
               onChange={(e) =>
                 setEditTenant((prev) =>
@@ -835,11 +832,10 @@ function TenantsOverview() {
             <div className="space-y-3">
               <div>
                 <Text fw={600} size="sm">
-                  Enabled Modules
+                  Turned on features
                 </Text>
                 <Text c="dimmed" size="xs">
-                  Controls the baseline footprint shown in the registry for this
-                  tenant.
+                  Choose which features this organization starts with.
                 </Text>
               </div>
               <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
@@ -897,9 +893,8 @@ function TenantsOverview() {
             <Group gap="sm">
               <Building2 size={16} className="text-[#006838]" />
               <Text className="text-[#006838] text-sm font-medium">
-                New tenants now bootstrap from a platform-neutral SparkTool
-                template instead of inheriting tenant-specific branding or
-                missing placeholder files.
+                New organizations now start from a clean SparkTool setup instead
+                of inheriting another organization's branding.
               </Text>
             </Group>
           </Paper>

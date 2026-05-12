@@ -25,6 +25,10 @@ import { minutesToMilliseconds } from "date-fns";
 import { updatePlatformConfig } from "@/actions/platform";
 import { listPlatformActivityLogsFn } from "@/server/activity-logs";
 import {
+  uploadBrandingAsset,
+  type BrandingAssetUploadInput,
+} from "@/server/branding-assets";
+import {
   getAdminInvitationPreviewFn,
   redeemAdminInvitationFn,
 } from "@/server/auth";
@@ -1179,5 +1183,16 @@ export function useUpdatePlatformConfig() {
     },
     mutationFn: (config: PlatformConfig) =>
       updatePlatformConfig({ data: config }),
+  });
+}
+
+export function useUploadBrandingAsset() {
+  return useMutation({
+    meta: {
+      errorMessage: "Failed to upload branding asset. Please try again.",
+      successMessage: "Branding asset uploaded successfully.",
+    },
+    mutationFn: (variables: BrandingAssetUploadInput) =>
+      uploadBrandingAsset(variables),
   });
 }

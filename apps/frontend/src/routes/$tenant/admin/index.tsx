@@ -88,10 +88,10 @@ function AdminDashboard() {
           {/* Header */}
           <Group justify="space-between">
             <div>
-              <Title className="mb-2 text-gray-800" order={1}>
+              <Title className="mb-2 text-(--app-text)" order={1}>
                 Admin Dashboard
               </Title>
-              <Text className="text-gray-600" size="lg">
+              <Text className="text-(--app-text-muted)" size="lg">
                 Manage students, courses, and monitor platform performance
               </Text>
             </div>
@@ -180,7 +180,7 @@ function AdminDashboard() {
                         label={
                           <Center>
                             <div className="text-center">
-                              <Text className="text-gray-500">
+                              <Text className="text-(--app-text-subtle)">
                                 Avg Progress
                               </Text>
                               <Text fw={700} size="lg">
@@ -202,7 +202,7 @@ function AdminDashboard() {
 
                     <Stack gap="xs">
                       <Group justify="space-between">
-                        <Text className="text-gray-600" size="sm">
+                        <Text className="text-(--app-text-muted)" size="sm">
                           Course Completion Rate
                         </Text>
                         <Text fw={500} size="sm">
@@ -210,7 +210,7 @@ function AdminDashboard() {
                         </Text>
                       </Group>
                       <Group justify="space-between">
-                        <Text className="text-gray-600" size="sm">
+                        <Text className="text-(--app-text-muted)" size="sm">
                           Active Students
                         </Text>
                         <Text fw={500} size="sm">
@@ -218,7 +218,7 @@ function AdminDashboard() {
                         </Text>
                       </Group>
                       <Group justify="space-between">
-                        <Text className="text-gray-600" size="sm">
+                        <Text className="text-(--app-text-muted)" size="sm">
                           Certificates Issued
                         </Text>
                         <Text fw={500} size="sm">
@@ -236,7 +236,7 @@ function AdminDashboard() {
                   </Title>
                   <Stack gap="md">
                     <Group justify="space-between">
-                      <Text className="text-gray-600" size="sm">
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Course Completion Rate
                       </Text>
                       <Text fw={500} size="sm">
@@ -244,7 +244,7 @@ function AdminDashboard() {
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text className="text-gray-600" size="sm">
+                      <Text className="text-(--app-text-muted)" size="sm">
                         New Enrollments This Week
                       </Text>
                       <Text fw={500} size="sm">
@@ -252,7 +252,7 @@ function AdminDashboard() {
                       </Text>
                     </Group>
                     <Group justify="space-between">
-                      <Text className="text-gray-600" size="sm">
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Courses in Progress
                       </Text>
                       <Text fw={500} size="sm">

@@ -154,7 +154,7 @@ function StudentLiveSessionsPage() {
 
   const renderSessionCard = (session: LiveSession, showJoinButton = false) => (
     <Card
-      className="border border-stone-200"
+      className="border border-(--app-border)"
       key={session.id}
       padding="md"
       shadow="sm"
@@ -180,20 +180,20 @@ function StudentLiveSessionsPage() {
 
         <Group gap="lg">
           <Group gap={8}>
-            <IconCalendar className="text-stone-500" size={16} />
+            <IconCalendar className="text-(--app-text-subtle)" size={16} />
             <Text size="sm">
               {format(new Date(session.scheduledAt), "MMM dd, yyyy")}
             </Text>
           </Group>
           <Group gap={8}>
-            <IconClock className="text-stone-500" size={16} />
+            <IconClock className="text-(--app-text-subtle)" size={16} />
             <Text size="sm">
               {format(new Date(session.scheduledAt), "h:mm a")} (
               {session.duration} min)
             </Text>
           </Group>
           <Group gap={8}>
-            <IconUsers className="text-stone-500" size={16} />
+            <IconUsers className="text-(--app-text-subtle)" size={16} />
             <Text size="sm">{session.participants.length} participants</Text>
           </Group>
         </Group>
@@ -328,9 +328,9 @@ function StudentLiveSessionsPage() {
 
         {/* Empty State */}
         {sessions.length === 0 && !isLoading && (
-          <Paper className="text-center border border-stone-200" p="xl">
+          <Paper className="text-center border border-(--app-border)" p="xl">
             <Stack align="center" gap="md">
-              <IconVideo className="text-stone-400" size={48} />
+              <IconVideo className="text-(--app-text-subtle)" size={48} />
               <div>
                 <Text fw={500} mb={4} size="lg">
                   No Live Sessions

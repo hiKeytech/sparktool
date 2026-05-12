@@ -159,15 +159,15 @@ function IdentitiesOverview() {
         <Group align="flex-start" justify="space-between">
           <div>
             <Badge color="green" variant="light">
-              Platform identity management
+              Admin management
             </Badge>
             <Title mt="sm" order={1}>
               Administrators
             </Title>
             <Text c="dimmed" maw={760} mt="sm">
-              Platform administrators operate SparkTool globally. Tenant
-              administrators operate a specific tenant. This page manages both
-              groups from the same platform registry.
+              Platform admins manage all of SparkTool. Organization admins work
+              inside a specific organization. This page lets you manage both in
+              one place.
             </Text>
           </div>
           <Button
@@ -201,10 +201,10 @@ function IdentitiesOverview() {
         <Alert
           color="blue"
           icon={<ShieldCheck size={16} />}
-          title="Scope model"
+          title="How roles work"
         >
-          Super admins are platform-wide and are not bound to a tenant. Tenant
-          admins should always be assigned to a tenant so ownership is explicit.
+          Platform admins work across all of SparkTool. Organization admins
+          should always be assigned to an organization so ownership is clear.
         </Alert>
 
         <Paper p="lg" radius="lg" withBorder>
@@ -276,7 +276,7 @@ function IdentitiesOverview() {
                         variant="light"
                         className="font-medium tracking-wide"
                       >
-                        Platform-wide
+                        All organizations
                       </Badge>
                     ) : (
                       <Badge
@@ -554,7 +554,7 @@ function isDormantAccount(user: User) {
 
 function resolveTenantLabel(user: User, tenants: Tenant[]) {
   if (user.role === "super-admin") {
-    return "Platform-wide";
+    return "All organizations";
   }
 
   const tenantNames = tenants
