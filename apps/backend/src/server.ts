@@ -8,7 +8,6 @@ import express, {
 } from "express";
 import helmet from "helmet";
 import { getMongoConnectionStatus, pingMongo } from "./db/mongo.js";
-import { serverEnv } from "./env.js";
 import { PlatformConfigService } from "./services/platform-config-service.js";
 import { TenantService } from "./services/tenant-service.js";
 import { getActorFromSession, httpError } from "./lib/request-helpers.js";
@@ -45,12 +44,12 @@ export function createApp() {
 
   app.set("trust proxy", 1);
   app.use(helmet());
-  const allowedOrigins = [
-    ...(serverEnv.FRONTEND_URL?.split(",")
-      .map((u) => u.trim())
-      .filter(Boolean) ?? []),
-    ...(serverEnv.VERCEL_URL ? [`https://${serverEnv.VERCEL_URL}`] : []),
-  ];
+  // const allowedOrigins = [
+  //   ...(serverEnv.FRONTEND_URL?.split(",")
+  //     .map((u) => u.trim())
+  //     .filter(Boolean) ?? []),
+  //   ...(serverEnv.VERCEL_URL ? [`https://${serverEnv.VERCEL_URL}`] : []),
+  // ];
 
   app.use(
     cors({
