@@ -172,10 +172,10 @@ export function StudentDetails() {
               <IconArrowLeft size={16} />
             </ActionIcon>
             <div>
-              <Title className="text-gray-800" order={1}>
+              <Title className="text-(--app-text)" order={1}>
                 Student Profile
               </Title>
-              <Text className="text-gray-600" size="lg">
+              <Text className="text-(--app-text-muted)" size="lg">
                 Detailed view of student progress and information
               </Text>
             </div>

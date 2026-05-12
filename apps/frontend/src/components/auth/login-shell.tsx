@@ -62,7 +62,7 @@ export function LoginShell({
     : auth.domains;
 
   return (
-    <div className="flex min-h-screen font-sans bg-stone-50 selection:bg-fun-green-500/30">
+    <div className="flex min-h-screen font-sans bg-(--app-bg) selection:bg-fun-green-500/30">
       {/* 
         ========================================================================
         LEFT PANEL (COMMAND SUITE STYLE)
@@ -70,7 +70,7 @@ export function LoginShell({
       */}
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-[#070b09] p-12 text-white lg:flex lg:p-16 border-r border-white/10">
         {/* Deep Nigerian Green Gradient Background */}
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_32%),linear-gradient(135deg,#1d4f35_0%,#113620_58%,#070b09_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_32%),linear-gradient(135deg,var(--color-fun-green-700)_0%,var(--color-fun-green-900)_58%,#070b09_100%)]" />
 
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -161,7 +161,7 @@ export function LoginShell({
         RIGHT PANEL (AUTH FORM)
         ========================================================================
       */}
-      <div className="relative flex w-full flex-col justify-center bg-white lg:w-[55%]">
+      <div className="relative flex w-full flex-col justify-center bg-(--app-surface) lg:w-[55%]">
         {/* Mobile Header */}
         <div className="absolute top-0 flex w-full items-center px-6 py-5 bg-[#070b09] text-white lg:hidden border-b border-white/10">
           <div className="flex items-center space-x-3">
@@ -185,10 +185,10 @@ export function LoginShell({
               <div className="inline-flex items-center justify-center w-12 h-12 mb-6 border lg:hidden rounded-xl bg-fun-green-50 border-fun-green-100 text-fun-green-700">
                 <LockKeyhole size={24} strokeWidth={1.5} />
               </div>
-              <h1 className="mb-3 font-sans text-3xl font-semibold tracking-tight text-stone-950 sm:text-4xl text-balance">
+              <h1 className="mb-3 font-sans text-3xl font-semibold tracking-tight text-(--app-text) sm:text-4xl text-balance">
                 {formTitle}
               </h1>
-              <Text className="font-sans text-base font-light leading-relaxed text-stone-600">
+              <Text className="font-sans text-base font-light leading-relaxed text-(--app-text-muted)">
                 {formDescription}
               </Text>
             </div>
@@ -206,12 +206,12 @@ export function LoginShell({
             </div>
 
             {footnote ? (
-              <Text className="max-w-sm mx-auto mt-6 font-sans text-xs text-center lg:text-left text-stone-500 lg:mx-0">
+              <Text className="max-w-sm mx-auto mt-6 font-sans text-xs text-center lg:text-left text-(--app-text-subtle) lg:mx-0">
                 {footnote}
               </Text>
             ) : null}
 
-            <div className="mt-12 flex flex-col items-center gap-3 text-[10px] tracking-widest uppercase text-stone-400 font-semibold lg:hidden">
+            <div className="mt-12 flex flex-col items-center gap-3 text-[10px] tracking-widest uppercase text-(--app-text-subtle) font-semibold lg:hidden">
               <div className="flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-fun-green-500 animate-pulse" />
                 SECURE CONNECTION

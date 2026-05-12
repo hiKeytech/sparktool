@@ -131,10 +131,10 @@ function CourseManagement() {
           {/* Header */}
           <Group justify="space-between">
             <div>
-              <Title className="mb-2 text-gray-800" order={1}>
+              <Title className="mb-2 text-(--app-text)" order={1}>
                 Course Management
               </Title>
-              <Text className="text-gray-600" size="lg">
+              <Text className="text-(--app-text-muted)" size="lg">
                 Create, edit, and manage all courses on the platform
               </Text>
             </div>
@@ -167,7 +167,7 @@ function CourseManagement() {
               <Card p="md" radius="lg" withBorder>
                 <Group justify="space-between">
                   <div>
-                    <Text className="mb-1 text-gray-600" size="sm">
+                    <Text className="mb-1 text-(--app-text-muted)" size="sm">
                       Total Courses
                     </Text>
                     <Text className="text-blue-600" fw={700} size="xl">
@@ -184,7 +184,7 @@ function CourseManagement() {
               <Card p="md" radius="lg" withBorder>
                 <Group justify="space-between">
                   <div>
-                    <Text className="mb-1 text-gray-600" size="sm">
+                    <Text className="mb-1 text-(--app-text-muted)" size="sm">
                       Published
                     </Text>
                     <Text className="text-green-600" fw={700} size="xl">
@@ -201,7 +201,7 @@ function CourseManagement() {
               <Card p="md" radius="lg" withBorder>
                 <Group justify="space-between">
                   <div>
-                    <Text className="mb-1 text-gray-600" size="sm">
+                    <Text className="mb-1 text-(--app-text-muted)" size="sm">
                       Total Enrollments
                     </Text>
                     <Text className="text-orange-600" fw={700} size="xl">
@@ -223,7 +223,7 @@ function CourseManagement() {
               <Card p="md" radius="lg" withBorder>
                 <Group justify="space-between">
                   <div>
-                    <Text className="mb-1 text-gray-600" size="sm">
+                    <Text className="mb-1 text-(--app-text-muted)" size="sm">
                       Avg Rating
                     </Text>
                     <Text className="text-yellow-600" fw={700} size="xl">

@@ -1,6 +1,6 @@
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
@@ -16,30 +16,46 @@ import tsconfigPaths from "vite-tsconfig-paths";
  *
  * @see {@link https://vitejs.dev/config/ Vite configuration documentation}
  */
-export default defineConfig({
-  plugins: [
-    tsconfigPaths(),
-    tailwindcss(),
-    tanstackStart({ srcDirectory: "src" }),
-    nitro({
-      preset: "vercel",
-      output: { dir: ".vercel/output" },
-      externals: {
-        inline: ["tslib", "react-remove-scroll", "react-remove-scroll-bar"],
-      },
-    }),
-    react(),
-  ],
-  root: ".",
-  server: {
-    port: 4317,
-    strictPort: true,
-    allowedHosts: [".ngrok-free.dev"],
-  },
-  preview: {
-    port: 4417,
-    strictPort: true,
-    host: "0.0.0.0",
-    allowedHosts: [".ngrok-free.dev"],
-  },
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const backendUrl = env.BACKEND_URL?.trim() || env.VITE_BACKEND_URL?.trim();
+
+  return {
+    plugins: [
+      tsconfigPaths(),
+      tailwindcss(),
+      tanstackStart({ srcDirectory: "src" }),
+      nitro({
+        preset: "vercel",
+        noExternals: [
+          "tslib",
+          "react-remove-scroll",
+          "react-remove-scroll-bar",
+        ],
+        output: { dir: ".vercel/output" },
+      }),
+      react(),
+    ],
+    root: ".",
+    server: {
+      port: 4317,
+      strictPort: true,
+      allowedHosts: [".ngrok-free.dev"],
+      proxy: backendUrl
+        ? {
+            "/api": {
+              changeOrigin: true,
+              secure: false,
+              target: backendUrl,
+            },
+          }
+        : undefined,
+    },
+    preview: {
+      port: 4417,
+      strictPort: true,
+      host: "0.0.0.0",
+      allowedHosts: [".ngrok-free.dev"],
+    },
+  };
 });

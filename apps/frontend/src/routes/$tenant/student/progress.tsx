@@ -61,10 +61,10 @@ function StudentProgress() {
         <Stack gap="xl">
           {/* Header */}
           <div data-aos="fade-up" data-aos-delay="100">
-            <Title className="mb-2 text-gray-800" order={1}>
+            <Title className="mb-2 text-(--app-text)" order={1}>
               My Learning Progress
             </Title>
-            <Text className="text-gray-600" size="lg">
+            <Text className="text-(--app-text-muted)" size="lg">
               Track your course progress and learning journey
             </Text>
           </div>
@@ -98,10 +98,10 @@ function StudentProgress() {
                   size={80}
                   thickness={8}
                 />
-                <Text className="text-gray-700" fw={500} size="sm">
+                <Text className="text-(--app-text-muted)" fw={500} size="sm">
                   Course Progress
                 </Text>
-                <Text className="text-gray-500" size="xs">
+                <Text className="text-(--app-text-subtle)" size="xs">
                   {completedCourses} of {totalCourses} completed
                 </Text>
               </Stack>
@@ -118,13 +118,13 @@ function StudentProgress() {
                 <ThemeIcon color="blue" size={60} variant="light">
                   <IconClock size={30} />
                 </ThemeIcon>
-                <Text className="text-gray-700" fw={500} size="sm">
+                <Text className="text-(--app-text-muted)" fw={500} size="sm">
                   Learning Hours
                 </Text>
                 <Text fw={600} size="lg">
                   {completedHours}
                 </Text>
-                <Text className="text-gray-500" size="xs">
+                <Text className="text-(--app-text-subtle)" size="xs">
                   Total completed hours
                 </Text>
               </Stack>
@@ -141,13 +141,13 @@ function StudentProgress() {
                 <ThemeIcon color="green" size={60} variant="light">
                   <IconBook size={30} />
                 </ThemeIcon>
-                <Text className="text-gray-700" fw={500} size="sm">
+                <Text className="text-(--app-text-muted)" fw={500} size="sm">
                   Total Courses
                 </Text>
                 <Text fw={600} size="lg">
                   {totalCourses}
                 </Text>
-                <Text className="text-gray-500" size="xs">
+                <Text className="text-(--app-text-subtle)" size="xs">
                   Enrolled courses
                 </Text>
               </Stack>

@@ -5,7 +5,9 @@ import {
   Badge,
   Button,
   Container,
+  FileInput,
   Group,
+  Image,
   Paper,
   SimpleGrid,
   Stack,
@@ -15,9 +17,13 @@ import {
   Title,
 } from "@mantine/core";
 import { getPlatformConfig } from "@/actions/platform";
-import { useUpdatePlatformConfig } from "@/services/hooks";
+import {
+  useUpdatePlatformConfig,
+  useUploadBrandingAsset,
+} from "@/services/hooks";
+import { BRANDING_IMAGE_ACCEPT } from "@/server/branding-assets";
 import type { PlatformConfig } from "@/schemas/platform-config";
-import { Globe2, Server, ShieldCheck } from "lucide-react";
+import { Globe2, Server, ShieldCheck, Upload } from "lucide-react";
 
 export const Route = createFileRoute("/super-admin/settings")({
   beforeLoad: async () => {
@@ -32,7 +38,9 @@ function SettingsOverview() {
     platform: null | PlatformConfig;
   };
   const [draft, setDraft] = useState<null | PlatformConfig>(platform);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const updatePlatformMutation = useUpdatePlatformConfig();
+  const uploadBrandingAsset = useUploadBrandingAsset();
 
   useEffect(() => {
     setDraft(platform);
@@ -90,33 +98,57 @@ function SettingsOverview() {
     setDraft(updated);
   };
 
+  const handlePlatformLogoUpload = async (file: File | null) => {
+    if (!file) {
+      return;
+    }
+
+    setUploadingLogo(true);
+
+    try {
+      const uploaded = await uploadBrandingAsset.mutateAsync({
+        file,
+        scope: "platform",
+      });
+
+      setDraft({
+        ...draft,
+        branding: {
+          ...draft.branding,
+          logoUrl: uploaded.url,
+        },
+      });
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
+
   return (
     <Container className="py-8" size="xl">
-      <Stack gap="xl">
+      <Stack gap="lg">
         <div>
           <Badge color="green" variant="light">
-            Platform policy
+            Platform setup
           </Badge>
           <Title mt="sm" order={1}>
             Platform Settings
           </Title>
           <Text c="dimmed" maw={760} mt="sm">
-            SparkTool platform configuration now edits the backend source of
-            truth directly. These changes affect the platform login experience
-            and global operator messaging.
+            Update the main SparkTool name, sign-in settings, and homepage text.
+            These changes affect the shared platform experience.
           </Text>
         </div>
 
-        <Alert color="blue" title="Platform-wide impact">
-          Changes here affect SparkTool platform operators globally. They do not
-          overwrite tenant-specific branding or tenant login experiences.
+        <Alert color="blue" title="What this changes">
+          These changes affect the shared SparkTool experience. Tenant branding
+          and tenant sign-in pages stay separate.
         </Alert>
 
         <SimpleGrid cols={{ base: 1, xl: 3 }} spacing="md">
           <Paper p="lg" radius="lg" withBorder>
             <Group gap="sm" mb="md">
               <Server size={18} className="text-stone-500" />
-              <Title order={3}>Platform Identity</Title>
+              <Title order={3}>Branding</Title>
             </Group>
             <Stack gap="sm">
               <TextInput
@@ -171,8 +203,17 @@ function SettingsOverview() {
                   })
                 }
               />
+              <FileInput
+                accept={BRANDING_IMAGE_ACCEPT}
+                clearable
+                description="Accepted formats: PNG, JPEG, WEBP, SVG. Save your changes after uploading."
+                label="Logo upload"
+                leftSection={<Upload size={16} />}
+                onChange={handlePlatformLogoUpload}
+                placeholder="Choose logo image"
+              />
               <TextInput
-                label="Logo asset"
+                label="Logo URL"
                 value={draft.branding.logoUrl}
                 onChange={(event) =>
                   setDraft({
@@ -184,13 +225,22 @@ function SettingsOverview() {
                   })
                 }
               />
+              {draft.branding.logoUrl ? (
+                <Image
+                  alt="Platform logo preview"
+                  className="max-w-40 rounded-md border border-(--app-border) bg-(--app-surface-soft)"
+                  fit="contain"
+                  h={72}
+                  src={draft.branding.logoUrl}
+                />
+              ) : null}
             </Stack>
           </Paper>
 
           <Paper p="lg" radius="lg" withBorder>
             <Group gap="sm" mb="md">
               <ShieldCheck size={18} className="text-[#006838]" />
-              <Title order={3}>Authentication Policy</Title>
+              <Title order={3}>Sign-in settings</Title>
             </Group>
             <Stack gap="sm">
               <Switch
@@ -207,7 +257,7 @@ function SettingsOverview() {
                 }
               />
               <TextInput
-                label="Strategy label"
+                label="Sign-in label"
                 value={draft.auth.strategies[0]?.label || ""}
                 onChange={(event) =>
                   setDraft({
@@ -225,13 +275,13 @@ function SettingsOverview() {
               />
               <TextInput
                 disabled
-                label="Auth strategies"
+                label="Sign-in methods"
                 value={draft.auth.strategies
                   .map((item) => item.type)
                   .join(", ")}
               />
               <TextInput
-                label="Domain policy"
+                label="Allowed email domains"
                 value={restrictedDomains.join(", ")}
                 onChange={(event) =>
                   updateRestrictedDomains(event.currentTarget.value)
@@ -243,7 +293,7 @@ function SettingsOverview() {
           <Paper p="lg" radius="lg" withBorder>
             <Group gap="sm" mb="md">
               <Globe2 size={18} className="text-blue-500" />
-              <Title order={3}>Platform Messaging</Title>
+              <Title order={3}>Homepage copy</Title>
             </Group>
             <Stack gap="sm">
               <TextInput
@@ -304,7 +354,7 @@ function SettingsOverview() {
 
         <Paper p="lg" radius="lg" withBorder>
           <Title mb="md" order={3}>
-            Login Surface Copy
+            Login page copy
           </Title>
           <Stack gap="sm">
             <TextInput
@@ -426,6 +476,7 @@ function SettingsOverview() {
 
         <Group justify="flex-end">
           <Button
+            disabled={uploadingLogo}
             loading={updatePlatformMutation.isPending}
             onClick={saveChanges}
           >

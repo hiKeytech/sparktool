@@ -178,7 +178,7 @@ export function EmailPasswordStrategy({
           {invitationError ||
             redeemError?.message ||
             error?.message ||
-            "An error occurred during authentication."}
+            "We couldn't sign you in. Please try again."}
         </Alert>
       )}
 

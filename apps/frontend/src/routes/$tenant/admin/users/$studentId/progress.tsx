@@ -173,7 +173,7 @@ function StudentProgressMonitoring() {
       >
         <Flex align="center" gap="md" mb="lg">
           <ActionIcon
-            className="text-stone-600 hover:text-fun-green-700"
+            className="text-(--app-text-muted) hover:text-fun-green-700"
             onClick={() => {
               if (tenant.id) {
                 navigate({
@@ -191,7 +191,7 @@ function StudentProgressMonitoring() {
             <IconArrowLeft size={20} />
           </ActionIcon>
           <div>
-            <Title className="text-stone-900" order={2}>
+            <Title className="text-(--app-text)" order={2}>
               {student.displayName}
             </Title>
             <Text c="dimmed">Student Progress Monitoring</Text>
@@ -207,15 +207,15 @@ function StudentProgressMonitoring() {
             initial={{ opacity: 0, scale: 0.95 }}
             transition={{ delay: 0.1, duration: 0.3 }}
           >
-            <Card className="bg-white border border-stone-200 shadow-sm">
+            <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
               <Stack gap="xs">
                 <Group gap="xs">
                   <IconUser className="text-fun-green-700" size={20} />
-                  <Text className="text-stone-700" fw={500} size="sm">
+                  <Text className="text-(--app-text-muted)" fw={500} size="sm">
                     Student Profile
                   </Text>
                 </Group>
-                <Text className="text-stone-900" fw={700} size="xl">
+                <Text className="text-(--app-text)" fw={700} size="xl">
                   {student.role === "admin" ? "Administrator" : "Student"}
                 </Text>
                 <Text c="dimmed" size="sm">
@@ -232,15 +232,15 @@ function StudentProgressMonitoring() {
             initial={{ opacity: 0, scale: 0.95 }}
             transition={{ delay: 0.2, duration: 0.3 }}
           >
-            <Card className="bg-white border border-stone-200 shadow-sm">
+            <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
               <Stack gap="xs">
                 <Group gap="xs">
                   <IconTrophy className="text-fun-green-700" size={20} />
-                  <Text className="text-stone-700" fw={500} size="sm">
+                  <Text className="text-(--app-text-muted)" fw={500} size="sm">
                     Overall Progress
                   </Text>
                 </Group>
-                <Text className="text-stone-900" fw={700} size="xl">
+                <Text className="text-(--app-text)" fw={700} size="xl">
                   {studentProgressData.totalProgress}%
                 </Text>
                 <Progress
@@ -260,15 +260,15 @@ function StudentProgressMonitoring() {
             initial={{ opacity: 0, scale: 0.95 }}
             transition={{ delay: 0.3, duration: 0.3 }}
           >
-            <Card className="bg-white border border-stone-200 shadow-sm">
+            <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
               <Stack gap="xs">
                 <Group gap="xs">
                   <IconCertificate className="text-fun-green-700" size={20} />
-                  <Text className="text-stone-700" fw={500} size="sm">
+                  <Text className="text-(--app-text-muted)" fw={500} size="sm">
                     Certificates
                   </Text>
                 </Group>
-                <Text className="text-stone-900" fw={700} size="xl">
+                <Text className="text-(--app-text)" fw={700} size="xl">
                   {studentProgressData.certificates}
                 </Text>
                 <Text c="dimmed" size="sm">
@@ -285,15 +285,15 @@ function StudentProgressMonitoring() {
             initial={{ opacity: 0, scale: 0.95 }}
             transition={{ delay: 0.4, duration: 0.3 }}
           >
-            <Card className="bg-white border border-stone-200 shadow-sm">
+            <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
               <Stack gap="xs">
                 <Group gap="xs">
                   <IconClock className="text-fun-green-700" size={20} />
-                  <Text className="text-stone-700" fw={500} size="sm">
+                  <Text className="text-(--app-text-muted)" fw={500} size="sm">
                     Study Time
                   </Text>
                 </Group>
-                <Text className="text-stone-900" fw={700} size="xl">
+                <Text className="text-(--app-text)" fw={700} size="xl">
                   {formatStudyTime(studentProgressData.totalStudyTime)}
                 </Text>
                 <Text c="dimmed" size="sm">
@@ -311,14 +311,14 @@ function StudentProgressMonitoring() {
         initial={{ opacity: 0, y: 20 }}
         transition={{ delay: 0.5, duration: 0.3 }}
       >
-        <Card className="bg-white border border-stone-200 shadow-sm">
+        <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
           <Stack gap="lg">
-            <Title className="text-stone-900" order={3}>
+            <Title className="text-(--app-text)" order={3}>
               Course Progress Details
             </Title>
 
             {studentProgressData.enrolledCourses.length === 0 ? (
-              <Paper className="bg-stone-50 p-8 text-center">
+              <Paper className="p-8 text-center bg-(--app-surface-soft)">
                 <Text c="dimmed">
                   This student is not enrolled in any courses yet.
                 </Text>

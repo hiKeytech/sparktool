@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-export const aiDifficultySchema = z.enum(["beginner", "intermediate", "advanced"]);
+export const aiDifficultySchema = z.enum([
+  "beginner",
+  "intermediate",
+  "advanced",
+]);
 
 export const aiPracticeQuizOptionSchema = z.object({
   id: z.string(),
@@ -140,7 +144,9 @@ export type AiDocumentLookup = z.infer<typeof aiDocumentLookupSchema>;
 export type AiChatThreadLookup = z.infer<typeof aiChatThreadLookupSchema>;
 export type AiDifficulty = z.infer<typeof aiDifficultySchema>;
 export type AiPracticeQuizAnswer = z.infer<typeof aiPracticeQuizAnswerSchema>;
-export type AiPracticeQuizQuestion = z.infer<typeof aiPracticeQuizQuestionSchema>;
+export type AiPracticeQuizQuestion = z.infer<
+  typeof aiPracticeQuizQuestionSchema
+>;
 export type AiPracticeQuizResult = z.infer<typeof aiPracticeQuizResultSchema>;
 export type AiPracticeQuizSession = z.infer<typeof aiPracticeQuizSessionSchema>;
 export type CreateAiDocumentInput = z.infer<typeof createAiDocumentInputSchema>;

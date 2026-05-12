@@ -69,6 +69,7 @@ export const authConfigSchema = z.object({
 });
 
 export const brandingSchema = z.object({
+  colorScheme: z.enum(["light", "dark"]).default("light"),
   faviconUrl: z.string().optional(),
   fontFamily: z.string().default("Inter, sans-serif"),
   loginPage: loginPageSchema,

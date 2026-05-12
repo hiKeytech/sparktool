@@ -229,7 +229,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
   return (
     <AuthScope value={auth}>
       <AppShell
-        className="bg-gray-50"
+        className="bg-(--app-bg)"
         header={{ height: 70 }}
         navbar={{
           breakpoint: "md",
@@ -380,7 +380,10 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
         </AppShell.Header>
 
         {/* Sidebar Navigation */}
-        <AppShell.Navbar className="bg-white border-r border-gray-200" p="md">
+        <AppShell.Navbar
+          className="border-r bg-(--app-surface) border-(--app-border)"
+          p="md"
+        >
           <Stack gap="xs">
             <Text c="dimmed" fw={600} mb="xs" size="xs" tt="uppercase">
               Administration
@@ -392,7 +395,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                 className={`rounded-lg transition-all duration-200 ${
                   isActivePath(item.path)
                     ? "bg-fun-green-50 text-fun-green-700 border-fun-green-200"
-                    : "hover:bg-gray-50"
+                    : "hover:bg-(--app-surface-soft)"
                 }`}
                 description={item.description}
                 key={item.path}
@@ -457,7 +460,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
         </AppShell.Navbar>
 
         {/* Main Content */}
-        <AppShell.Main className="bg-gray-50">
+        <AppShell.Main className="bg-(--app-bg)">
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             className="min-h-full"

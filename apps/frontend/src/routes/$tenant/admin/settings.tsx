@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useForm } from "@mantine/form";
@@ -8,8 +8,11 @@ import {
   Badge,
   Button,
   Container,
+  FileInput,
   Group,
+  Image,
   Paper,
+  Select,
   SimpleGrid,
   Stack,
   Switch,
@@ -22,15 +25,35 @@ import {
   IconBrandTrello,
   IconGlobe,
   IconLock,
+  IconUpload,
   IconWorld,
 } from "@tabler/icons-react";
 
 import type { Tenant } from "@/schemas/tenant-contract";
-import { useUpdateTenant } from "@/services/hooks";
+import { useUpdateTenant, useUploadBrandingAsset } from "@/services/hooks";
+import { BRANDING_IMAGE_ACCEPT } from "@/server/branding-assets";
 import { applyBrandingTheme } from "@/utils/branding-theme";
+
+const hexColorPattern = /^#(?:[\da-fA-F]{3}){1,2}$/;
+
+function normalizeHexColorInput(value: string) {
+  const normalized = value.trim();
+  const shortHexMatch = /^#([\da-fA-F]{3})$/.exec(normalized);
+
+  if (shortHexMatch) {
+    return `#${shortHexMatch[1]
+      .split("")
+      .map((channel) => `${channel}${channel}`)
+      .join("")
+      .toLowerCase()}`;
+  }
+
+  return normalized.toLowerCase();
+}
 
 const tenantSettingsSchema = z.object({
   allowSignup: z.boolean(),
+  colorScheme: z.enum(["light", "dark"]),
   copyright: z.string().trim().min(1, "Copyright text is required"),
   featuredCoursesCtaLabel: z
     .string()
@@ -69,9 +92,15 @@ const tenantSettingsSchema = z.object({
   supportEmail: z.email("Enter a valid support email").or(z.literal("")),
   logoUrl: z.string().trim().min(1, "Logo URL is required"),
   portalName: z.string().trim().min(1, "Portal name is required"),
-  primaryColor: z.string().trim().min(1, "Primary color is required"),
+  primaryColor: z
+    .string()
+    .trim()
+    .regex(hexColorPattern, "Enter a valid hex color like #1b7339"),
   restrictedDomains: z.string().trim(),
-  secondaryColor: z.string().trim().min(1, "Secondary color is required"),
+  secondaryColor: z
+    .string()
+    .trim()
+    .regex(hexColorPattern, "Enter a valid hex color like #eef6f1"),
 });
 
 type TenantSettingsFormValues = z.infer<typeof tenantSettingsSchema>;
@@ -85,6 +114,7 @@ function getRestrictedDomains(tenant: Tenant) {
 function mapTenantToFormValues(tenant: Tenant): TenantSettingsFormValues {
   return {
     allowSignup: tenant.config.auth.allowSignup,
+    colorScheme: tenant.config.branding.colorScheme,
     copyright: tenant.config.publicSite.copyright,
     featuredCoursesCtaLabel: tenant.config.publicSite.featuredCoursesCtaLabel,
     featuredCoursesTitle: tenant.config.publicSite.featuredCoursesTitle,
@@ -122,6 +152,10 @@ function parseDomains(value: string) {
   );
 }
 
+function serializeFormValues(values: TenantSettingsFormValues) {
+  return JSON.stringify(values);
+}
+
 export const Route = createFileRoute("/$tenant/admin/settings")({
   component: AdminSettings,
 });
@@ -130,19 +164,59 @@ function AdminSettings() {
   const { tenant } = Route.useRouteContext() as { tenant: Tenant };
   const router = useRouter();
   const updateTenant = useUpdateTenant();
+  const uploadBrandingAsset = useUploadBrandingAsset();
+  const [uploadingField, setUploadingField] = useState<
+    null | "heroLogoUrl" | "logoUrl"
+  >(null);
+  const tenantFormValues = useMemo(
+    () => mapTenantToFormValues(tenant),
+    [tenant],
+  );
   const form = useForm<TenantSettingsFormValues>({
-    initialValues: mapTenantToFormValues(tenant),
+    initialValues: tenantFormValues,
     validate: zod4Resolver(tenantSettingsSchema),
   });
+  const lastSyncedTenantValues = useRef(serializeFormValues(tenantFormValues));
 
   useEffect(() => {
-    const nextValues = mapTenantToFormValues(tenant);
-    form.setValues(nextValues);
-    form.resetDirty(nextValues);
-  }, [form, tenant]);
+    const nextValuesKey = serializeFormValues(tenantFormValues);
+
+    if (lastSyncedTenantValues.current === nextValuesKey) {
+      return;
+    }
+
+    lastSyncedTenantValues.current = nextValuesKey;
+    form.setValues(tenantFormValues);
+    form.resetDirty(tenantFormValues);
+  }, [form, tenantFormValues]);
+
+  const handleBrandingUpload = async (
+    field: "heroLogoUrl" | "logoUrl",
+    file: File | null,
+  ) => {
+    if (!file) {
+      return;
+    }
+
+    setUploadingField(field);
+
+    try {
+      const uploaded = await uploadBrandingAsset.mutateAsync({
+        file,
+        scope: "tenant",
+        tenantId: tenant.id,
+      });
+
+      form.setFieldValue(field, uploaded.url);
+    } finally {
+      setUploadingField(null);
+    }
+  };
 
   const saveChanges = form.onSubmit(async (values) => {
     const domains = parseDomains(values.restrictedDomains);
+    const primaryColor = normalizeHexColorInput(values.primaryColor);
+    const secondaryColor = normalizeHexColorInput(values.secondaryColor);
     const updatedTenant = await updateTenant.mutateAsync({
       tenantData: {
         config: {
@@ -163,10 +237,11 @@ function AdminSettings() {
               heading: values.loginHeading,
               subheading: values.loginSubheading,
             },
+            colorScheme: values.colorScheme,
             logoUrl: values.logoUrl,
             portalName: values.portalName,
-            primaryColor: values.primaryColor,
-            secondaryColor: values.secondaryColor,
+            primaryColor,
+            secondaryColor,
           },
           publicSite: {
             ...tenant.config.publicSite,
@@ -195,6 +270,7 @@ function AdminSettings() {
     });
 
     const nextValues = mapTenantToFormValues(updatedTenant);
+    lastSyncedTenantValues.current = serializeFormValues(nextValues);
     form.setValues(nextValues);
     form.resetDirty(nextValues);
     applyBrandingTheme({
@@ -215,15 +291,15 @@ function AdminSettings() {
             Portal Settings
           </Title>
           <Text c="dimmed" maw={760} mt="sm">
-            Manage the identity, landing page copy, and self-service access
-            policy for {tenant.name}.
+            Update the name, look, sign-up settings, and public page text for
+            {tenant.name}.
           </Text>
         </div>
 
-        <Alert color="blue" title="Portal-specific changes">
-          Updates here affect this organization&apos;s landing page, login page,
-          and learner self-registration flow. They do not change the
-          platform-wide SparkTool login.
+        <Alert color="blue" title="What this changes">
+          These changes affect this organization&apos;s public page, sign-in
+          page, and learner sign-up settings. They do not change the main
+          SparkTool sign-in page.
         </Alert>
 
         <form onSubmit={saveChanges}>
@@ -232,28 +308,82 @@ function AdminSettings() {
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
                   <IconBrandTrello className="text-fun-green-700" size={20} />
-                  <Title order={3}>Brand Identity</Title>
+                  <Title order={3}>Branding</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
                   <TextInput
                     label="Portal name"
                     {...form.getInputProps("portalName")}
                   />
-                  <TextInput
-                    label="Logo URL"
-                    {...form.getInputProps("logoUrl")}
+                  <Select
+                    data={[
+                      { label: "Light", value: "light" },
+                      { label: "Dark", value: "dark" },
+                    ]}
+                    label="Appearance"
+                    {...form.getInputProps("colorScheme")}
                   />
-                  <TextInput
-                    label="Landing logo URL"
-                    {...form.getInputProps("heroLogoUrl")}
-                  />
+                  <Stack gap="xs">
+                    <FileInput
+                      accept={BRANDING_IMAGE_ACCEPT}
+                      clearable
+                      description="Accepted formats: PNG, JPEG, WEBP, SVG. Save your changes after uploading."
+                      label="Logo upload"
+                      leftSection={<IconUpload size={16} />}
+                      onChange={(file) => handleBrandingUpload("logoUrl", file)}
+                      placeholder="Choose logo image"
+                    />
+                    <TextInput
+                      label="Logo URL"
+                      {...form.getInputProps("logoUrl")}
+                    />
+                    {form.values.logoUrl ? (
+                      <Image
+                        alt={`${tenant.name} logo preview`}
+                        className="max-w-40 rounded-md border border-(--app-border) bg-(--app-surface-soft)"
+                        fit="contain"
+                        h={72}
+                        src={form.values.logoUrl}
+                      />
+                    ) : null}
+                  </Stack>
+                  <Stack gap="xs">
+                    <FileInput
+                      accept={BRANDING_IMAGE_ACCEPT}
+                      clearable
+                      description="Accepted formats: PNG, JPEG, WEBP, SVG. Save your changes after uploading."
+                      label="Landing logo upload"
+                      leftSection={<IconUpload size={16} />}
+                      onChange={(file) =>
+                        handleBrandingUpload("heroLogoUrl", file)
+                      }
+                      placeholder="Choose landing logo image"
+                    />
+                    <TextInput
+                      label="Landing logo URL"
+                      {...form.getInputProps("heroLogoUrl")}
+                    />
+                    {form.values.heroLogoUrl ? (
+                      <Image
+                        alt={`${tenant.name} landing logo preview`}
+                        className="max-w-40 rounded-md border border-(--app-border) bg-(--app-surface-soft)"
+                        fit="contain"
+                        h={72}
+                        src={form.values.heroLogoUrl}
+                      />
+                    ) : null}
+                  </Stack>
                   <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                     <TextInput
+                      description="Use a hex value like #1b7339"
                       label="Primary color"
+                      placeholder="#1b7339"
                       {...form.getInputProps("primaryColor")}
                     />
                     <TextInput
+                      description="Use a hex value like #eef6f1"
                       label="Secondary color"
+                      placeholder="#eef6f1"
                       {...form.getInputProps("secondaryColor")}
                     />
                   </SimpleGrid>
@@ -263,7 +393,7 @@ function AdminSettings() {
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
                   <IconLock className="text-fun-green-700" size={20} />
-                  <Title order={3}>Access Policy</Title>
+                  <Title order={3}>Sign-up settings</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
                   <Switch
@@ -317,7 +447,7 @@ function AdminSettings() {
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
                   <IconWorld className="text-fun-green-700" size={20} />
-                  <Title order={3}>Portal Landing Page</Title>
+                  <Title order={3}>Public page</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
                   <TextInput
@@ -391,7 +521,7 @@ function AdminSettings() {
               </Button>
               <Button
                 className="bg-fun-green-800 hover:bg-fun-green-700"
-                disabled={!form.isDirty()}
+                disabled={!form.isDirty() || uploadingField !== null}
                 loading={updateTenant.isPending}
                 type="submit"
               >

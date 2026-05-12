@@ -1,5 +1,7 @@
 import { randomUUID } from "node:crypto";
+import { Readable } from "node:stream";
 import { Router } from "express";
+import multer from "multer";
 import { v2 as cloudinary } from "cloudinary";
 import { z } from "zod";
 import { lessonResourceSchema } from "sparktool-contracts/course-lesson";
@@ -9,11 +11,32 @@ import { requireSession } from "../middleware/session.js";
 
 export const lessonResourcesRouter = Router();
 
-const serializedFileSchema = z.object({
-  dataUrl: z.string().min(1),
-  name: z.string().min(1),
-  size: z.number().nonnegative(),
-  type: z.string().min(1),
+const LESSON_RESOURCE_MAX_BYTES = 25 * 1024 * 1024;
+
+const lessonResourceUpload = multer({
+  limits: {
+    fileSize: LESSON_RESOURCE_MAX_BYTES,
+  },
+  storage: multer.memoryStorage(),
+});
+
+const lessonResourceDataSchema = lessonResourceSchema
+  .omit({
+    createdAt: true,
+    id: true,
+    storageKey: true,
+    storageProvider: true,
+    storageResourceType: true,
+    updatedAt: true,
+  })
+  .passthrough();
+
+const createLessonResourceBodySchema = z.object({
+  resourceData: lessonResourceDataSchema,
+});
+
+const updateLessonResourceBodySchema = z.object({
+  resourceData: lessonResourceDataSchema.partial().passthrough(),
 });
 
 let cloudinaryConfigured = false;
@@ -42,16 +65,38 @@ function configureCloudinary() {
   cloudinaryConfigured = true;
 }
 
-async function uploadToCloudinary(
-  lessonId: string,
-  file: z.infer<typeof serializedFileSchema>,
-) {
+async function uploadToCloudinary(lessonId: string, file: Express.Multer.File) {
   configureCloudinary();
-  const result = await cloudinary.uploader.upload(file.dataUrl, {
-    folder: `lesson-resources/${lessonId}`,
-    public_id: `${Date.now()}-${randomUUID()}`,
-    resource_type: "auto",
+  const result = await new Promise<{
+    bytes: number;
+    public_id: string;
+    resource_type: string;
+    secure_url: string;
+  }>((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        folder: `lesson-resources/${lessonId}`,
+        public_id: `${Date.now()}-${randomUUID()}`,
+        resource_type: "auto",
+      },
+      (error, uploadResult) => {
+        if (error || !uploadResult) {
+          reject(error ?? new Error("Lesson resource upload failed."));
+          return;
+        }
+
+        resolve({
+          bytes: uploadResult.bytes,
+          public_id: uploadResult.public_id,
+          resource_type: uploadResult.resource_type,
+          secure_url: uploadResult.secure_url,
+        });
+      },
+    );
+
+    Readable.from(file.buffer).pipe(uploadStream);
   });
+
   return {
     fileSize: result.bytes,
     storageKey: result.public_id,
@@ -102,61 +147,102 @@ async function assertLessonTenantAccess(lessonId: string, tenantId: string) {
   return lesson;
 }
 
-// POST / — create lesson resource
-lessonResourcesRouter.post("/", requireSession, async (request, response) => {
-  try {
-    const { resourceData, file } = request.body;
-    const tenantId = request.session.activeTenantId!;
-
-    const lesson = await assertLessonTenantAccess(
-      resourceData.lessonId,
-      tenantId,
-    );
-
-    let nextUrl = resourceData.url;
-    let nextFileSize = resourceData.fileSize;
-    let nextStorageKey: string | undefined;
-    let nextStorageProvider: "cloudinary" | "local" | undefined;
-    let nextStorageResourceType: "image" | "raw" | "video" | undefined;
-
-    if (file) {
-      const uploaded = await uploadToCloudinary(lesson.id, file);
-      nextUrl = uploaded.url;
-      nextFileSize = uploaded.fileSize;
-      nextStorageKey = uploaded.storageKey;
-      nextStorageProvider = uploaded.storageProvider;
-      nextStorageResourceType = uploaded.storageResourceType;
-    }
-
-    if (resourceData.type !== "link" && !nextUrl) {
-      return response.status(400).json({
-        message: "A file upload or URL is required for this resource type.",
-      });
-    }
-
-    const resource = lessonResourceSchema.parse({
-      ...resourceData,
-      createdAt: Date.now(),
-      fileSize: nextFileSize,
-      id: randomUUID(),
-      storageKey: nextStorageKey,
-      storageProvider: nextStorageProvider,
-      storageResourceType: nextStorageResourceType,
-      updatedAt: Date.now(),
-      url: nextUrl,
-    });
-
-    await courseLessonRepository.update(lesson.id, {
-      resources: [...lesson.resources, resource],
-    });
-
-    response.json(resource.id);
-  } catch (error) {
-    response.status(500).json({
-      message: error instanceof Error ? error.message : "Internal server error",
+function parseMultipartJsonField<TSchema extends z.ZodTypeAny>(input: {
+  schema: TSchema;
+  value: unknown;
+}) {
+  if (typeof input.value !== "string") {
+    throw Object.assign(new Error("Resource details are required."), {
+      status: 400,
     });
   }
-});
+
+  let parsedJson: unknown;
+
+  try {
+    parsedJson = JSON.parse(input.value);
+  } catch {
+    throw Object.assign(new Error("Resource details must be valid JSON."), {
+      status: 400,
+    });
+  }
+
+  const parsed = input.schema.safeParse(parsedJson);
+
+  if (!parsed.success) {
+    throw Object.assign(new Error("Invalid lesson resource details."), {
+      status: 400,
+    });
+  }
+
+  return parsed.data;
+}
+
+// POST / — create lesson resource
+lessonResourcesRouter.post(
+  "/",
+  requireSession,
+  lessonResourceUpload.single("file"),
+  async (request, response) => {
+    try {
+      const resourceData = parseMultipartJsonField({
+        schema: createLessonResourceBodySchema.shape.resourceData,
+        value: request.body.resourceData,
+      });
+      const file = request.file;
+      const tenantId = request.session.activeTenantId!;
+
+      const lesson = await assertLessonTenantAccess(
+        resourceData.lessonId,
+        tenantId,
+      );
+
+      let nextUrl = resourceData.url;
+      let nextFileSize = resourceData.fileSize;
+      let nextStorageKey: string | undefined;
+      let nextStorageProvider: "cloudinary" | "local" | undefined;
+      let nextStorageResourceType: "image" | "raw" | "video" | undefined;
+
+      if (file) {
+        const uploaded = await uploadToCloudinary(lesson.id, file);
+        nextUrl = uploaded.url;
+        nextFileSize = uploaded.fileSize;
+        nextStorageKey = uploaded.storageKey;
+        nextStorageProvider = uploaded.storageProvider;
+        nextStorageResourceType = uploaded.storageResourceType;
+      }
+
+      if (resourceData.type !== "link" && !nextUrl) {
+        return response.status(400).json({
+          message: "A file upload or URL is required for this resource type.",
+        });
+      }
+
+      const resource = lessonResourceSchema.parse({
+        ...resourceData,
+        createdAt: Date.now(),
+        fileSize: nextFileSize,
+        id: randomUUID(),
+        storageKey: nextStorageKey,
+        storageProvider: nextStorageProvider,
+        storageResourceType: nextStorageResourceType,
+        updatedAt: Date.now(),
+        url: nextUrl,
+      });
+
+      await courseLessonRepository.update(lesson.id, {
+        resources: [...lesson.resources, resource],
+      });
+
+      response.json(resource.id);
+    } catch (error) {
+      response.status(500).json({
+        message:
+          error instanceof Error ? error.message : "Internal server error",
+      });
+    }
+  },
+);
 
 // GET /:resourceId — get lesson resource
 lessonResourcesRouter.get(
@@ -200,9 +286,14 @@ lessonResourcesRouter.get(
 lessonResourcesRouter.patch(
   "/:resourceId",
   requireSession,
+  lessonResourceUpload.single("file"),
   async (request, response) => {
     try {
-      const { resourceData, file } = request.body;
+      const resourceData = parseMultipartJsonField({
+        schema: updateLessonResourceBodySchema.shape.resourceData,
+        value: request.body.resourceData,
+      });
+      const file = request.file;
       const tenantId = request.session.activeTenantId!;
       const { lesson, resource } = await getLessonResourceOrThrow(
         request.params.resourceId as string,

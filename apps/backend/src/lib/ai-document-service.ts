@@ -6,7 +6,9 @@ const MAX_CHUNK_LENGTH = 1200;
 const CHUNK_OVERLAP = 200;
 
 function decodeDataUrl(dataUrl: string) {
-  const match = dataUrl.match(/^data:([^;,]+)?(?:;charset=[^;,]+)?;base64,(.+)$/);
+  const match = dataUrl.match(
+    /^data:([^;,]+)?(?:;charset=[^;,]+)?;base64,(.+)$/,
+  );
 
   if (!match) {
     throw Object.assign(new Error("Invalid document upload payload."), {
@@ -21,7 +23,10 @@ function decodeDataUrl(dataUrl: string) {
 }
 
 function compactText(value: string) {
-  return value.replace(/\u0000/g, " ").replace(/\s+/g, " ").trim();
+  return value
+    .replace(/\u0000/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function buildChunks(text: string) {
@@ -70,10 +75,7 @@ async function extractDocxText(buffer: Buffer) {
 function inferDocumentType(file: CreateAiDocumentInput["file"]) {
   const filename = file.name.toLowerCase();
 
-  if (
-    file.type === "application/pdf" ||
-    filename.endsWith(".pdf")
-  ) {
+  if (file.type === "application/pdf" || filename.endsWith(".pdf")) {
     return "pdf";
   }
 
@@ -92,7 +94,9 @@ function inferDocumentType(file: CreateAiDocumentInput["file"]) {
   return "unsupported";
 }
 
-export async function parseUploadedDocument(file: CreateAiDocumentInput["file"]) {
+export async function parseUploadedDocument(
+  file: CreateAiDocumentInput["file"],
+) {
   const { buffer, mimeType } = decodeDataUrl(file.dataUrl);
   const detectedType = inferDocumentType(file);
 
@@ -104,14 +108,15 @@ export async function parseUploadedDocument(file: CreateAiDocumentInput["file"])
     extractedText = await extractDocxText(buffer);
   } else if (detectedType === "doc") {
     throw Object.assign(
-      new Error("Legacy .doc files are not supported yet. Please upload .docx or .pdf."),
+      new Error(
+        "Legacy .doc files are not supported yet. Please upload .docx or .pdf.",
+      ),
       { status: 400 },
     );
   } else {
-    throw Object.assign(
-      new Error("Only PDF and DOCX files are supported."),
-      { status: 400 },
-    );
+    throw Object.assign(new Error("Only PDF and DOCX files are supported."), {
+      status: 400,
+    });
   }
 
   const chunks = buildChunks(extractedText);

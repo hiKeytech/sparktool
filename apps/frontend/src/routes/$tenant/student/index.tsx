@@ -80,7 +80,7 @@ function StudentDashboard() {
                 <Text c="dimmed" size="sm">
                   Home
                 </Text>
-                <Title className="text-gray-800" order={2}>
+                <Title className="text-(--app-text)" order={2}>
                   Welcome back, {user?.displayName}
                 </Title>
               </div>
@@ -182,7 +182,7 @@ function StudentDashboard() {
             {userProgress && userProgress.length > 0 && (
               <div data-aos="fade-up" data-aos-delay="200">
                 <Card p="lg" radius="lg" withBorder>
-                  <Title className="text-gray-800" mb="md" order={4}>
+                  <Title className="text-(--app-text)" mb="md" order={4}>
                     Current Courses
                   </Title>
                   <Stack gap="md">
@@ -194,7 +194,7 @@ function StudentDashboard() {
                       >
                         <Group justify="space-between" mb="xs">
                           <div>
-                            <Text className="text-gray-800" fw={500}>
+                            <Text className="text-(--app-text)" fw={500}>
                               {index + 1}. {getCourseTitle(progress.courseId)}
                             </Text>
                             <Text c="dimmed" size="sm">
@@ -234,7 +234,7 @@ function StudentDashboard() {
             {/* Tenant Branding Card */}
             <div data-aos="fade-up" data-aos-delay="300">
               <Card
-                className="text-center bg-gray-50"
+                className="text-center bg-(--app-surface-soft)"
                 p="lg"
                 radius="lg"
                 withBorder
@@ -247,7 +247,7 @@ function StudentDashboard() {
                     src={logoUrl}
                   />
                 </div>
-                <Title className="mb-1 text-gray-800" order={4}>
+                <Title className="mb-1 text-(--app-text)" order={4}>
                   {portalName}
                 </Title>
                 <Text c="dimmed" size="sm">
@@ -264,7 +264,7 @@ function StudentDashboard() {
             {/* Progress Summary Card */}
             <div data-aos="fade-up" data-aos-delay="200">
               <Card p="lg" radius="lg" withBorder>
-                <Title className="text-gray-800" mb="md" order={4}>
+                <Title className="text-(--app-text)" mb="md" order={4}>
                   Progress Summary
                 </Title>
                 <SimpleGrid cols={1} spacing="sm">
@@ -272,7 +272,7 @@ function StudentDashboard() {
                     <Text className="text-fun-green-600" fw={700} size="xl">
                       {completedCourses}
                     </Text>
-                    <Text className="text-gray-600" size="sm">
+                    <Text className="text-(--app-text-muted)" size="sm">
                       Completed Courses
                     </Text>
                   </div>
@@ -280,15 +280,19 @@ function StudentDashboard() {
                     <Text className="text-blue-600" fw={700} size="xl">
                       {inProgressCourses}
                     </Text>
-                    <Text className="text-gray-600" size="sm">
+                    <Text className="text-(--app-text-muted)" size="sm">
                       In Progress
                     </Text>
                   </div>
-                  <div className="p-3 text-center rounded-lg bg-gray-50">
-                    <Text className="text-gray-600" fw={700} size="xl">
+                  <div className="p-3 text-center rounded-lg bg-(--app-surface-soft)">
+                    <Text
+                      className="text-(--app-text-muted)"
+                      fw={700}
+                      size="xl"
+                    >
                       {totalCourses}
                     </Text>
-                    <Text className="text-gray-600" size="sm">
+                    <Text className="text-(--app-text-muted)" size="sm">
                       Total Enrolled
                     </Text>
                   </div>
@@ -299,21 +303,28 @@ function StudentDashboard() {
             {/* Recent Activity Card */}
             <div data-aos="fade-up" data-aos-delay="300">
               <Card p="lg" radius="lg" withBorder>
-                <Title className="text-gray-800" mb="md" order={4}>
+                <Title className="text-(--app-text)" mb="md" order={4}>
                   Recent Activity
                 </Title>
                 <Stack gap="md">
                   {userProgress?.slice(0, 2).map((progress) => (
                     <div key={progress.courseId}>
-                      <Text className="mb-1 text-gray-800" fw={500} size="sm">
+                      <Text
+                        className="mb-1 text-(--app-text)"
+                        fw={500}
+                        size="sm"
+                      >
                         Course Progress Updated
                       </Text>
-                      <Text className="mb-2 text-gray-600" size="sm">
+                      <Text className="mb-2 text-(--app-text-muted)" size="sm">
                         {getCourseTitle(progress.courseId)} -{" "}
                         {progress.completionPercentage}% complete
                       </Text>
                       <Group gap="xs">
-                        <IconClock className="text-gray-400" size={12} />
+                        <IconClock
+                          className="text-(--app-text-subtle)"
+                          size={12}
+                        />
                         <Text c="dimmed" size="xs">
                           {progress.lastAccessedAt
                             ? new Date(

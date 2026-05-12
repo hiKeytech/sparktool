@@ -560,13 +560,13 @@ function UserProfile() {
                 <div>
                   <Group justify="space-between" mb="md">
                     <div>
-                      <Text fw={500}>Two-Factor Authentication</Text>
+                      <Text fw={500}>Extra sign-in protection</Text>
                       <Text c="dimmed" size="sm">
-                        Add an extra layer of security to your account
+                        Add another step to help protect your account
                       </Text>
                     </div>
                     <Button color="gray" disabled variant="outline">
-                      Enable 2FA
+                      Coming soon
                     </Button>
                   </Group>
                 </div>

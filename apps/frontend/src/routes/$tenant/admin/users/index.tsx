@@ -270,10 +270,10 @@ function UserManagement() {
         {/* Header */}
         <Group data-aos="fade-right" justify="space-between">
           <div>
-            <Title className="mb-2 text-gray-800" order={1}>
+            <Title className="mb-2 text-(--app-text)" order={1}>
               User Management
             </Title>
-            <Text className="text-gray-600" size="lg">
+            <Text className="text-(--app-text-muted)" size="lg">
               Manage student accounts, track progress, and control access
             </Text>
           </div>
@@ -299,7 +299,7 @@ function UserManagement() {
         <Grid data-aos="fade-up" data-aos-delay="100">
           <Grid.Col span={{ base: 6, md: 3 }}>
             <Card className="text-center" p="md" radius="md" withBorder>
-              <Text className="mb-1 text-gray-600" size="sm">
+              <Text className="mb-1 text-(--app-text-muted)" size="sm">
                 Total Users
               </Text>
               <Text className="text-blue-600" fw={700} size="xl">
@@ -309,7 +309,7 @@ function UserManagement() {
           </Grid.Col>
           <Grid.Col span={{ base: 6, md: 3 }}>
             <Card className="text-center" p="md" radius="md" withBorder>
-              <Text className="mb-1 text-gray-600" size="sm">
+              <Text className="mb-1 text-(--app-text-muted)" size="sm">
                 Active Students
               </Text>
               <Text className="text-green-600" fw={700} size="xl">
@@ -319,7 +319,7 @@ function UserManagement() {
           </Grid.Col>
           <Grid.Col span={{ base: 6, md: 3 }}>
             <Card className="text-center" p="md" radius="md" withBorder>
-              <Text className="mb-1 text-gray-600" size="sm">
+              <Text className="mb-1 text-(--app-text-muted)" size="sm">
                 Avg Progress
               </Text>
               <Text className="text-orange-600" fw={700} size="xl">
@@ -329,7 +329,7 @@ function UserManagement() {
           </Grid.Col>
           <Grid.Col span={{ base: 6, md: 3 }}>
             <Card className="text-center" p="md" radius="md" withBorder>
-              <Text className="mb-1 text-gray-600" size="sm">
+              <Text className="mb-1 text-(--app-text-muted)" size="sm">
                 Certificates
               </Text>
               <Text className="text-purple-600" fw={700} size="xl">

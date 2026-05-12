@@ -54,9 +54,6 @@ export function CourseCatalog() {
   const { data: userProgress = [] } = useUserProgress(tenant.id, user?.uid);
   const enrollMutation = useEnrollInCourse();
 
-  console.log("userProgress", userProgress);
-  console.log("enrolled courses", user);
-
   // Helper functions to determine enrollment status
   const isEnrolled = (courseId: string) => {
     return user?.enrolledCourses?.includes(courseId) || false;
@@ -179,17 +176,17 @@ export function CourseCatalog() {
   return (
     <Container className="py-8" size="xl">
       <div
-        className="p-6 mb-8 bg-white border rounded-lg shadow-sm border-stone-200"
+        className="p-6 mb-8 border rounded-lg shadow-sm bg-(--app-surface) border-(--app-border)"
         data-aos="fade-up"
         data-aos-duration="300"
       >
         <Stack gap="xl">
           {/* Header */}
           <div>
-            <Title className="mb-2 text-gray-800" order={1}>
+            <Title className="mb-2 text-(--app-text)" order={1}>
               Course Catalog
             </Title>
-            <Text className="text-gray-600" size="lg">
+            <Text className="text-(--app-text-muted)" size="lg">
               Discover new skills and advance your career with our comprehensive
               courses
             </Text>
@@ -272,11 +269,11 @@ export function CourseCatalog() {
 
                     {/* Course Info */}
                     <div className="flex-1">
-                      <Title className="mb-2 text-gray-800" order={4}>
+                      <Title className="mb-2 text-(--app-text)" order={4}>
                         {course.title}
                       </Title>
                       <Text
-                        className="mb-3 text-gray-600"
+                        className="mb-3 text-(--app-text-muted)"
                         lineClamp={2}
                         size="sm"
                       >
@@ -286,26 +283,39 @@ export function CourseCatalog() {
                       {/* Stats */}
                       <Group gap="lg" mb="md">
                         <Group gap="xs">
-                          <IconBooks className="text-gray-500" size={14} />
-                          <Text className="text-gray-600" size="xs">
+                          <IconBooks
+                            className="text-(--app-text-subtle)"
+                            size={14}
+                          />
+                          <Text className="text-(--app-text-muted)" size="xs">
                             {getCourseStats(course).sectionCount} sections
                           </Text>
                         </Group>
                         <Group gap="xs">
-                          <IconListCheck className="text-gray-500" size={14} />
-                          <Text className="text-gray-600" size="xs">
+                          <IconListCheck
+                            className="text-(--app-text-subtle)"
+                            size={14}
+                          />
+                          <Text className="text-(--app-text-muted)" size="xs">
                             {getCourseStats(course).lessonCount} lessons
                           </Text>
                         </Group>
                         <Group gap="xs">
-                          <IconClock className="text-gray-500" size={14} />
-                          <Text className="text-gray-600" size="xs">
+                          <IconClock
+                            className="text-(--app-text-subtle)"
+                            size={14}
+                          />
+                          <Text className="text-(--app-text-muted)" size="xs">
                             {getCourseStats(course).totalDurationHours}h
                           </Text>
                         </Group>
                       </Group>
 
-                      <Text className="mb-3 text-gray-700" fw={500} size="sm">
+                      <Text
+                        className="mb-3 text-(--app-text-muted)"
+                        fw={500}
+                        size="sm"
+                      >
                         {course.instructors
                           ?.map(({ name }: any) => name)
                           .join(", ") || "No instructor assigned"}
@@ -316,7 +326,10 @@ export function CourseCatalog() {
                         getCourseProgress(course.id) > 0 && (
                           <div className="mb-3">
                             <Group justify="space-between" mb="xs">
-                              <Text className="text-gray-600" size="xs">
+                              <Text
+                                className="text-(--app-text-muted)"
+                                size="xs"
+                              >
                                 Progress
                               </Text>
                               <Text
@@ -341,7 +354,7 @@ export function CourseCatalog() {
                       className={
                         isEnrolled(course.id)
                           ? "bg-fun-green-600 hover:bg-fun-green-700"
-                          : "bg-gray-800 hover:bg-gray-700"
+                          : "bg-(--app-text) hover:opacity-90"
                       }
                       fullWidth
                       loading={enrollMutation.isPending}
@@ -367,7 +380,7 @@ export function CourseCatalog() {
           {/* Empty State */}
           {filteredCourses.length === 0 && (
             <div className="py-12 text-center">
-              <Text className="text-gray-500" size="lg">
+              <Text className="text-(--app-text-subtle)" size="lg">
                 No courses found matching your criteria
               </Text>
               <Button

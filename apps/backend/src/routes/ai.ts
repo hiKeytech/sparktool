@@ -28,7 +28,9 @@ import { courseRepository } from "../repositories/course-repository.js";
 
 export const aiRouter = Router();
 
-function assertStudentAccess(actor: Awaited<ReturnType<typeof getActorFromSession>>) {
+function assertStudentAccess(
+  actor: Awaited<ReturnType<typeof getActorFromSession>>,
+) {
   if (!actor) {
     throw httpError(401, "Unauthorized");
   }
@@ -77,19 +79,27 @@ async function loadAccessibleDocuments(input: {
   tenantId: string;
 }) {
   const documents = await Promise.all(
-    input.documentIds.map((documentId) => aiDocumentRepository.getById(documentId)),
+    input.documentIds.map((documentId) =>
+      aiDocumentRepository.getById(documentId),
+    ),
   );
 
   return documents.map((document, index) => {
     if (!document) {
-      throw httpError(404, `Uploaded document ${input.documentIds[index]} not found.`);
+      throw httpError(
+        404,
+        `Uploaded document ${input.documentIds[index]} not found.`,
+      );
     }
 
     if (
       document.studentId !== input.studentId ||
       document.tenantId !== input.tenantId
     ) {
-      throw httpError(403, "You cannot use another student's uploaded document.");
+      throw httpError(
+        403,
+        "You cannot use another student's uploaded document.",
+      );
     }
 
     return document;
@@ -391,7 +401,8 @@ aiRouter.post("/chat", requireTenantSession, async (request, response) => {
 
   if (
     existingThread &&
-    (existingThread.studentId !== actor.id || existingThread.tenantId !== tenantId)
+    (existingThread.studentId !== actor.id ||
+      existingThread.tenantId !== tenantId)
   ) {
     throw httpError(403, "You cannot continue another student's AI chat.");
   }
@@ -418,7 +429,11 @@ aiRouter.post("/chat", requireTenantSession, async (request, response) => {
     previousMessages: [...(existingThread?.messages ?? []), userMessage],
   });
 
-  const nextMessages = [...(existingThread?.messages ?? []), userMessage, assistantMessage];
+  const nextMessages = [
+    ...(existingThread?.messages ?? []),
+    userMessage,
+    assistantMessage,
+  ];
   const now = Date.now();
 
   const thread = existingThread

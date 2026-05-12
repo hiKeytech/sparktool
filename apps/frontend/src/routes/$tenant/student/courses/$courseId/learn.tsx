@@ -163,9 +163,9 @@ function CourseView() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-(--app-bg)">
       {/* Breadcrumb Header */}
-      <div className="py-4 bg-white border-b border-gray-200">
+      <div className="py-4 border-b bg-(--app-surface) border-(--app-border)">
         <Container size="xl">
           <Group align="center" justify="space-between">
             <CourseBreadcrumbs
@@ -214,7 +214,7 @@ function CourseView() {
                   <Text className="mb-1 text-sm font-medium text-fun-green-600">
                     {currentSection?.title}
                   </Text>
-                  <Title className="text-gray-800" order={1}>
+                  <Title className="text-(--app-text)" order={1}>
                     {currentLesson?.title || courseStructure?.title}
                   </Title>
                 </div>
@@ -230,13 +230,13 @@ function CourseView() {
                 )}
 
                 {/* Tabs */}
-                <div className="border-b border-gray-200">
+                <div className="border-b border-(--app-border)">
                   <Group gap="lg">
                     <button
                       className={`pb-2 border-b-2 ${
                         activeTab === "description"
                           ? "border-fun-green-600 text-fun-green-600"
-                          : "border-transparent text-gray-600"
+                          : "border-transparent text-(--app-text-muted)"
                       }`}
                       onClick={() => setActiveTab("description")}
                       type="button"
@@ -247,7 +247,7 @@ function CourseView() {
                       className={`pb-2 border-b-2 ${
                         activeTab === "resources"
                           ? "border-fun-green-600 text-fun-green-600"
-                          : "border-transparent text-gray-600"
+                          : "border-transparent text-(--app-text-muted)"
                       }`}
                       onClick={() => setActiveTab("resources")}
                       type="button"
@@ -258,7 +258,7 @@ function CourseView() {
                       className={`pb-2 border-b-2 ${
                         activeTab === "discussion"
                           ? "border-fun-green-600 text-fun-green-600"
-                          : "border-transparent text-gray-600"
+                          : "border-transparent text-(--app-text-muted)"
                       }`}
                       onClick={() => setActiveTab("discussion")}
                       type="button"
@@ -272,7 +272,7 @@ function CourseView() {
                 <Card p="lg" withBorder>
                   {activeTab === "description" ? (
                     <div>
-                      <Text className="text-gray-700">
+                      <Text className="text-(--app-text-muted)">
                         {currentLesson?.description ||
                           courseStructure?.description}
                       </Text>
@@ -280,7 +280,7 @@ function CourseView() {
                         courseStructure.learningObjectives.length > 0 && (
                           <div className="mt-4">
                             <Text
-                              className="mb-2 font-medium text-gray-800"
+                              className="mb-2 font-medium text-(--app-text)"
                               size="sm"
                             >
                               Learning Objectives:
@@ -289,7 +289,7 @@ function CourseView() {
                               {courseStructure.learningObjectives.map(
                                 (objective: string, index: number) => (
                                   <li
-                                    className="text-sm text-gray-600"
+                                    className="text-sm text-(--app-text-muted)"
                                     key={index}
                                   >
                                     {objective}
@@ -307,19 +307,22 @@ function CourseView() {
                         <Stack gap="sm">
                           {currentLesson.resources.map((resource, index) => (
                             <Group
-                              className="p-3 border rounded-lg bg-gray-50"
+                              className="p-3 border rounded-lg bg-(--app-surface-soft) border-(--app-border)"
                               gap="sm"
                               key={index}
                             >
                               <IconFileText
-                                className="text-gray-600"
+                                className="text-(--app-text-muted)"
                                 size={16}
                               />
                               <div className="flex-1">
                                 <Text className="font-medium" size="sm">
                                   {resource.title}
                                 </Text>
-                                <Text className="text-gray-600" size="xs">
+                                <Text
+                                  className="text-(--app-text-muted)"
+                                  size="xs"
+                                >
                                   {resource.type.charAt(0).toUpperCase() +
                                     resource.type.slice(1)}
                                 </Text>
@@ -338,13 +341,13 @@ function CourseView() {
                           ))}
                         </Stack>
                       ) : (
-                        <Text className="text-gray-500">
+                        <Text className="text-(--app-text-subtle)">
                           No resources available for this lesson.
                         </Text>
                       )}
                     </div>
                   ) : (
-                    <Text className="text-gray-700">
+                    <Text className="text-(--app-text-muted)">
                       Ask or answer questions about this lesson to discuss
                       topics with other students and instructors.
                     </Text>
@@ -359,7 +362,7 @@ function CourseView() {
                         currentLesson.id,
                         currentSection?.id || "",
                       )
-                        ? "bg-gray-400 hover:bg-gray-500"
+                        ? "bg-(--app-text-subtle) hover:opacity-90"
                         : "bg-fun-green-600 hover:bg-fun-green-700"
                     }`}
                     disabled={isLessonCompleted(

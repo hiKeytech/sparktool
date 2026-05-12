@@ -8,6 +8,7 @@ import express, {
 } from "express";
 import helmet from "helmet";
 import { getMongoConnectionStatus, pingMongo } from "./db/mongo.js";
+import { serverEnv } from "./env.js";
 import { PlatformConfigService } from "./services/platform-config-service.js";
 import { TenantService } from "./services/tenant-service.js";
 import { getActorFromSession, httpError } from "./lib/request-helpers.js";
@@ -35,6 +36,7 @@ import { notificationsRouter } from "./routes/notifications.js";
 import { activityLogsRouter } from "./routes/activity-logs.js";
 import { tenantsRouter } from "./routes/tenants.js";
 import { dashboardRouter } from "./routes/dashboard.js";
+import { brandingAssetsRouter } from "./routes/branding-assets.js";
 import { lessonResourcesRouter } from "./routes/lesson-resources.js";
 import { aiRouter } from "./routes/ai.js";
 
@@ -43,7 +45,19 @@ export function createApp() {
 
   app.set("trust proxy", 1);
   app.use(helmet());
-  app.use(cors());
+  const allowedOrigins = [
+    ...(serverEnv.FRONTEND_URL?.split(",")
+      .map((u) => u.trim())
+      .filter(Boolean) ?? []),
+    ...(serverEnv.VERCEL_URL ? [`https://${serverEnv.VERCEL_URL}`] : []),
+  ];
+
+  app.use(
+    cors({
+      credentials: true,
+      origin: true,
+    }),
+  );
   app.use(express.json());
   app.use(sessionMiddleware);
 
@@ -166,6 +180,7 @@ export function createApp() {
   app.use("/api/notifications", notificationsRouter);
   app.use("/api/activity-logs", activityLogsRouter);
   app.use("/api/dashboard", dashboardRouter);
+  app.use("/api/branding-assets", brandingAssetsRouter);
   app.use("/api/lesson-resources", lessonResourcesRouter);
   app.use("/api/ai", aiRouter);
 

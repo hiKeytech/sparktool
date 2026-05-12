@@ -343,10 +343,10 @@ export function CourseDetails() {
               <Stack gap="md">
                 <Group justify="space-between" wrap="nowrap">
                   <div className="flex-1">
-                    <Title className="mb-2 text-gray-800" order={1}>
+                    <Title className="mb-2 text-(--app-text)" order={1}>
                       {course.title}
                     </Title>
-                    <Text className="mb-4 text-gray-600" size="lg">
+                    <Text className="mb-4 text-(--app-text-muted)" size="lg">
                       {course.shortDescription || course.description}
                     </Text>
                   </div>
@@ -368,8 +368,8 @@ export function CourseDetails() {
                   </Badge>
 
                   <Group gap="xs">
-                    <IconClock className="text-gray-500" size={16} />
-                    <Text className="text-gray-600" size="sm">
+                    <IconClock className="text-(--app-text-subtle)" size={16} />
+                    <Text className="text-(--app-text-muted)" size="sm">
                       {course.sections?.reduce(
                         (acc: number, section: any) =>
                           acc +
@@ -385,8 +385,8 @@ export function CourseDetails() {
                   </Group>
 
                   <Group gap="xs">
-                    <IconUsers className="text-gray-500" size={16} />
-                    <Text className="text-gray-600" size="sm">
+                    <IconUsers className="text-(--app-text-subtle)" size={16} />
+                    <Text className="text-(--app-text-muted)" size="sm">
                       {(course.enrollmentCount || 0).toLocaleString()} enrolled
                     </Text>
                   </Group>
@@ -398,7 +398,7 @@ export function CourseDetails() {
                         size="sm"
                         value={course.averageRating || 0}
                       />
-                      <Text className="text-gray-600" size="sm">
+                      <Text className="text-(--app-text-muted)" size="sm">
                         {(course.averageRating || 0).toFixed(1)} (
                         {course.totalRatings || 0})
                       </Text>
@@ -406,8 +406,8 @@ export function CourseDetails() {
                   )}
 
                   <Group gap="xs">
-                    <IconClock className="text-gray-500" size={16} />
-                    <Text className="text-gray-600" size="sm">
+                    <IconClock className="text-(--app-text-subtle)" size={16} />
+                    <Text className="text-(--app-text-muted)" size="sm">
                       Created {formatRelativeTime(course.createdAt)}
                     </Text>
                   </Group>
@@ -444,7 +444,7 @@ export function CourseDetails() {
                 <Title className="mb-4" order={3}>
                   About This Course
                 </Title>
-                <Text className="leading-relaxed text-gray-700">
+                <Text className="leading-relaxed text-(--app-text-muted)">
                   {course.description || "No description available."}
                 </Text>
               </Card>
@@ -478,7 +478,9 @@ export function CourseDetails() {
                     >
                       {course.learningObjectives.map((objective, index) => (
                         <List.Item key={index}>
-                          <Text className="text-gray-700">{objective}</Text>
+                          <Text className="text-(--app-text-muted)">
+                            {objective}
+                          </Text>
                         </List.Item>
                       ))}
                     </List>
@@ -501,17 +503,20 @@ export function CourseDetails() {
                   <Stack gap="md">
                     {course.sections.map((section, sectionIndex) => (
                       <div
-                        className="border border-gray-200 rounded-lg"
+                        className="border rounded-lg border-(--app-border)"
                         key={section.id}
                       >
-                        <div className="p-4 bg-gray-50 border-b border-gray-200">
+                        <div className="p-4 border-b bg-(--app-surface-soft) border-(--app-border)">
                           <Group align="center" justify="space-between">
                             <div>
-                              <Text className="font-medium text-gray-800">
+                              <Text className="font-medium text-(--app-text)">
                                 Section {sectionIndex + 1}: {section.title}
                               </Text>
                               {section.description && (
-                                <Text className="mt-1 text-gray-600" size="sm">
+                                <Text
+                                  className="mt-1 text-(--app-text-muted)"
+                                  size="sm"
+                                >
                                   {section.description}
                                 </Text>
                               )}
@@ -527,7 +532,7 @@ export function CourseDetails() {
                             <Stack gap="sm">
                               {section.lessons.map((lesson, lessonIndex) => (
                                 <Group
-                                  className="p-3 bg-white rounded-md border border-gray-100"
+                                  className="p-3 border rounded-md bg-(--app-surface) border-(--app-border)"
                                   gap="sm"
                                   key={lesson.id}
                                 >
@@ -536,13 +541,16 @@ export function CourseDetails() {
                                   </div>
                                   <div className="flex-1">
                                     <Text
-                                      className="font-medium text-gray-700"
+                                      className="font-medium text-(--app-text-muted)"
                                       size="sm"
                                     >
                                       {lesson.title}
                                     </Text>
                                     {lesson.type && (
-                                      <Text className="text-gray-500" size="xs">
+                                      <Text
+                                        className="text-(--app-text-subtle)"
+                                        size="xs"
+                                      >
                                         {lesson.type.charAt(0).toUpperCase() +
                                           lesson.type.slice(1)}
                                       </Text>
@@ -551,10 +559,13 @@ export function CourseDetails() {
                                   {lesson.estimatedDuration && (
                                     <Group gap="xs">
                                       <IconClock
-                                        className="text-gray-400"
+                                        className="text-(--app-text-subtle)"
                                         size={12}
                                       />
-                                      <Text className="text-gray-500" size="xs">
+                                      <Text
+                                        className="text-(--app-text-subtle)"
+                                        size="xs"
+                                      >
                                         {lesson.estimatedDuration}m
                                       </Text>
                                     </Group>
@@ -598,7 +609,9 @@ export function CourseDetails() {
                   >
                     {course.prerequisites.map((prerequisite, index) => (
                       <List.Item key={index}>
-                        <Text className="text-gray-700">{prerequisite}</Text>
+                        <Text className="text-(--app-text-muted)">
+                          {prerequisite}
+                        </Text>
                       </List.Item>
                     ))}
                   </List>
@@ -627,7 +640,7 @@ export function CourseDetails() {
                     <IconUser size={24} />
                   </ThemeIcon>
                   <div className="flex-1">
-                    <Text className="text-lg font-semibold text-gray-800">
+                    <Text className="text-lg font-semibold text-(--app-text)">
                       {course.instructors
                         ?.map((instructor) => instructor?.name || "Unknown")
                         .join(", ") || "No instructor assigned"}
@@ -640,7 +653,7 @@ export function CourseDetails() {
                           .filter((instructor) => instructor?.biography) // filtered
                           .map((instructor, index) => (
                             <Text
-                              className="text-gray-600"
+                              className="text-(--app-text-muted)"
                               key={index}
                               size="sm"
                             >
@@ -709,7 +722,10 @@ export function CourseDetails() {
                     <>
                       {tenant.config?.monetization?.model === "subscription" ? (
                         <div id="subscription-options" className="space-y-4">
-                          <Text size="sm" className="text-gray-600 font-medium">
+                          <Text
+                            size="sm"
+                            className="font-medium text-(--app-text-muted)"
+                          >
                             Choose a Subscription Plan to Access
                           </Text>
                           {tenant.config.monetization.subscriptionConfig
@@ -767,7 +783,10 @@ export function CourseDetails() {
                         </Button>
                       )}
 
-                      <Text className="text-center text-gray-500" size="sm">
+                      <Text
+                        className="text-center text-(--app-text-subtle)"
+                        size="sm"
+                      >
                         Join {(course.enrollmentCount || 0).toLocaleString()}{" "}
                         other students
                       </Text>
@@ -791,8 +810,11 @@ export function CourseDetails() {
                 <Stack gap="md">
                   <Group justify="space-between">
                     <Group gap="xs">
-                      <IconBook className="text-gray-500" size={16} />
-                      <Text className="text-gray-600" size="sm">
+                      <IconBook
+                        className="text-(--app-text-subtle)"
+                        size={16}
+                      />
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Sections
                       </Text>
                     </Group>
@@ -803,8 +825,11 @@ export function CourseDetails() {
 
                   <Group justify="space-between">
                     <Group gap="xs">
-                      <IconCheck className="text-gray-500" size={16} />
-                      <Text className="text-gray-600" size="sm">
+                      <IconCheck
+                        className="text-(--app-text-subtle)"
+                        size={16}
+                      />
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Lessons
                       </Text>
                     </Group>
@@ -819,8 +844,11 @@ export function CourseDetails() {
 
                   <Group justify="space-between">
                     <Group gap="xs">
-                      <IconClock className="text-gray-500" size={16} />
-                      <Text className="text-gray-600" size="sm">
+                      <IconClock
+                        className="text-(--app-text-subtle)"
+                        size={16}
+                      />
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Duration
                       </Text>
                     </Group>
@@ -841,8 +869,11 @@ export function CourseDetails() {
 
                   <Group justify="space-between">
                     <Group gap="xs">
-                      <IconTrendingUp className="text-gray-500" size={16} />
-                      <Text className="text-gray-600" size="sm">
+                      <IconTrendingUp
+                        className="text-(--app-text-subtle)"
+                        size={16}
+                      />
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Level
                       </Text>
                     </Group>
@@ -862,8 +893,11 @@ export function CourseDetails() {
 
                   <Group justify="space-between">
                     <Group gap="xs">
-                      <IconBook className="text-gray-500" size={16} />
-                      <Text className="text-gray-600" size="sm">
+                      <IconBook
+                        className="text-(--app-text-subtle)"
+                        size={16}
+                      />
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Category
                       </Text>
                     </Group>
@@ -874,8 +908,11 @@ export function CourseDetails() {
 
                   <Group justify="space-between">
                     <Group gap="xs">
-                      <IconCertificate className="text-gray-500" size={16} />
-                      <Text className="text-gray-600" size="sm">
+                      <IconCertificate
+                        className="text-(--app-text-subtle)"
+                        size={16}
+                      />
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Certificate
                       </Text>
                     </Group>
@@ -886,8 +923,11 @@ export function CourseDetails() {
 
                   <Group justify="space-between">
                     <Group gap="xs">
-                      <IconWorldWww className="text-gray-500" size={16} />
-                      <Text className="text-gray-600" size="sm">
+                      <IconWorldWww
+                        className="text-(--app-text-subtle)"
+                        size={16}
+                      />
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Access
                       </Text>
                     </Group>
@@ -898,8 +938,11 @@ export function CourseDetails() {
 
                   <Group justify="space-between">
                     <Group gap="xs">
-                      <IconClock className="text-gray-500" size={16} />
-                      <Text className="text-gray-600" size="sm">
+                      <IconClock
+                        className="text-(--app-text-subtle)"
+                        size={16}
+                      />
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Last Updated
                       </Text>
                     </Group>
@@ -949,7 +992,7 @@ export function CourseDetails() {
                 </Title>
                 <Stack gap="md">
                   <Group justify="space-between">
-                    <Text className="text-gray-600" size="sm">
+                    <Text className="text-(--app-text-muted)" size="sm">
                       Students Enrolled
                     </Text>
                     <Text className="font-medium" size="sm">
@@ -957,7 +1000,7 @@ export function CourseDetails() {
                     </Text>
                   </Group>
                   <Group justify="space-between">
-                    <Text className="text-gray-600" size="sm">
+                    <Text className="text-(--app-text-muted)" size="sm">
                       Completions
                     </Text>
                     <Text className="font-medium" size="sm">
@@ -966,7 +1009,7 @@ export function CourseDetails() {
                   </Group>
                   {(course.averageRating || 0) > 0 && (
                     <Group justify="space-between">
-                      <Text className="text-gray-600" size="sm">
+                      <Text className="text-(--app-text-muted)" size="sm">
                         Average Rating
                       </Text>
                       <Group gap="xs">

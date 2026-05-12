@@ -165,7 +165,7 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
   return (
     <AuthScope value={auth}>
       <AppShell
-        className="bg-gray-50"
+        className="bg-(--app-bg)"
         header={{ height: 70 }}
         navbar={{
           breakpoint: "sm",
@@ -264,7 +264,10 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
         </AppShell.Header>
 
         {/* Sidebar Navigation */}
-        <AppShell.Navbar className="bg-white border-r border-gray-200" p="md">
+        <AppShell.Navbar
+          className="border-r bg-(--app-surface) border-(--app-border)"
+          p="md"
+        >
           <Stack gap="xs">
             <Text c="dimmed" fw={600} mb="xs" size="xs" tt="uppercase">
               Learning Portal
@@ -276,7 +279,7 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
                 className={`rounded-lg transition-all duration-200 ${
                   isActivePath(item.path)
                     ? "bg-fun-green-50 text-fun-green-700 border-fun-green-200"
-                    : "hover:bg-gray-50"
+                    : "hover:bg-(--app-surface-soft)"
                 }`}
                 key={item.path}
                 label={item.label}

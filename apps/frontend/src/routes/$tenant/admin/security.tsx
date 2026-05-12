@@ -70,8 +70,10 @@ function AdminSecurity() {
     <Container size="lg" py="xl">
       <Stack gap="xl">
         <div>
-          <Title order={2}>Security Settings</Title>
-          <Text c="dimmed">Manage password and security preferences</Text>
+          <Title order={2}>Sign-in and security</Title>
+          <Text c="dimmed">
+            Update your password and review sign-in details
+          </Text>
         </div>
 
         <Grid>
@@ -122,21 +124,20 @@ function AdminSecurity() {
 
               <Paper p="xl" radius="md" withBorder>
                 <Stack gap="md">
-                  <Title order={4}>Two-Factor Authentication</Title>
-                  <Alert color="blue" title="Enhanced Security">
-                    Two-factor authentication adds an extra layer of security to
-                    your account.
+                  <Title order={4}>Extra sign-in protection</Title>
+                  <Alert color="blue" title="Extra protection">
+                    Add another confirmation step to help protect your account.
                   </Alert>
                   <Group justify="space-between" align="center">
                     <div>
-                      <Text fw={500}>Two-Factor Authentication</Text>
+                      <Text fw={500}>Extra sign-in protection</Text>
                       <Text size="sm" c="dimmed">
-                        Contact your platform administrator to enable or manage
-                        two-factor authentication.
+                        Contact your platform admin if you want help turning
+                        this on.
                       </Text>
                     </div>
                     <Button disabled variant="light">
-                      Not available
+                      Coming soon
                     </Button>
                   </Group>
                 </Stack>
@@ -147,14 +148,17 @@ function AdminSecurity() {
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Paper p="xl" radius="md" withBorder>
               <Title order={4} mb="md">
-                Active Sessions
+                Signed-in device
               </Title>
               <Stack gap="md">
                 <Group>
-                  <IconDeviceDesktop size={32} className="text-gray-400" />
+                  <IconDeviceDesktop
+                    size={32}
+                    className="text-(--app-text-subtle)"
+                  />
                   <div style={{ flex: 1 }}>
                     <Text size="sm" fw={500}>
-                      {user?.email || "Administrator session"}
+                      {user?.email || "Admin sign-in"}
                     </Text>
                     <Text size="xs" c="green">
                       Current Session
@@ -164,9 +168,9 @@ function AdminSecurity() {
                     </Text>
                   </div>
                 </Group>
-                <Alert color="blue" title="Active session">
-                  Showing your current sign-in session. Contact support to view
-                  or revoke other sessions.
+                <Alert color="blue" title="Current sign-in">
+                  This shows the device you are using now. Contact support if
+                  you need help with other sign-ins.
                 </Alert>
               </Stack>
             </Paper>

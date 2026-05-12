@@ -57,17 +57,17 @@ function CategoryCard({
     <Paper
       p="xl"
       radius="lg"
-      className="h-full transition-all duration-300 bg-white border shadow-sm border-stone-200 hover:-translate-y-1 hover:border-stone-300 hover:shadow-md"
+      className="h-full transition-all duration-300 border shadow-sm bg-(--app-surface) border-(--app-border) hover:-translate-y-1 hover:border-(--app-border-strong) hover:shadow-md"
       data-aos="fade-up"
       data-aos-delay={delay}
     >
       <div className="inline-flex items-center justify-center w-12 h-12 mb-6 text-white rounded-lg bg-fun-green-800">
         <Icon size={22} strokeWidth={1.8} />
       </div>
-      <h3 className="mb-3 text-xl font-semibold tracking-tight text-stone-950">
+      <h3 className="mb-3 text-xl font-semibold tracking-tight text-(--app-text)">
         {title}
       </h3>
-      <p className="text-sm leading-relaxed text-stone-600 sm:text-base">
+      <p className="text-sm leading-relaxed text-(--app-text-muted) sm:text-base">
         {description}
       </p>
     </Paper>
@@ -85,14 +85,14 @@ function StatCard({
 }) {
   return (
     <div
-      className="p-6 bg-white border rounded-lg shadow-sm border-stone-200"
+      className="p-6 border rounded-lg shadow-sm bg-(--app-surface) border-(--app-border)"
       data-aos="fade-up"
       data-aos-delay={delay}
     >
-      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-stone-400">
+      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-(--app-text-subtle)">
         {label}
       </p>
-      <p className="mt-3 text-3xl font-semibold tracking-tight text-stone-950">
+      <p className="mt-3 text-3xl font-semibold tracking-tight text-(--app-text)">
         {value}
       </p>
     </div>
@@ -114,15 +114,15 @@ function TenantHeroPreview({
 }) {
   return (
     <div className="relative" data-aos="fade-left" data-aos-delay="150">
-      <div className="overflow-hidden bg-white border rounded-lg shadow-xl border-stone-200">
-        <div className="relative h-105 bg-stone-100">
+      <div className="overflow-hidden border rounded-lg shadow-xl bg-(--app-surface) border-(--app-border)">
+        <div className="relative h-105 bg-(--app-surface-soft)">
           <img
             src={imageUrl}
             alt={imageAlt}
             className="object-cover w-full h-full"
           />
           <div className="absolute inset-0 bg-linear-to-t from-stone-950/35 via-stone-950/5 to-transparent" />
-          <div className="absolute inline-flex items-center gap-3 px-4 py-3 border rounded-lg shadow-sm left-6 top-6 border-white/60 bg-white/90 backdrop-blur">
+          <div className="absolute inline-flex items-center gap-3 px-4 py-3 border rounded-lg shadow-sm left-6 top-6 border-white/60 bg-(--app-surface-elevated) backdrop-blur">
             <img
               src={logoUrl}
               alt={logoAlt}
@@ -132,7 +132,7 @@ function TenantHeroPreview({
               <p className="text-xs font-bold tracking-[0.18em] uppercase text-fun-green-800">
                 {portalName}
               </p>
-              <p className="text-sm font-medium text-stone-700">
+              <p className="text-sm font-medium text-(--app-text-muted)">
                 Courses, progress, and live sessions.
               </p>
             </div>
@@ -180,8 +180,8 @@ function TenantLandingPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen font-sans text-stone-900 bg-stone-50 selection:bg-fun-green-500/20">
-      <header className="sticky top-0 z-50 px-6 py-4 border-b bg-white/95 backdrop-blur-sm border-stone-200/80 lg:px-8">
+    <div className="flex flex-col min-h-screen font-sans text-(--app-text) bg-(--app-bg) selection:bg-fun-green-500/20">
+      <header className="sticky top-0 z-50 px-6 py-4 border-b backdrop-blur-sm bg-(--app-surface-elevated) border-(--app-border) lg:px-8">
         <div className="flex items-center justify-between mx-auto max-w-7xl">
           <Group
             gap="sm"
@@ -193,10 +193,10 @@ function TenantLandingPage() {
               className="object-contain w-10 h-10 rounded-md"
             />
             <div className="flex flex-col">
-              <Text className="text-sm font-bold leading-none tracking-wide text-stone-950">
+              <Text className="text-sm font-bold leading-none tracking-wide text-(--app-text)">
                 {portalName}
               </Text>
-              <Text className="mt-1 text-[10px] font-medium leading-none uppercase tracking-[0.2em] text-stone-500">
+              <Text className="mt-1 text-[10px] font-medium leading-none uppercase tracking-[0.2em] text-(--app-text-subtle)">
                 Learning Portal
               </Text>
             </div>
@@ -209,7 +209,7 @@ function TenantLandingPage() {
             <Link to="/$tenant/login" params={{ tenant: tenant.id }}>
               <Button
                 variant="outline"
-                className="h-10 px-6 text-xs font-semibold tracking-wider uppercase transition-all border rounded-md border-stone-300 text-stone-800 hover:bg-stone-100"
+                className="h-10 px-6 text-xs font-semibold tracking-wider uppercase transition-all border rounded-md border-(--app-border-strong) text-(--app-text) hover:bg-(--app-surface-soft)"
               >
                 Access Portal
               </Button>
@@ -219,7 +219,7 @@ function TenantLandingPage() {
       </header>
 
       <main className="flex-1">
-        <section className="relative overflow-hidden bg-white border-b border-stone-200">
+        <section className="relative overflow-hidden border-b bg-(--app-surface) border-(--app-border)">
           <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top_left,rgba(27,115,57,0.12),transparent_40%)]" />
           <div className="relative px-6 pt-16 pb-20 mx-auto max-w-7xl lg:px-8 lg:pt-24 lg:pb-24">
             <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
@@ -232,10 +232,10 @@ function TenantLandingPage() {
                 >
                   {tenant.name}
                 </Badge>
-                <Title className="max-w-3xl mb-8 text-5xl font-semibold leading-[1.05] tracking-tight text-stone-950 sm:text-6xl lg:text-7xl">
+                <Title className="max-w-3xl mb-8 text-5xl font-semibold leading-[1.05] tracking-tight text-(--app-text) sm:text-6xl lg:text-7xl">
                   {heroTitle}
                 </Title>
-                <p className="max-w-2xl text-lg leading-relaxed text-stone-600 sm:text-xl">
+                <p className="max-w-2xl text-lg leading-relaxed text-(--app-text-muted) sm:text-xl">
                   {heroDescription}
                 </p>
 
@@ -254,7 +254,7 @@ function TenantLandingPage() {
                     href="#learning-overview"
                     variant="light"
                     size="lg"
-                    className="px-8 text-xs font-bold tracking-wider uppercase rounded-md h-14 bg-stone-100 text-stone-800 hover:bg-stone-200"
+                    className="px-8 text-xs font-bold tracking-wider uppercase rounded-md h-14 bg-(--app-surface-soft) text-(--app-text) hover:opacity-90"
                   >
                     {heroSecondaryCtaLabel}
                   </Button>
@@ -262,7 +262,7 @@ function TenantLandingPage() {
 
                 {allowSignup ? (
                   <Group className="mt-4" gap="sm">
-                    <Text className="text-sm font-medium text-stone-600">
+                    <Text className="text-sm font-medium text-(--app-text-muted)">
                       New learner?
                     </Text>
                     <Link
@@ -307,11 +307,11 @@ function TenantLandingPage() {
 
         <section
           id="learning-overview"
-          className="py-20 border-y bg-stone-100/70 border-stone-200"
+          className="py-20 border-y bg-(--app-surface-soft) border-(--app-border)"
         >
           <div className="grid items-center gap-12 px-6 mx-auto max-w-7xl lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:px-8">
             <div
-              className="overflow-hidden bg-white border rounded-lg shadow-sm border-stone-200"
+              className="overflow-hidden border rounded-lg shadow-sm bg-(--app-surface) border-(--app-border)"
               data-aos="fade-right"
             >
               <img
@@ -325,10 +325,10 @@ function TenantLandingPage() {
               <p className="mb-4 text-xs font-bold tracking-[0.25em] uppercase text-fun-green-800">
                 Mission
               </p>
-              <Title className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl">
+              <Title className="text-4xl font-semibold tracking-tight text-(--app-text) sm:text-5xl">
                 {missionTitle}
               </Title>
-              <Text className="max-w-2xl mt-6 text-lg leading-relaxed text-stone-600">
+              <Text className="max-w-2xl mt-6 text-lg leading-relaxed text-(--app-text-muted)">
                 {missionDescription}
               </Text>
               <Link to="/$tenant/login" params={{ tenant: tenant.id }}>
@@ -349,10 +349,10 @@ function TenantLandingPage() {
             <p className="mb-4 text-xs font-bold tracking-[0.25em] uppercase text-fun-green-800">
               Learning Areas
             </p>
-            <h2 className="text-4xl font-semibold tracking-tight text-stone-950 sm:text-5xl">
+            <h2 className="text-4xl font-semibold tracking-tight text-(--app-text) sm:text-5xl">
               {categorySectionTitle}
             </h2>
-            <p className="mt-6 text-lg leading-relaxed text-stone-600">
+            <p className="mt-6 text-lg leading-relaxed text-(--app-text-muted)">
               Browse learning areas to find courses that match your goals and
               get started at your own pace.
             </p>
@@ -397,7 +397,7 @@ function TenantLandingPage() {
               <Button
                 size="lg"
                 rightSection={<ArrowRight size={18} />}
-                className="px-8 mt-8 text-xs font-bold tracking-wider uppercase bg-white rounded-md h-14 text-fun-green-900 hover:bg-stone-100 lg:mt-0"
+                className="px-8 mt-8 text-xs font-bold tracking-wider uppercase rounded-md h-14 bg-(--app-surface) text-fun-green-900 hover:bg-(--app-surface-soft) lg:mt-0"
               >
                 {featuredCoursesCtaLabel}
               </Button>
@@ -406,9 +406,9 @@ function TenantLandingPage() {
         </section>
       </main>
 
-      <footer className="pt-16 pb-8 bg-white border-t border-stone-200">
+      <footer className="pt-16 pb-8 border-t bg-(--app-surface) border-(--app-border)">
         <div className="px-6 mx-auto max-w-7xl lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-8 pb-12 mb-8 border-b md:flex-row border-stone-200">
+          <div className="flex flex-col items-center justify-between gap-8 pb-12 mb-8 border-b md:flex-row border-(--app-border)">
             <Group
               gap="sm"
               className="transition-opacity opacity-80 hover:opacity-100"
@@ -418,21 +418,21 @@ function TenantLandingPage() {
                 alt={footerLogoAlt}
                 className="object-contain w-8 h-8 rounded-md"
               />
-              <Text className="text-sm font-bold tracking-wider uppercase text-stone-950">
+              <Text className="text-sm font-bold tracking-wider uppercase text-(--app-text)">
                 {portalName}
               </Text>
             </Group>
 
-            <Text className="text-xs font-medium text-stone-500">
+            <Text className="text-xs font-medium text-(--app-text-subtle)">
               {footerTagline}
             </Text>
           </div>
 
           <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <Text className="text-xs font-medium text-stone-500">
+            <Text className="text-xs font-medium text-(--app-text-subtle)">
               {copyright || `© ${CURRENT_YEAR} ${portalName}`}
             </Text>
-            <Text className="font-mono text-[10px] uppercase tracking-widest text-stone-400">
+            <Text className="font-mono text-[10px] uppercase tracking-widest text-(--app-text-subtle)">
               {footerTagline}
             </Text>
           </div>
