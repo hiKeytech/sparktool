@@ -1,8 +1,14 @@
+import "dotenv/config";
 import { MongoClient } from "mongodb";
 
-const MONGODB_URI =
-  "mongodb+srv://admin:Mkv0hJ4k43PMsIVj@cluster0.wooql5v.mongodb.net/?appName=Cluster0";
-const MONGODB_DB_NAME = "afri-learn";
+function requireEnv(name: keyof NodeJS.ProcessEnv): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} is required`);
+  return value;
+}
+
+const MONGODB_URI = requireEnv("MONGODB_URI");
+const MONGODB_DB_NAME = requireEnv("MONGODB_DB_NAME");
 const STUDENT_ID = "sample-academy-student-student";
 const QUIZ_ID = "20ec7aea-3801-408e-9014-f62f69c520c7";
 

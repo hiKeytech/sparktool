@@ -1,8 +1,14 @@
+import "dotenv/config";
 import { MongoClient } from "mongodb";
 
-const uri =
-  "mongodb+srv://admin:Mkv0hJ4k43PMsIVj@cluster0.wooql5v.mongodb.net/?appName=Cluster0";
-const dbName = "afri-learn";
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) throw new Error(`${name} is required`);
+  return value;
+}
+
+const uri = requireEnv("MONGODB_URI");
+const dbName = requireEnv("MONGODB_DB_NAME");
 
 async function main() {
   const client = new MongoClient(uri);
