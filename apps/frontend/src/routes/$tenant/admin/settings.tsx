@@ -63,6 +63,8 @@ const tenantSettingsSchema = z.object({
     .string()
     .trim()
     .min(1, "Featured section title is required"),
+  footerLogoAlt: z.string().trim(),
+  footerLogoUrl: z.string().trim(),
   footerTagline: z.string().trim().min(1, "Footer tagline is required"),
   heroDescription: z.string().trim().min(1, "Hero description is required"),
   heroLogoUrl: z.string().trim().min(1, "Hero logo URL is required"),
@@ -123,6 +125,8 @@ function mapTenantToFormValues(tenant: Tenant): TenantSettingsFormValues {
     copyright: tenant.config.publicSite.copyright,
     featuredCoursesCtaLabel: tenant.config.publicSite.featuredCoursesCtaLabel,
     featuredCoursesTitle: tenant.config.publicSite.featuredCoursesTitle,
+    footerLogoAlt: tenant.config.publicSite.footerLogoAlt ?? "",
+    footerLogoUrl: tenant.config.publicSite.footerLogoUrl ?? "",
     footerTagline: tenant.config.publicSite.footerTagline,
     heroBackgroundImageUrl: tenant.config.publicSite.heroBackgroundImageUrl,
     heroDescription: tenant.config.publicSite.heroDescription,
@@ -174,6 +178,7 @@ function AdminSettings() {
   const uploadBrandingAsset = useUploadBrandingAsset();
   const [uploadingField, setUploadingField] = useState<
     | null
+    | "footerLogoUrl"
     | "heroBackgroundImageUrl"
     | "heroLogoUrl"
     | "logoUrl"
@@ -203,6 +208,7 @@ function AdminSettings() {
 
   const handleBrandingUpload = async (
     field:
+      | "footerLogoUrl"
       | "heroBackgroundImageUrl"
       | "heroLogoUrl"
       | "logoUrl"
@@ -263,6 +269,8 @@ function AdminSettings() {
             copyright: values.copyright,
             featuredCoursesCtaLabel: values.featuredCoursesCtaLabel,
             featuredCoursesTitle: values.featuredCoursesTitle,
+            footerLogoAlt: values.footerLogoAlt,
+            footerLogoUrl: values.footerLogoUrl,
             footerTagline: values.footerTagline,
             heroDescription: values.heroDescription,
             heroBackgroundImageUrl: values.heroBackgroundImageUrl,
@@ -560,6 +568,37 @@ function AdminSettings() {
                   <TextInput
                     label="Mission CTA label"
                     {...form.getInputProps("missionCtaLabel")}
+                  />
+                  <Stack gap="xs">
+                    <FileInput
+                      accept={BRANDING_IMAGE_ACCEPT}
+                      clearable
+                      description="Accepted formats: PNG, JPEG, WEBP, SVG. Leave blank to reuse the landing logo."
+                      label="Footer logo upload"
+                      leftSection={<IconUpload size={16} />}
+                      onChange={(file) =>
+                        handleBrandingUpload("footerLogoUrl", file)
+                      }
+                      placeholder="Choose footer logo image"
+                    />
+                    <TextInput
+                      label="Footer logo URL"
+                      {...form.getInputProps("footerLogoUrl")}
+                    />
+                    {form.values.footerLogoUrl ? (
+                      <Image
+                        alt="Footer logo preview"
+                        className="max-w-40 rounded-md border border-(--app-border) bg-(--app-surface-soft)"
+                        fit="contain"
+                        h={72}
+                        src={form.values.footerLogoUrl}
+                      />
+                    ) : null}
+                  </Stack>
+                  <TextInput
+                    label="Footer logo alt text"
+                    placeholder="e.g. NSIB logo"
+                    {...form.getInputProps("footerLogoAlt")}
                   />
                   <TextInput
                     label="Footer tagline"

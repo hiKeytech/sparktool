@@ -438,9 +438,6 @@ function TenantLandingPage() {
             <Text className="text-xs font-medium text-(--app-text-subtle)">
               {copyright || `© ${CURRENT_YEAR} ${portalName}`}
             </Text>
-            <Text className="font-mono text-[10px] uppercase tracking-widest text-(--app-text-subtle)">
-              {footerTagline}
-            </Text>
           </div>
         </div>
       </footer>
