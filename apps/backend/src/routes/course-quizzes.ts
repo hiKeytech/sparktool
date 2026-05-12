@@ -18,6 +18,9 @@ courseQuizzesRouter.get(
   async (request, response) => {
     const { courseId } = request.query as Record<string, string>;
     if (courseId) {
+      const tenantId = request.session.activeTenantId!;
+      const course = await courseRepository.getById(courseId);
+      if (!course || course.tenantId !== tenantId) return response.json([]);
       return response.json(await courseQuizRepository.list({ courseId }));
     }
     response.json([]);

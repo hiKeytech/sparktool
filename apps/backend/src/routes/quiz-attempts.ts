@@ -32,7 +32,8 @@ quizAttemptsRouter.get("/", requireTenantSession, async (request, response) => {
     );
   }
 
-  response.json([]);
+  const tenantId = request.session.activeTenantId!;
+  response.json(await quizAttemptRepository.list({ tenantId }));
 });
 
 /** POST /api/quiz-attempts */

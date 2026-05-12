@@ -53,6 +53,7 @@ export const quizAttemptRepository = {
       courseId: string;
       quizId: string;
       studentId: string;
+      tenantId: string;
     }> = {},
   ) {
     const attempts = await getQuizAttemptCollection();
@@ -68,6 +69,10 @@ export const quizAttemptRepository = {
 
     if (filters.courseId) {
       query.courseId = filters.courseId;
+    }
+
+    if (filters.tenantId) {
+      query.tenantId = filters.tenantId;
     }
 
     const sort: Sort = { startedAt: -1 };

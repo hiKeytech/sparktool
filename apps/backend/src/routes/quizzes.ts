@@ -14,7 +14,16 @@ export const quizzesRouter = Router();
 /** GET /api/quizzes */
 quizzesRouter.get("/", requireTenantSession, async (request, response) => {
   const { courseId } = request.query as Record<string, string>;
-  response.json(await quizRepository.list(courseId ?? undefined));
+  const tenantId = request.session.activeTenantId!;
+
+  if (courseId) {
+    response.json(await quizRepository.list({ courseId }));
+    return;
+  }
+
+  const tenantCourses = await courseRepository.list(tenantId);
+  const courseIds = tenantCourses.map((c) => c.id);
+  response.json(await quizRepository.list({ courseIds }));
 });
 
 /** POST /api/quizzes */
