@@ -144,7 +144,7 @@ function AdminLiveSessions() {
       <Container py="xl" size="xl">
         <Center h={400}>
           <Stack align="center" gap="md">
-            <Loader className="text-fun-green-600" size="xl" />
+            <Loader className="text-brand-600" size="xl" />
             <Text c="dimmed">Loading live sessions...</Text>
           </Stack>
         </Center>
@@ -158,13 +158,13 @@ function AdminLiveSessions() {
         {/* Page Header */}
         <Group justify="space-between" mb="xl">
           <div>
-            <Title className="text-fun-green-800" order={1}>
+            <Title className="text-brand-800" order={1}>
               Live Session Management
             </Title>
             <Text c="dimmed">Create and manage live teaching sessions</Text>
           </div>
           <Button
-            className="bg-fun-green-600 hover:bg-fun-green-700"
+            className="bg-brand-600 hover:bg-brand-700"
             leftSection={<IconPlus size={16} />}
             onClick={handleCreateSession}
           >
@@ -175,16 +175,16 @@ function AdminLiveSessions() {
         {/* Stats Cards */}
         <Grid data-aos="fade-up" data-aos-delay="100" mb="xl">
           <Grid.Col span={3}>
-            <Paper className="bg-fun-green-50" p="md" radius="md">
+            <Paper className="bg-brand-50" p="md" radius="md">
               <Group gap="xs">
-                <ThemeIcon color="fun-green" size={40} variant="light">
+                <ThemeIcon color="brand" size={40} variant="light">
                   <IconCalendar size={20} />
                 </ThemeIcon>
                 <div>
                   <Text c="dimmed" size="sm">
                     Total Sessions
                   </Text>
-                  <Text className="text-fun-green-800" fw={600} size="lg">
+                  <Text className="text-brand-800" fw={600} size="lg">
                     {displaySessions.length}
                   </Text>
                 </div>

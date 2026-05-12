@@ -29,7 +29,7 @@ export function AdminHeaderStats({
       value: totalStudents.toLocaleString(),
     },
     {
-      color: "fun-green",
+      color: "brand",
       icon: IconBook,
       label: "Total Courses",
       value: totalCourses.toLocaleString(),

@@ -57,8 +57,8 @@ function CertificateVerification(_props: CertificateVerificationProps) {
           {/* Header */}
           <div className="text-center">
             <Group justify="center" mb="md">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-fun-green-100">
-                <IconShield size={24} className="text-fun-green-600" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-brand-100">
+                <IconShield size={24} className="text-brand-600" />
               </div>
             </Group>
             <Title order={1} className="mb-2 text-gray-800">
@@ -91,7 +91,7 @@ function CertificateVerification(_props: CertificateVerificationProps) {
                     onClick={handleSearch}
                     disabled={!certificateId.trim() || isLoading}
                     leftSection={<IconSearch size={16} />}
-                    className="bg-fun-green-800 hover:bg-fun-green-700"
+                    className="bg-brand-800 hover:bg-brand-700"
                     size="lg"
                   >
                     Verify Certificate
@@ -213,7 +213,7 @@ function CertificateVerification(_props: CertificateVerificationProps) {
 
                     <Alert
                       icon={<IconShield size={16} />}
-                      color="fun-green"
+                      color="brand"
                       mt="md"
                     >
                       <Text size="sm">

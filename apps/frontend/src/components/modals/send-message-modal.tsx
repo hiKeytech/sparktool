@@ -88,7 +88,7 @@ function SendMessageModal({ currentUser, student }: SendMessageModalProps) {
             Cancel
           </Button>
           <Button
-            className="bg-fun-green-600 hover:bg-fun-green-700"
+            className="bg-brand-600 hover:bg-brand-700"
             type="submit"
           >
             Send Message

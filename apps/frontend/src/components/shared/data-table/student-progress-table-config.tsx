@@ -28,7 +28,7 @@ export function createStudentProgressTableColumns(): ColumnDef<CourseProgress>[]
       accessorKey: "completionPercentage",
       cell: ({ getValue }) => (
         <Progress
-          color="fun-green.6"
+          color="brand.6"
           radius="xl"
           size="sm"
           style={{ width: "96px" }}

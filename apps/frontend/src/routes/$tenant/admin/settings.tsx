@@ -309,7 +309,7 @@ function AdminSettings() {
     <Container className="py-8" size="xl">
       <Stack gap="xl">
         <div>
-          <Badge color="fun-green" variant="light">
+          <Badge color="brand" variant="light">
             Learning Portal
           </Badge>
           <Title mt="sm" order={2}>
@@ -332,7 +332,7 @@ function AdminSettings() {
             <SimpleGrid cols={{ base: 1, xl: 2 }} spacing="md">
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
-                  <IconBrandTrello className="text-fun-green-700" size={20} />
+                  <IconBrandTrello className="text-brand-700" size={20} />
                   <Title order={3}>Branding</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
@@ -417,7 +417,7 @@ function AdminSettings() {
 
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
-                  <IconLock className="text-fun-green-700" size={20} />
+                  <IconLock className="text-brand-700" size={20} />
                   <Title order={3}>Sign-up settings</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
@@ -436,7 +436,7 @@ function AdminSettings() {
 
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
-                  <IconGlobe className="text-fun-green-700" size={20} />
+                  <IconGlobe className="text-brand-700" size={20} />
                   <Title order={3}>Login Experience</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
@@ -471,7 +471,7 @@ function AdminSettings() {
 
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
-                  <IconWorld className="text-fun-green-700" size={20} />
+                  <IconWorld className="text-brand-700" size={20} />
                   <Title order={3}>Public page</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
@@ -628,7 +628,7 @@ function AdminSettings() {
                 Reset
               </Button>
               <Button
-                className="bg-fun-green-800 hover:bg-fun-green-700"
+                className="bg-brand-800 hover:bg-brand-700"
                 disabled={!form.isDirty() || uploadingField !== null}
                 loading={updateTenant.isPending}
                 type="submit"

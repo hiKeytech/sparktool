@@ -61,7 +61,7 @@ function CategoryCard({
       data-aos="fade-up"
       data-aos-delay={delay}
     >
-      <div className="inline-flex items-center justify-center w-12 h-12 mb-6 text-white rounded-lg bg-fun-green-800">
+      <div className="inline-flex items-center justify-center w-12 h-12 mb-6 text-white rounded-lg bg-brand-800">
         <Icon size={22} strokeWidth={1.8} />
       </div>
       <h3 className="mb-3 text-xl font-semibold tracking-tight text-(--app-text)">
@@ -129,7 +129,7 @@ function TenantHeroPreview({
               className="object-contain w-10 h-10"
             />
             <div>
-              <p className="text-xs font-bold tracking-[0.18em] uppercase text-fun-green-800">
+              <p className="text-xs font-bold tracking-[0.18em] uppercase text-brand-800">
                 {portalName}
               </p>
               <p className="text-sm font-medium text-(--app-text-muted)">
@@ -180,7 +180,7 @@ function TenantLandingPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen font-sans text-(--app-text) bg-(--app-bg) selection:bg-fun-green-500/20">
+    <div className="flex flex-col min-h-screen font-sans text-(--app-text) bg-(--app-bg) selection:bg-brand-500/20">
       <header className="sticky top-0 z-50 px-6 py-4 border-b backdrop-blur-sm bg-(--app-surface-elevated) border-(--app-border) lg:px-8">
         <div className="flex items-center justify-between mx-auto max-w-7xl">
           <Group
@@ -203,7 +203,7 @@ function TenantLandingPage() {
           </Group>
 
           <Group gap="md">
-            <Text className="hidden text-xs font-bold tracking-widest uppercase md:block text-fun-green-800">
+            <Text className="hidden text-xs font-bold tracking-widest uppercase md:block text-brand-800">
               Explore Courses
             </Text>
             <Link to="/$tenant/login" params={{ tenant: tenant.id }}>
@@ -250,7 +250,7 @@ function TenantLandingPage() {
                     <Button
                       size="lg"
                       rightSection={<ChevronRight size={18} />}
-                      className="px-8 text-xs font-bold tracking-wider text-white uppercase rounded-md h-14 bg-fun-green-800 hover:bg-fun-green-700"
+                      className="px-8 text-xs font-bold tracking-wider text-white uppercase rounded-md h-14 bg-brand-800 hover:bg-brand-700"
                     >
                       {heroPrimaryCtaLabel}
                     </Button>
@@ -278,7 +278,7 @@ function TenantLandingPage() {
                     >
                       <Button
                         variant="subtle"
-                        className="px-0 text-xs font-bold tracking-wider uppercase text-fun-green-800 hover:bg-transparent hover:text-fun-green-700"
+                        className="px-0 text-xs font-bold tracking-wider uppercase text-brand-800 hover:bg-transparent hover:text-brand-700"
                       >
                         Create student account
                       </Button>
@@ -328,7 +328,7 @@ function TenantLandingPage() {
             </div>
 
             <div data-aos="fade-left">
-              <p className="mb-4 text-xs font-bold tracking-[0.25em] uppercase text-fun-green-800">
+              <p className="mb-4 text-xs font-bold tracking-[0.25em] uppercase text-brand-800">
                 Mission
               </p>
               <Title className="text-4xl font-semibold tracking-tight text-(--app-text) sm:text-5xl">
@@ -341,7 +341,7 @@ function TenantLandingPage() {
                 <Button
                   size="lg"
                   rightSection={<ArrowRight size={18} />}
-                  className="px-8 mt-8 text-xs font-bold tracking-wider text-white uppercase rounded-md h-14 bg-fun-green-800 hover:bg-fun-green-700"
+                  className="px-8 mt-8 text-xs font-bold tracking-wider text-white uppercase rounded-md h-14 bg-brand-800 hover:bg-brand-700"
                 >
                   {missionCtaLabel}
                 </Button>
@@ -352,7 +352,7 @@ function TenantLandingPage() {
 
         <section className="px-6 py-20 mx-auto max-w-7xl lg:px-8 lg:py-24">
           <div className="max-w-3xl mb-14" data-aos="fade-up">
-            <p className="mb-4 text-xs font-bold tracking-[0.25em] uppercase text-fun-green-800">
+            <p className="mb-4 text-xs font-bold tracking-[0.25em] uppercase text-brand-800">
               Learning Areas
             </p>
             <h2 className="text-4xl font-semibold tracking-tight text-(--app-text) sm:text-5xl">
@@ -383,7 +383,7 @@ function TenantLandingPage() {
 
         <section className="px-6 pb-24 mx-auto max-w-7xl lg:px-8 lg:pb-28">
           <div
-            className="p-8 text-white border rounded-lg shadow-lg bg-fun-green-800 border-fun-green-900/80 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:p-10"
+            className="p-8 text-white border rounded-lg shadow-lg bg-brand-800 border-brand-900/80 lg:flex lg:items-center lg:justify-between lg:gap-10 lg:p-10"
             data-aos="fade-up"
           >
             <div className="max-w-3xl">
@@ -403,7 +403,7 @@ function TenantLandingPage() {
               <Button
                 size="lg"
                 rightSection={<ArrowRight size={18} />}
-                className="px-8 mt-8 text-xs font-bold tracking-wider uppercase rounded-md h-14 bg-(--app-surface) text-fun-green-900 hover:bg-(--app-surface-soft) lg:mt-0"
+                className="px-8 mt-8 text-xs font-bold tracking-wider uppercase rounded-md h-14 bg-(--app-surface) text-brand-900 hover:bg-(--app-surface-soft) lg:mt-0"
               >
                 {featuredCoursesCtaLabel}
               </Button>

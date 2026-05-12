@@ -172,7 +172,7 @@ export function applyBrandingTheme(branding: BrandingTheme) {
   applySurfaceTheme(root, colorScheme, normalizedPrimary, normalizedSecondary);
 
   for (const [shade, value] of Object.entries(palette)) {
-    root.style.setProperty(`--color-fun-green-${shade}`, value);
+    root.style.setProperty(`--color-brand-${shade}`, value);
   }
 
   document.title = branding.portalName;

@@ -189,7 +189,7 @@ export function EmailPasswordStrategy({
       ) : null}
 
       {isInvitationMode && invitationPreview ? (
-        <Alert color="fun-green" mb="md" variant="light">
+        <Alert color="brand" mb="md" variant="light">
           <Text fw={600} size="sm">
             Administrator invitation for {invitationPreview.email}
           </Text>
@@ -205,7 +205,7 @@ export function EmailPasswordStrategy({
           {(mode === "sign-up" || isInvitationMode) && (
             <TextInput
               classNames={{
-                input: "border-stone-300 focus:border-fun-green-700",
+                input: "border-stone-300 focus:border-brand-700",
                 label: "mb-1 font-sans font-medium text-stone-900",
               }}
               label="Display name"
@@ -216,7 +216,7 @@ export function EmailPasswordStrategy({
           )}
           <TextInput
             classNames={{
-              input: "border-stone-300 focus:border-fun-green-700",
+              input: "border-stone-300 focus:border-brand-700",
               label: "mb-1 font-sans font-medium text-stone-900",
             }}
             disabled={isInvitationMode && !hasInvitationPreview}
@@ -228,7 +228,7 @@ export function EmailPasswordStrategy({
           />
           <PasswordInput
             classNames={{
-              input: "border-stone-300 focus:border-fun-green-700",
+              input: "border-stone-300 focus:border-brand-700",
               label: "mb-1 font-sans font-medium text-stone-900",
             }}
             label="Password"
@@ -239,7 +239,7 @@ export function EmailPasswordStrategy({
           {(mode === "sign-up" || isInvitationMode) && (
             <PasswordInput
               classNames={{
-                input: "border-stone-300 focus:border-fun-green-700",
+                input: "border-stone-300 focus:border-brand-700",
                 label: "mb-1 font-sans font-medium text-stone-900",
               }}
               label="Confirm password"
@@ -249,7 +249,7 @@ export function EmailPasswordStrategy({
             />
           )}
           <Button
-            className="mt-2 text-white transition-colors duration-300 shadow-sm bg-fun-green-800 hover:bg-fun-green-700"
+            className="mt-2 text-white transition-colors duration-300 shadow-sm bg-brand-800 hover:bg-brand-700"
             disabled={isInvitationMode && !hasInvitationPreview}
             fullWidth
             loading={isBusy}
@@ -268,7 +268,7 @@ export function EmailPasswordStrategy({
           </Button>
           {allowSignup && !isInvitationMode && (
             <Button
-              className="font-sans text-fun-green-800 hover:bg-fun-green-50"
+              className="font-sans text-brand-800 hover:bg-brand-50"
               onClick={() => {
                 setMode((currentMode) =>
                   currentMode === "sign-in" ? "sign-up" : "sign-in",

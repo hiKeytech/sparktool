@@ -71,7 +71,7 @@ export function PublicFooter() {
               <Stack gap="xs">
                 {quickLinks.map((link) => (
                   <UnstyledButton
-                    className="text-sm text-gray-400 transition-colors hover:text-fun-green-400 w-fit"
+                    className="text-sm text-gray-400 transition-colors hover:text-brand-400 w-fit"
                     key={link.label}
                     onClick={() => handlePublicNavigation(link.href)}
                   >
@@ -91,7 +91,7 @@ export function PublicFooter() {
               <Stack gap="xs">
                 {supportLinks.map((link) => (
                   <UnstyledButton
-                    className="text-sm text-gray-400 transition-colors hover:text-fun-green-400 w-fit"
+                    className="text-sm text-gray-400 transition-colors hover:text-brand-400 w-fit"
                     key={link.label}
                     onClick={() => handlePublicNavigation(link.href)}
                   >
@@ -110,28 +110,28 @@ export function PublicFooter() {
               </Text>
               <Stack gap="sm">
                 <Group gap="sm">
-                  <IconMapPin className="text-fun-green-400" size={16} />
+                  <IconMapPin className="text-brand-400" size={16} />
                   <Text className="text-gray-300" size="sm">
                     SparkTool Platform
                   </Text>
                 </Group>
 
                 <Group gap="sm">
-                  <IconAddressBook className="text-fun-green-400" size={16} />
+                  <IconAddressBook className="text-brand-400" size={16} />
                   <Text className="text-gray-300" size="sm">
                     Organization-managed deployment
                   </Text>
                 </Group>
 
                 <Group gap="sm">
-                  <IconPhone className="text-fun-green-400" size={16} />
+                  <IconPhone className="text-brand-400" size={16} />
                   <Text className="text-gray-300" size="sm">
                     Available through your workspace administrator
                   </Text>
                 </Group>
 
                 <Group gap="sm">
-                  <IconMail className="text-fun-green-400" size={16} />
+                  <IconMail className="text-brand-400" size={16} />
                   <Text className="text-gray-300" size="sm">
                     support@sparktool.io
                   </Text>

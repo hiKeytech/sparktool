@@ -171,7 +171,7 @@ function AdminCertificates() {
         <Stack gap="xl">
           {/* Header */}
           <div>
-            <Title className="text-fun-green-800" order={1}>
+            <Title className="text-brand-800" order={1}>
               Certificate Management
             </Title>
             <Text c="dimmed" size="lg">
@@ -273,7 +273,7 @@ function AdminCertificates() {
                 </Group>
 
                 <Button
-                  color="fun-green"
+                  color="brand"
                   leftSection={<IconPlus size={16} />}
                   onClick={handleGenerateCertificate}
                 >

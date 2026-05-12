@@ -76,7 +76,7 @@ export function PublicLayout() {
             <Group gap="xl" visibleFrom="md">
               {navigationItems.map((item) => (
                 <UnstyledButton
-                  className="font-medium transition-colors text-(--app-text-muted) hover:text-fun-green-600"
+                  className="font-medium transition-colors text-(--app-text-muted) hover:text-brand-600"
                   key={item.label}
                   onClick={() => handlePublicNavigation(item.href)}
                 >
@@ -87,7 +87,7 @@ export function PublicLayout() {
 
             {/* Desktop Auth Buttons */}
             <Button
-              className="bg-fun-green-600 hover:bg-fun-green-700"
+              className="bg-brand-600 hover:bg-brand-700"
               leftSection={<IconLogin size={16} />}
               onClick={handleLogin}
             >
@@ -126,7 +126,7 @@ export function PublicLayout() {
         <Stack gap="lg">
           {navigationItems.map((item) => (
             <UnstyledButton
-              className="py-2 font-medium text-(--app-text-muted) hover:text-fun-green-600"
+              className="py-2 font-medium text-(--app-text-muted) hover:text-brand-600"
               key={item.label}
               onClick={() => {
                 handlePublicNavigation(item.href);
@@ -139,7 +139,7 @@ export function PublicLayout() {
 
           <div className="pt-4 mt-4 border-t border-(--app-border)">
             <Button
-              className="bg-fun-green-600 hover:bg-fun-green-700"
+              className="bg-brand-600 hover:bg-brand-700"
               fullWidth
               leftSection={<IconLogin size={16} />}
               onClick={() => {

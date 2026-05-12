@@ -1,16 +1,16 @@
 import { createTheme } from "@mantine/core";
 
 const funGreenPalette = [
-  "var(--color-fun-green-50)",
-  "var(--color-fun-green-100)",
-  "var(--color-fun-green-200)",
-  "var(--color-fun-green-300)",
-  "var(--color-fun-green-400)",
-  "var(--color-fun-green-500)",
-  "var(--color-fun-green-600)",
-  "var(--color-fun-green-700)",
-  "var(--color-fun-green-800)",
-  "var(--color-fun-green-900)",
+  "var(--color-brand-50)",
+  "var(--color-brand-100)",
+  "var(--color-brand-200)",
+  "var(--color-brand-300)",
+  "var(--color-brand-400)",
+  "var(--color-brand-500)",
+  "var(--color-brand-600)",
+  "var(--color-brand-700)",
+  "var(--color-brand-800)",
+  "var(--color-brand-900)",
 ] as const;
 
 export const theme = createTheme({
@@ -28,8 +28,8 @@ export const theme = createTheme({
       "#374324",
       "#1b240f",
     ],
-    "fun-green": funGreenPalette,
+    "brand": funGreenPalette,
   },
   fontFamily: "var(--font-sans)",
-  primaryColor: "fun-green",
+  primaryColor: "brand",
 });

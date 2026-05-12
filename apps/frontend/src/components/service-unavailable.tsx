@@ -22,7 +22,7 @@ export function ServiceUnavailable() {
       </div>
 
       <Button
-        color="fun-green"
+        color="brand"
         leftSection={<RefreshCw size={15} />}
         onClick={() => window.location.reload()}
         variant="filled"

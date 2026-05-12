@@ -35,7 +35,7 @@ export function createAnalyticsTableColumns(): ColumnDef<Course>[] {
         const completions = row.original.completionCount || 0;
         const rate =
           enrollments > 0 ? Math.round((completions / enrollments) * 100) : 0;
-        const color = rate >= 70 ? "fun-green" : rate >= 50 ? "blue" : "orange";
+        const color = rate >= 70 ? "brand" : rate >= 50 ? "blue" : "orange";
 
         return (
           <Badge color={color} size="sm" variant="light">
@@ -96,7 +96,7 @@ export function createAnalyticsTableColumns(): ColumnDef<Course>[] {
             : 0;
         const color =
           dropoutRate <= 20
-            ? "fun-green"
+            ? "brand"
             : dropoutRate <= 40
               ? "orange"
               : "red";

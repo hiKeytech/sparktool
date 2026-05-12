@@ -127,7 +127,7 @@ function SettingsOverview() {
     <Container className="py-8" size="xl">
       <Stack gap="lg">
         <div>
-          <Badge color="fun-green" variant="light">
+          <Badge color="brand" variant="light">
             Platform setup
           </Badge>
           <Title mt="sm" order={1}>

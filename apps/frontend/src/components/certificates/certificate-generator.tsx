@@ -156,7 +156,7 @@ export function CertificateGenerator({
       <Stack gap="lg">
         {/* Header */}
         <Group gap="sm">
-          <IconCertificate className="text-fun-green-600" size={24} />
+          <IconCertificate className="text-brand-600" size={24} />
           <div>
             <Text fw={500} size="lg">
               Generate New Certificate
@@ -250,7 +250,7 @@ export function CertificateGenerator({
           </Button>
 
           <Button
-            className="bg-fun-green-800 hover:bg-fun-green-700"
+            className="bg-brand-800 hover:bg-brand-700"
             leftSection={<IconSend size={16} />}
             loading={generateCertificateMutation.isPending}
             type="submit"

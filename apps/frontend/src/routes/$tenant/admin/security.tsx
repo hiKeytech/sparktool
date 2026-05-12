@@ -88,7 +88,7 @@ function AdminSecurity() {
               >
                 <Stack gap="md">
                   <Group gap="sm">
-                    <IconShieldCheck size={24} className="text-fun-green-600" />
+                    <IconShieldCheck size={24} className="text-brand-600" />
                     <Title order={4}>Change Password</Title>
                   </Group>
                   <Stack gap="sm">

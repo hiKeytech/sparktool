@@ -138,7 +138,7 @@ export function StudentCertificates({
 
                   {certificate.status === "issued" && (
                     <Button
-                      color="fun-green"
+                      color="brand"
                       leftSection={<IconEye size={14} />}
                       onClick={() => handlePreview(certificate)}
                       size="sm"

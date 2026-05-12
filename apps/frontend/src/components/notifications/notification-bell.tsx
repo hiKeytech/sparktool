@@ -18,7 +18,7 @@ export function NotificationBell({ userId }: NotificationBellProps) {
     <>
       <Group className="relative">
         <ActionIcon
-          className="text-white hover:bg-fun-green-700"
+          className="text-white hover:bg-brand-700"
           onClick={open}
           size="lg"
           variant="light"

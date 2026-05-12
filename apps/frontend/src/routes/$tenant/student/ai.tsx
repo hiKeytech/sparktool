@@ -380,7 +380,7 @@ function StudentAiAssistantPage() {
             </Text>
           </div>
           <Badge
-            color="fun-green"
+            color="brand"
             leftSection={<IconSparkles size={12} />}
             size="lg"
           >
@@ -458,7 +458,7 @@ function StudentAiAssistantPage() {
           <Card p="lg" radius="lg" withBorder>
             <Stack gap="xs">
               <Badge
-                color="fun-green"
+                color="brand"
                 leftSection={<IconMessageCircle size={12} />}
                 variant="light"
               >
@@ -576,7 +576,7 @@ function StudentAiAssistantPage() {
                         value={uploadedFile}
                       />
                       <Button
-                        color="fun-green"
+                        color="brand"
                         disabled={!uploadedFile || aiUnavailable}
                         leftSection={<IconFileText size={16} />}
                         loading={createAiDocument.isPending}
@@ -659,7 +659,7 @@ function StudentAiAssistantPage() {
 
                       {chatThread?.messages.map((message) => (
                         <Paper
-                          bg={message.role === "assistant" ? "fun-green.0" : "white"}
+                          bg={message.role === "assistant" ? "brand.0" : "white"}
                           key={message.id}
                           p="sm"
                           radius="md"
@@ -699,7 +699,7 @@ function StudentAiAssistantPage() {
 
                 <Group justify="flex-end">
                   <Button
-                    color="fun-green"
+                    color="brand"
                     disabled={!chatMessage.trim() || aiUnavailable}
                     leftSection={<IconSend size={16} />}
                     loading={sendChatMessage.isPending}
@@ -789,7 +789,7 @@ function StudentAiAssistantPage() {
                       value={questionCount}
                     />
                     <Button
-                      color="fun-green"
+                      color="brand"
                       disabled={!selectedCourseId || aiUnavailable}
                       leftSection={<IconSparkles size={16} />}
                       loading={generatePracticeQuiz.isPending}
@@ -898,7 +898,7 @@ function StudentAiAssistantPage() {
                     })}
 
                     {practiceSession.result ? (
-                      <Alert color="fun-green" title="Practice Summary">
+                      <Alert color="brand" title="Practice Summary">
                         <Text>
                           {practiceSession.result.correctAnswers}/
                           {practiceSession.result.totalQuestions} correct (
@@ -911,7 +911,7 @@ function StudentAiAssistantPage() {
                     ) : (
                       <Group justify="flex-end">
                         <Button
-                          color="fun-green"
+                          color="brand"
                           disabled={Object.keys(practiceAnswers).length === 0}
                           loading={submitPracticeQuiz.isPending}
                           onClick={handleSubmitPracticeQuiz}

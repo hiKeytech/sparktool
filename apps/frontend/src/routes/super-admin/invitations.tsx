@@ -97,7 +97,7 @@ function InvitationHistoryPage() {
     return (
       <Container py="xl" size="xl">
         <Group justify="center" py="xl">
-          <Loader color="fun-green" />
+          <Loader color="brand" />
         </Group>
       </Container>
     );
@@ -120,7 +120,7 @@ function InvitationHistoryPage() {
     <Container className="py-8" size="xl">
       <Stack gap="xl">
         <div>
-          <Badge color="fun-green" variant="light">
+          <Badge color="brand" variant="light">
             Invitation governance
           </Badge>
           <Title mt="sm" order={1}>
@@ -258,7 +258,7 @@ function InvitationHistoryPage() {
                         {isReissuable ? (
                           <Button
                             variant="subtle"
-                            color="fun-green"
+                            color="brand"
                             size="xs"
                             className="text-[#006838] hover:bg-[#006838]/10"
                             loading={isReissuing}
@@ -341,7 +341,7 @@ function InvitationHistoryPage() {
               <CopyButton value={reissuedLink?.inviteLink ?? ""}>
                 {({ copied, copy }) => (
                   <Button
-                    color="fun-green"
+                    color="brand"
                     leftSection={<Mail size={16} />}
                     onClick={copy}
                   >

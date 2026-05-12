@@ -85,7 +85,7 @@ export const CourseBreadcrumbs: React.FC<CourseBreadcrumbsProps> = ({
 
           if (isLast) {
             return (
-              <Text c="fun-green" fw={600} key={item.href} size="sm">
+              <Text c="brand" fw={600} key={item.href} size="sm">
                 {item.title.length > 25
                   ? `${item.title.substring(0, 25)}...`
                   : item.title}
@@ -95,7 +95,7 @@ export const CourseBreadcrumbs: React.FC<CourseBreadcrumbsProps> = ({
 
           return (
             <Anchor
-              c={isSecondLast ? "fun-green.6" : "dimmed"}
+              c={isSecondLast ? "brand.6" : "dimmed"}
               component={Link}
               key={item.href}
               size="sm"
@@ -119,7 +119,7 @@ export const CourseBreadcrumbs: React.FC<CourseBreadcrumbsProps> = ({
 
         if (isLast) {
           return (
-            <Text c="fun-green" fw={600} key={item.href} size="sm">
+            <Text c="brand" fw={600} key={item.href} size="sm">
               {item.title}
             </Text>
           );
@@ -127,7 +127,7 @@ export const CourseBreadcrumbs: React.FC<CourseBreadcrumbsProps> = ({
 
         return (
           <Anchor
-            c="fun-green.6"
+            c="brand.6"
             component={Link}
             key={item.href}
             size="sm"

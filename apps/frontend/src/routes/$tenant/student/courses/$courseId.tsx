@@ -466,7 +466,7 @@ export function CourseDetails() {
                     <List
                       icon={
                         <ThemeIcon
-                          color="fun-green"
+                          color="brand"
                           radius="xl"
                           size={24}
                           variant="light"
@@ -521,7 +521,7 @@ export function CourseDetails() {
                                 </Text>
                               )}
                             </div>
-                            <Badge color="fun-green" variant="light">
+                            <Badge color="brand" variant="light">
                               {section.lessons?.length || 0} lessons
                             </Badge>
                           </Group>
@@ -536,7 +536,7 @@ export function CourseDetails() {
                                   gap="sm"
                                   key={lesson.id}
                                 >
-                                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-fun-green-100 text-fun-green-700 text-xs font-medium">
+                                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-brand-100 text-brand-700 text-xs font-medium">
                                     {lessonIndex + 1}
                                   </div>
                                   <div className="flex-1">
@@ -632,7 +632,7 @@ export function CourseDetails() {
                 </Title>
                 <Group gap="md">
                   <ThemeIcon
-                    color="fun-green"
+                    color="brand"
                     radius="xl"
                     size={50}
                     variant="light"
@@ -685,7 +685,7 @@ export function CourseDetails() {
                 <Stack gap="md">
                   {hasAccess ? (
                     <>
-                      <Alert color="fun-green" icon={<IconCheck size={16} />}>
+                      <Alert color="brand" icon={<IconCheck size={16} />}>
                         You have access to this course
                       </Alert>
                       <Button
@@ -704,7 +704,7 @@ export function CourseDetails() {
                         Open AI Tutor
                       </Button>
                       <Button
-                        className="bg-fun-green-600 hover:bg-fun-green-700"
+                        className="bg-brand-600 hover:bg-brand-700"
                         fullWidth
                         onClick={() =>
                           navigate({
@@ -771,7 +771,7 @@ export function CourseDetails() {
                         </div>
                       ) : (
                         <Button
-                          className="bg-fun-green-600 hover:bg-fun-green-700"
+                          className="bg-brand-600 hover:bg-brand-700"
                           fullWidth
                           loading={isEnrolling}
                           onClick={handleEnrollClick}

@@ -199,7 +199,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
     {
       action: () =>
         navigateToAdminPath(buildTenantPath(tenantSlug, "/admin/courses")),
-      color: "fun-green",
+      color: "brand",
       icon: IconPlus,
       label: "Add Course",
     },
@@ -239,7 +239,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
         padding="md"
       >
         {/* Header */}
-        <AppShell.Header className="border-b-2 bg-fun-green-800 border-fun-green-600">
+        <AppShell.Header className="border-b-2 bg-brand-800 border-brand-600">
           <Container h="100%" size="xl">
             <Group h="100%" justify="space-between" px="md">
               {/* Left side - Logo and burger */}
@@ -268,7 +268,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                     </Text>
                     <Badge
                       className="hidden sm:block"
-                      color="fun-green"
+                      color="brand"
                       size="xs"
                       variant="light"
                     >
@@ -285,7 +285,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                   {quickActions.map((action) => (
                     <Tooltip key={action.label} label={action.label}>
                       <ActionIcon
-                        className="text-white hover:bg-fun-green-700"
+                        className="text-white hover:bg-brand-700"
                         onClick={action.action}
                         size="lg"
                         variant="light"
@@ -299,7 +299,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                 {/* Search */}
                 <Tooltip label="Global Search">
                   <ActionIcon
-                    className="text-white hover:bg-fun-green-700"
+                    className="text-white hover:bg-brand-700"
                     size="lg"
                     variant="light"
                   >
@@ -313,10 +313,10 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                 {/* User Menu */}
                 <Menu shadow="md" width={250}>
                   <Menu.Target>
-                    <Group className="px-3 py-2 transition-colors rounded-lg cursor-pointer hover:bg-fun-green-700">
+                    <Group className="px-3 py-2 transition-colors rounded-lg cursor-pointer hover:bg-brand-700">
                       <Avatar
                         alt={user?.displayName || "Admin"}
-                        color="fun-green"
+                        color="brand"
                         size="sm"
                         src={user?.photoURL}
                       >
@@ -326,7 +326,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                         <Text className="text-white" fw={500} size="sm">
                           {user?.displayName || "Administrator"}
                         </Text>
-                        <Text className="text-fun-green-200" size="xs">
+                        <Text className="text-brand-200" size="xs">
                           {user?.email}
                         </Text>
                       </div>
@@ -394,7 +394,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                 active={isActivePath(item.path)}
                 className={`rounded-lg transition-all duration-200 ${
                   isActivePath(item.path)
-                    ? "bg-fun-green-50 text-fun-green-700 border-fun-green-200"
+                    ? "bg-brand-50 text-brand-700 border-brand-200"
                     : "hover:bg-(--app-surface-soft)"
                 }`}
                 description={item.description}
@@ -448,7 +448,7 @@ export function AdminLayout({ auth }: AdminLayoutProps) {
                 System Status
               </Text>
               <Group gap="xs">
-                <Badge color="fun-green" size="sm" variant="dot">
+                <Badge color="brand" size="sm" variant="dot">
                   Online
                 </Badge>
                 <Text c="dimmed" size="xs">

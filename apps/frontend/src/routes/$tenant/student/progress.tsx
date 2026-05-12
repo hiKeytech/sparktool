@@ -93,7 +93,7 @@ function StudentProgress() {
                     </Center>
                   }
                   sections={[
-                    { color: "fun-green", value: completionPercentage },
+                    { color: "brand", value: completionPercentage },
                   ]}
                   size={80}
                   thickness={8}
@@ -138,7 +138,7 @@ function StudentProgress() {
               withBorder
             >
               <Stack align="center" gap="xs">
-                <ThemeIcon color="fun-green" size={60} variant="light">
+                <ThemeIcon color="brand" size={60} variant="light">
                   <IconBook size={30} />
                 </ThemeIcon>
                 <Text className="text-(--app-text-muted)" fw={500} size="sm">
@@ -168,7 +168,7 @@ function StudentProgress() {
             <Stack gap="md">
               <Group justify="space-between">
                 <Text size="sm">Courses Completed</Text>
-                <Badge color="fun-green" variant="light">
+                <Badge color="brand" variant="light">
                   {completedCourses}
                 </Badge>
               </Group>

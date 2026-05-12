@@ -146,7 +146,7 @@ function CourseManagement() {
                 Import Courses
               </Button>
               <Button
-                className="bg-fun-green-600 hover:bg-fun-green-700"
+                className="bg-brand-600 hover:bg-brand-700"
                 leftSection={<IconPlus size={16} />}
                 onClick={() => {
                   if (!tenant || !user) {
@@ -191,7 +191,7 @@ function CourseManagement() {
                       {courses.filter((c) => c.published).length}
                     </Text>
                   </div>
-                  <ThemeIcon color="fun-green" size={40} variant="light">
+                  <ThemeIcon color="brand" size={40} variant="light">
                     <IconPlayerPlay size={20} />
                   </ThemeIcon>
                 </Group>

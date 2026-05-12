@@ -175,7 +175,7 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
         padding="md"
       >
         {/* Header */}
-        <AppShell.Header className="border-b-2 bg-fun-green-800 border-fun-green-600">
+        <AppShell.Header className="border-b-2 bg-brand-800 border-brand-600">
           <Container h="100%" size="xl">
             <Group h="100%" justify="space-between" px="md">
               {/* Left side - Logo and navigation */}
@@ -209,8 +209,8 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
                 {user?.uid && <NotificationBell userId={user.uid} />}
 
                 <Button
-                  className="hidden text-white sm:flex bg-fun-green-700 hover:bg-fun-green-600"
-                  color="fun-green"
+                  className="hidden text-white sm:flex bg-brand-700 hover:bg-brand-600"
+                  color="brand"
                   leftSection={<IconUser size={16} />}
                   onClick={navigateToProfile}
                   size="sm"
@@ -221,10 +221,10 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
 
                 <Menu shadow="md" width={200}>
                   <Menu.Target>
-                    <Group className="px-3 py-2 transition-colors rounded-lg cursor-pointer hover:bg-fun-green-700">
+                    <Group className="px-3 py-2 transition-colors rounded-lg cursor-pointer hover:bg-brand-700">
                       <Avatar
                         alt={user?.displayName}
-                        color="fun-green"
+                        color="brand"
                         size="sm"
                         src={user?.photoURL}
                       />
@@ -233,7 +233,7 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
                         <Text className="text-white" fw={500} size="sm">
                           {user?.displayName}
                         </Text>
-                        <Text className="text-fun-green-200" size="xs">
+                        <Text className="text-brand-200" size="xs">
                           {user?.email}
                         </Text>
                       </div>
@@ -278,7 +278,7 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
                 active={isActivePath(item.path)}
                 className={`rounded-lg transition-all duration-200 ${
                   isActivePath(item.path)
-                    ? "bg-fun-green-50 text-fun-green-700 border-fun-green-200"
+                    ? "bg-brand-50 text-brand-700 border-brand-200"
                     : "hover:bg-(--app-surface-soft)"
                 }`}
                 key={item.path}
@@ -301,7 +301,7 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
               <Group gap="xs">
                 <Avatar
                   alt={user?.displayName}
-                  color="fun-green"
+                  color="brand"
                   size="sm"
                   src={user?.photoURL}
                 >
@@ -311,7 +311,7 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
                   <Text fw={500} size="sm">
                     {user?.displayName}
                   </Text>
-                  <Badge color="fun-green" size="xs" variant="light">
+                  <Badge color="brand" size="xs" variant="light">
                     Student
                   </Badge>
                 </div>

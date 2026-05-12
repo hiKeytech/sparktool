@@ -92,7 +92,7 @@ export function CertificatePreview({
         </Button>
 
         <Button
-          className="bg-fun-green-800 hover:bg-fun-green-700"
+          className="bg-brand-800 hover:bg-brand-700"
           leftSection={<IconDownload size={16} />}
           onClick={handleDownloadPDF}
         >

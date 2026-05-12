@@ -37,7 +37,7 @@ function AdminProfile() {
                   src={user?.photoURL}
                   size={120}
                   radius={120}
-                  color="fun-green"
+                  color="brand"
                   className="text-4xl"
                 >
                   {user?.displayName?.[0] || "A"}

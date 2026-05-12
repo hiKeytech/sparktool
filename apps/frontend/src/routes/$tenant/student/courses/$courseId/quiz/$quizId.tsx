@@ -257,7 +257,7 @@ function QuizAssessment() {
       <Container py="xl" size="lg">
         <Center h={400}>
           <Stack align="center" gap="md">
-            <Loader color="fun-green" size="xl" />
+            <Loader color="brand" size="xl" />
             <Text c="dimmed">Quiz not found</Text>
           </Stack>
         </Center>
@@ -289,11 +289,11 @@ function QuizAssessment() {
                   <RingProgress
                     label={
                       <Center>
-                        <IconTrophy className="text-fun-green-600" size={32} />
+                        <IconTrophy className="text-brand-600" size={32} />
                       </Center>
                     }
                     sections={[
-                      { color: "fun-green", value: results.percentage },
+                      { color: "brand", value: results.percentage },
                     ]}
                     size={120}
                     thickness={8}
@@ -311,7 +311,7 @@ function QuizAssessment() {
                   />
                 )}
                 <Stack gap="xs">
-                  <Title c={results.passed ? "fun-green" : "red"} order={2}>
+                  <Title c={results.passed ? "brand" : "red"} order={2}>
                     {results.passed ? "Congratulations!" : "Keep Learning"}
                   </Title>
                   <Text fw={600} size="lg">
@@ -324,7 +324,7 @@ function QuizAssessment() {
 
               {/* Status Badge */}
               <Badge
-                color={results.passed ? "fun-green" : "red"}
+                color={results.passed ? "brand" : "red"}
                 size="lg"
                 variant="light"
               >
@@ -334,7 +334,7 @@ function QuizAssessment() {
               {/* Action Buttons */}
               <Group>
                 <Button
-                  color="fun-green"
+                  color="brand"
                   leftSection={<IconArrowLeft size={16} />}
                   onClick={() =>
                     tenant.id &&
@@ -349,7 +349,7 @@ function QuizAssessment() {
                 </Button>
                 {!results.passed && (
                   <Button
-                    color="fun-green"
+                    color="brand"
                     leftSection={<IconRefresh size={16} />}
                     onClick={() => {
                       attemptInitializationRef.current = false;
@@ -386,7 +386,7 @@ function QuizAssessment() {
         <Card mb="xl" p="lg" radius="lg" shadow="md">
           <Group justify="space-between" mb="md">
             <div>
-              <Title className="text-fun-green-800" order={2}>
+              <Title className="text-brand-800" order={2}>
                 {quiz.title}
               </Title>
               {quiz.description && (
@@ -397,11 +397,11 @@ function QuizAssessment() {
             </div>
 
             {/* Timer */}
-            <Paper bg="fun-green.0" p="md" radius="md">
+            <Paper bg="brand.0" p="md" radius="md">
               <Group gap="xs">
-                <IconClock className="text-fun-green-600" size={20} />
+                <IconClock className="text-brand-600" size={20} />
                 <Text
-                  c={quizState.timeRemaining < 300 ? "red" : "fun-green"}
+                  c={quizState.timeRemaining < 300 ? "red" : "brand"}
                   fw={600}
                 >
                   {formatTime(quizState.timeRemaining)}
@@ -422,7 +422,7 @@ function QuizAssessment() {
               </Text>
             </Group>
             <Progress
-              color="fun-green"
+              color="brand"
               radius="xl"
               size="lg"
               value={progress}
@@ -446,7 +446,7 @@ function QuizAssessment() {
                     <ActionIcon
                       className="cursor-pointer"
                       color={
-                        isCurrent ? "fun-green" : isAnswered ? "blue" : "gray"
+                        isCurrent ? "brand" : isAnswered ? "blue" : "gray"
                       }
                       key={index}
                       onClick={() => handleQuestionJump(index)}
@@ -471,7 +471,7 @@ function QuizAssessment() {
                 <Stack gap="xl">
                   <div>
                     <Group justify="space-between" mb="md">
-                      <Badge color="fun-green" variant="light">
+                      <Badge color="brand" variant="light">
                         {currentQuestion.points} points
                       </Badge>
                       <Badge color="gray" variant="outline">
@@ -580,7 +580,7 @@ function QuizAssessment() {
                       {quizState.currentQuestionIndex ===
                       quiz.questions.length - 1 ? (
                         <Button
-                          color="fun-green"
+                          color="brand"
                           disabled={answeredQuestions === 0}
                           onClick={() => setConfirmSubmitModal(true)}
                           rightSection={<IconFlag size={16} />}
@@ -589,7 +589,7 @@ function QuizAssessment() {
                         </Button>
                       ) : (
                         <Button
-                          color="fun-green"
+                          color="brand"
                           onClick={handleNextQuestion}
                           rightSection={<IconArrowRight size={16} />}
                         >
@@ -645,7 +645,7 @@ function QuizAssessment() {
               >
                 Cancel
               </Button>
-              <Button color="fun-green" onClick={handleSubmitQuiz}>
+              <Button color="brand" onClick={handleSubmitQuiz}>
                 Submit Quiz
               </Button>
             </Group>
