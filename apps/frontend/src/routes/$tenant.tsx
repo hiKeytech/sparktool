@@ -29,6 +29,7 @@ function TenantParamLayout() {
       applyBrandingTheme({
         ...tenant.config.branding,
         description: tenant.config.publicSite.heroDescription,
+        faviconUrl: tenant.config.branding.faviconUrl,
       });
     }
   }, [tenant]);
@@ -51,9 +52,9 @@ function TenantLookupError() {
           The tenant URL you visited does not match any configured workspace.
           Check the address and try again, or return to the platform entry.
         </p>
-        <div className="mt-6 flex gap-3">
+        <div className="flex gap-3 mt-6">
           <Link
-            className="inline-flex rounded-md bg-brand-800 px-4 py-2 font-sans text-sm font-medium text-white hover:bg-brand-700"
+            className="inline-flex px-4 py-2 font-sans text-sm font-medium text-white rounded-md bg-brand-800 hover:bg-brand-700"
             to="/"
           >
             Go to platform

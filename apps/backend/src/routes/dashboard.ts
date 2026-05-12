@@ -89,7 +89,7 @@ dashboardRouter.get("/metrics", requireSession, async (request, response) => {
       enrollments,
       certificates,
       activityLogs,
-      rawAttempts,
+      quizAttempts,
     ] = await Promise.all([
       userRepository.list(tenantId),
       courseRepository.list(tenantId),
@@ -98,10 +98,8 @@ dashboardRouter.get("/metrics", requireSession, async (request, response) => {
       activityLogRepository
         .list({ tenantId, userId: "*" })
         .then((logs) => logs.filter((l) => l.userId !== "*")),
-      quizAttemptRepository.list(),
+      quizAttemptRepository.list({ tenantId }),
     ]);
-    const courseIds = new Set(courses.map((c) => c.id).filter(Boolean));
-    const quizAttempts = rawAttempts.filter((a) => courseIds.has(a.courseId));
 
     const basicMetrics = computeBasicMetrics(
       users,

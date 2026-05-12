@@ -3,7 +3,12 @@ import { Router } from "express";
 import { activityLogRepository } from "../repositories/activity-log-repository.js";
 import { courseLessonRepository } from "../repositories/course-lesson-repository.js";
 import { lessonProgressRepository } from "../repositories/lesson-progress-repository.js";
-import { getActorFromSession, httpError } from "../lib/request-helpers.js";
+import {
+  getActorFromSession,
+  httpError,
+  userHasTenantAccess,
+} from "../lib/request-helpers.js";
+import { userRepository } from "../repositories/user-repository.js";
 import { requireTenantSession } from "../middleware/session.js";
 import {
   updateCourseProgress,
@@ -51,6 +56,14 @@ lessonProgressRouter.get(
       actor.role !== "super-admin"
     ) {
       throw httpError(403, "Access denied.");
+    }
+
+    if (actor.id !== targetId) {
+      const tenantId = request.session.activeTenantId!;
+      const targetUser = await userRepository.getById(targetId);
+      if (!targetUser || !userHasTenantAccess(targetUser, tenantId)) {
+        throw httpError(403, "Student does not belong to the current tenant.");
+      }
     }
 
     const { courseId } = request.query as Record<string, string>;

@@ -175,7 +175,7 @@ function AdminLiveSessions() {
         {/* Stats Cards */}
         <Grid data-aos="fade-up" data-aos-delay="100" mb="xl">
           <Grid.Col span={3}>
-            <Paper className="bg-brand-50" p="md" radius="md">
+            <Paper p="md" radius="md">
               <Group gap="xs">
                 <ThemeIcon color="brand" size={40} variant="light">
                   <IconCalendar size={20} />
@@ -184,7 +184,7 @@ function AdminLiveSessions() {
                   <Text c="dimmed" size="sm">
                     Total Sessions
                   </Text>
-                  <Text className="text-brand-800" fw={600} size="lg">
+                  <Text fw={600} size="lg">
                     {displaySessions.length}
                   </Text>
                 </div>
@@ -192,7 +192,7 @@ function AdminLiveSessions() {
             </Paper>
           </Grid.Col>
           <Grid.Col span={3}>
-            <Paper className="bg-blue-50" p="md" radius="md">
+            <Paper p="md" radius="md">
               <Group gap="xs">
                 <ThemeIcon color="blue" size={40} variant="light">
                   <IconVideo size={20} />
@@ -201,7 +201,7 @@ function AdminLiveSessions() {
                   <Text c="dimmed" size="sm">
                     Active Sessions
                   </Text>
-                  <Text className="text-blue-800" fw={600} size="lg">
+                  <Text fw={600} size="lg">
                     {
                       displaySessions.filter((s) => s.status === "active")
                         .length
@@ -212,7 +212,7 @@ function AdminLiveSessions() {
             </Paper>
           </Grid.Col>
           <Grid.Col span={3}>
-            <Paper className="bg-orange-50" p="md" radius="md">
+            <Paper p="md" radius="md">
               <Group gap="xs">
                 <ThemeIcon color="orange" size={40} variant="light">
                   <IconUsers size={20} />
@@ -221,7 +221,7 @@ function AdminLiveSessions() {
                   <Text c="dimmed" size="sm">
                     Total Participants
                   </Text>
-                  <Text className="text-orange-800" fw={600} size="lg">
+                  <Text fw={600} size="lg">
                     {displaySessions.reduce(
                       (acc, { participants }) => acc + participants.length,
                       0,
@@ -232,7 +232,7 @@ function AdminLiveSessions() {
             </Paper>
           </Grid.Col>
           <Grid.Col span={3}>
-            <Paper className="bg-purple-50" p="md" radius="md">
+            <Paper p="md" radius="md">
               <Group gap="xs">
                 <ThemeIcon color="purple" size={40} variant="light">
                   <IconCalendar size={20} />
@@ -241,10 +241,11 @@ function AdminLiveSessions() {
                   <Text c="dimmed" size="sm">
                     Scheduled Sessions
                   </Text>
-                  <Text className="text-purple-800" fw={600} size="lg">
+                  <Text fw={600} size="lg">
                     {
-                      displaySessions.filter((s) => s.status === "scheduled")
-                        .length
+                      displaySessions.filter(
+                        ({ status }) => status === "scheduled",
+                      ).length
                     }
                   </Text>
                 </div>

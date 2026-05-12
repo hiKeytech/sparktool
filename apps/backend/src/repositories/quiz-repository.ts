@@ -68,14 +68,16 @@ export const quizRepository = {
     return parseStoredQuiz(quiz);
   },
 
-  async list(courseId?: string) {
+  async list(filters?: { courseId?: string; courseIds?: string[] }) {
     const quizzes = await getQuizCollection();
     const query: Filter<QuizDocument> = {
       $or: [{ deleted: { $exists: false } }, { deleted: false }],
     };
 
-    if (courseId) {
-      query.courseId = courseId;
+    if (filters?.courseId) {
+      query.courseId = filters.courseId;
+    } else if (filters?.courseIds) {
+      query.courseId = { $in: filters.courseIds };
     }
 
     const sort: Sort = { createdAt: -1 };

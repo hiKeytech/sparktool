@@ -4,7 +4,6 @@ import { zod4Resolver } from "mantine-form-zod-resolver";
 import { useForm } from "@mantine/form";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import {
-  Alert,
   Badge,
   Button,
   Container,
@@ -97,6 +96,7 @@ const tenantSettingsSchema = z.object({
   missionImageUrl: z.string().trim().min(1, "Mission image URL is required"),
   missionTitle: z.string().trim().min(1, "Mission title is required"),
   supportEmail: z.email("Enter a valid support email").or(z.literal("")),
+  faviconUrl: z.string().trim(),
   logoUrl: z.string().trim().min(1, "Logo URL is required"),
   portalName: z.string().trim().min(1, "Portal name is required"),
   primaryColor: z
@@ -143,6 +143,7 @@ function mapTenantToFormValues(tenant: Tenant): TenantSettingsFormValues {
     missionDescription: tenant.config.publicSite.missionDescription,
     missionImageUrl: tenant.config.publicSite.missionImageUrl,
     missionTitle: tenant.config.publicSite.missionTitle,
+    faviconUrl: tenant.config.branding.faviconUrl ?? "",
     logoUrl: tenant.config.branding.logoUrl,
     portalName: tenant.config.branding.portalName,
     primaryColor: tenant.config.branding.primaryColor,
@@ -178,6 +179,7 @@ function AdminSettings() {
   const uploadBrandingAsset = useUploadBrandingAsset();
   const [uploadingField, setUploadingField] = useState<
     | null
+    | "faviconUrl"
     | "footerLogoUrl"
     | "heroBackgroundImageUrl"
     | "heroLogoUrl"
@@ -208,6 +210,7 @@ function AdminSettings() {
 
   const handleBrandingUpload = async (
     field:
+      | "faviconUrl"
       | "footerLogoUrl"
       | "heroBackgroundImageUrl"
       | "heroLogoUrl"
@@ -259,6 +262,7 @@ function AdminSettings() {
               subheading: values.loginSubheading,
             },
             colorScheme: values.colorScheme,
+            faviconUrl: values.faviconUrl,
             logoUrl: values.logoUrl,
             portalName: values.portalName,
             primaryColor,
@@ -301,6 +305,7 @@ function AdminSettings() {
     applyBrandingTheme({
       ...updatedTenant.config.branding,
       description: updatedTenant.config.publicSite.heroDescription,
+      faviconUrl: updatedTenant.config.branding.faviconUrl,
     });
     await router.invalidate();
   });
@@ -320,12 +325,6 @@ function AdminSettings() {
             {tenant.name}.
           </Text>
         </div>
-
-        <Alert color="blue" title="What this changes">
-          These changes affect this organization&apos;s public page, sign-in
-          page, and learner sign-up settings. They do not change the main
-          SparkTool sign-in page.
-        </Alert>
 
         <form onSubmit={saveChanges}>
           <Stack gap="md">
@@ -369,6 +368,32 @@ function AdminSettings() {
                         fit="contain"
                         h={72}
                         src={form.values.logoUrl}
+                      />
+                    ) : null}
+                  </Stack>
+                  <Stack gap="xs">
+                    <FileInput
+                      accept={BRANDING_IMAGE_ACCEPT}
+                      clearable
+                      description="Square image recommended (PNG, ICO, SVG). Defaults to the logo above if not set."
+                      label="Favicon upload"
+                      leftSection={<IconUpload size={16} />}
+                      onChange={(file) =>
+                        handleBrandingUpload("faviconUrl", file)
+                      }
+                      placeholder="Choose favicon image"
+                    />
+                    <TextInput
+                      label="Favicon URL"
+                      {...form.getInputProps("faviconUrl")}
+                    />
+                    {form.values.faviconUrl ? (
+                      <Image
+                        alt="Favicon preview"
+                        className="max-w-16 rounded-md border border-(--app-border) bg-(--app-surface-soft)"
+                        fit="contain"
+                        h={48}
+                        src={form.values.faviconUrl}
                       />
                     ) : null}
                   </Stack>
