@@ -63,6 +63,8 @@ const tenantSettingsSchema = z.object({
     .string()
     .trim()
     .min(1, "Featured section title is required"),
+  footerLogoAlt: z.string().trim(),
+  footerLogoUrl: z.string().trim(),
   footerTagline: z.string().trim().min(1, "Footer tagline is required"),
   heroDescription: z.string().trim().min(1, "Hero description is required"),
   heroLogoUrl: z.string().trim().min(1, "Hero logo URL is required"),
@@ -74,6 +76,10 @@ const tenantSettingsSchema = z.object({
     .string()
     .trim()
     .min(1, "Secondary CTA label is required"),
+  heroBackgroundImageUrl: z
+    .string()
+    .trim()
+    .min(1, "Hero background image URL is required"),
   heroTitle: z.string().trim().min(1, "Hero title is required"),
   loginFootnote: z.string().trim().min(1, "Login footnote is required"),
   loginFormDescription: z
@@ -88,6 +94,7 @@ const tenantSettingsSchema = z.object({
     .string()
     .trim()
     .min(1, "Mission description is required"),
+  missionImageUrl: z.string().trim().min(1, "Mission image URL is required"),
   missionTitle: z.string().trim().min(1, "Mission title is required"),
   supportEmail: z.email("Enter a valid support email").or(z.literal("")),
   logoUrl: z.string().trim().min(1, "Logo URL is required"),
@@ -118,7 +125,10 @@ function mapTenantToFormValues(tenant: Tenant): TenantSettingsFormValues {
     copyright: tenant.config.publicSite.copyright,
     featuredCoursesCtaLabel: tenant.config.publicSite.featuredCoursesCtaLabel,
     featuredCoursesTitle: tenant.config.publicSite.featuredCoursesTitle,
+    footerLogoAlt: tenant.config.publicSite.footerLogoAlt ?? "",
+    footerLogoUrl: tenant.config.publicSite.footerLogoUrl ?? "",
     footerTagline: tenant.config.publicSite.footerTagline,
+    heroBackgroundImageUrl: tenant.config.publicSite.heroBackgroundImageUrl,
     heroDescription: tenant.config.publicSite.heroDescription,
     heroLogoUrl: tenant.config.publicSite.heroLogoUrl,
     heroPrimaryCtaLabel: tenant.config.publicSite.heroPrimaryCtaLabel,
@@ -131,6 +141,7 @@ function mapTenantToFormValues(tenant: Tenant): TenantSettingsFormValues {
     loginSubheading: tenant.config.branding.loginPage.subheading,
     missionCtaLabel: tenant.config.publicSite.missionCtaLabel,
     missionDescription: tenant.config.publicSite.missionDescription,
+    missionImageUrl: tenant.config.publicSite.missionImageUrl,
     missionTitle: tenant.config.publicSite.missionTitle,
     logoUrl: tenant.config.branding.logoUrl,
     portalName: tenant.config.branding.portalName,
@@ -166,7 +177,12 @@ function AdminSettings() {
   const updateTenant = useUpdateTenant();
   const uploadBrandingAsset = useUploadBrandingAsset();
   const [uploadingField, setUploadingField] = useState<
-    null | "heroLogoUrl" | "logoUrl"
+    | null
+    | "footerLogoUrl"
+    | "heroBackgroundImageUrl"
+    | "heroLogoUrl"
+    | "logoUrl"
+    | "missionImageUrl"
   >(null);
   const tenantFormValues = useMemo(
     () => mapTenantToFormValues(tenant),
@@ -191,7 +207,12 @@ function AdminSettings() {
   }, [form, tenantFormValues]);
 
   const handleBrandingUpload = async (
-    field: "heroLogoUrl" | "logoUrl",
+    field:
+      | "footerLogoUrl"
+      | "heroBackgroundImageUrl"
+      | "heroLogoUrl"
+      | "logoUrl"
+      | "missionImageUrl",
     file: File | null,
   ) => {
     if (!file) {
@@ -248,14 +269,18 @@ function AdminSettings() {
             copyright: values.copyright,
             featuredCoursesCtaLabel: values.featuredCoursesCtaLabel,
             featuredCoursesTitle: values.featuredCoursesTitle,
+            footerLogoAlt: values.footerLogoAlt,
+            footerLogoUrl: values.footerLogoUrl,
             footerTagline: values.footerTagline,
             heroDescription: values.heroDescription,
+            heroBackgroundImageUrl: values.heroBackgroundImageUrl,
             heroLogoUrl: values.heroLogoUrl,
             heroPrimaryCtaLabel: values.heroPrimaryCtaLabel,
             heroSecondaryCtaLabel: values.heroSecondaryCtaLabel,
             heroTitle: values.heroTitle,
             missionCtaLabel: values.missionCtaLabel,
             missionDescription: values.missionDescription,
+            missionImageUrl: values.missionImageUrl,
             missionTitle: values.missionTitle,
           },
           liveSessions: tenant.config.liveSessions
@@ -284,7 +309,7 @@ function AdminSettings() {
     <Container className="py-8" size="xl">
       <Stack gap="xl">
         <div>
-          <Badge color="green" variant="light">
+          <Badge color="brand" variant="light">
             Learning Portal
           </Badge>
           <Title mt="sm" order={2}>
@@ -307,7 +332,7 @@ function AdminSettings() {
             <SimpleGrid cols={{ base: 1, xl: 2 }} spacing="md">
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
-                  <IconBrandTrello className="text-fun-green-700" size={20} />
+                  <IconBrandTrello className="text-brand-700" size={20} />
                   <Title order={3}>Branding</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
@@ -392,7 +417,7 @@ function AdminSettings() {
 
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
-                  <IconLock className="text-fun-green-700" size={20} />
+                  <IconLock className="text-brand-700" size={20} />
                   <Title order={3}>Sign-up settings</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
@@ -411,7 +436,7 @@ function AdminSettings() {
 
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
-                  <IconGlobe className="text-fun-green-700" size={20} />
+                  <IconGlobe className="text-brand-700" size={20} />
                   <Title order={3}>Login Experience</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
@@ -446,7 +471,7 @@ function AdminSettings() {
 
               <Paper p="lg" radius="lg" withBorder>
                 <Group gap="sm">
-                  <IconWorld className="text-fun-green-700" size={20} />
+                  <IconWorld className="text-brand-700" size={20} />
                   <Title order={3}>Public page</Title>
                 </Group>
                 <Stack gap="sm" mt="md">
@@ -460,6 +485,32 @@ function AdminSettings() {
                     minRows={4}
                     {...form.getInputProps("heroDescription")}
                   />
+                  <Stack gap="xs">
+                    <FileInput
+                      accept={BRANDING_IMAGE_ACCEPT}
+                      clearable
+                      description="Accepted formats: PNG, JPEG, WEBP, SVG. Save your changes after uploading."
+                      label="Hero background image upload"
+                      leftSection={<IconUpload size={16} />}
+                      onChange={(file) =>
+                        handleBrandingUpload("heroBackgroundImageUrl", file)
+                      }
+                      placeholder="Choose hero background image"
+                    />
+                    <TextInput
+                      label="Hero background image URL"
+                      {...form.getInputProps("heroBackgroundImageUrl")}
+                    />
+                    {form.values.heroBackgroundImageUrl ? (
+                      <Image
+                        alt="Hero background preview"
+                        className="max-w-40 rounded-md border border-(--app-border) bg-(--app-surface-soft)"
+                        fit="cover"
+                        h={72}
+                        src={form.values.heroBackgroundImageUrl}
+                      />
+                    ) : null}
+                  </Stack>
                   <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="sm">
                     <TextInput
                       label="Primary CTA label"
@@ -488,9 +539,66 @@ function AdminSettings() {
                     minRows={4}
                     {...form.getInputProps("missionDescription")}
                   />
+                  <Stack gap="xs">
+                    <FileInput
+                      accept={BRANDING_IMAGE_ACCEPT}
+                      clearable
+                      description="Accepted formats: PNG, JPEG, WEBP, SVG. Save your changes after uploading."
+                      label="Mission image upload"
+                      leftSection={<IconUpload size={16} />}
+                      onChange={(file) =>
+                        handleBrandingUpload("missionImageUrl", file)
+                      }
+                      placeholder="Choose mission image"
+                    />
+                    <TextInput
+                      label="Mission image URL"
+                      {...form.getInputProps("missionImageUrl")}
+                    />
+                    {form.values.missionImageUrl ? (
+                      <Image
+                        alt="Mission image preview"
+                        className="max-w-40 rounded-md border border-(--app-border) bg-(--app-surface-soft)"
+                        fit="cover"
+                        h={72}
+                        src={form.values.missionImageUrl}
+                      />
+                    ) : null}
+                  </Stack>
                   <TextInput
                     label="Mission CTA label"
                     {...form.getInputProps("missionCtaLabel")}
+                  />
+                  <Stack gap="xs">
+                    <FileInput
+                      accept={BRANDING_IMAGE_ACCEPT}
+                      clearable
+                      description="Accepted formats: PNG, JPEG, WEBP, SVG. Leave blank to reuse the landing logo."
+                      label="Footer logo upload"
+                      leftSection={<IconUpload size={16} />}
+                      onChange={(file) =>
+                        handleBrandingUpload("footerLogoUrl", file)
+                      }
+                      placeholder="Choose footer logo image"
+                    />
+                    <TextInput
+                      label="Footer logo URL"
+                      {...form.getInputProps("footerLogoUrl")}
+                    />
+                    {form.values.footerLogoUrl ? (
+                      <Image
+                        alt="Footer logo preview"
+                        className="max-w-40 rounded-md border border-(--app-border) bg-(--app-surface-soft)"
+                        fit="contain"
+                        h={72}
+                        src={form.values.footerLogoUrl}
+                      />
+                    ) : null}
+                  </Stack>
+                  <TextInput
+                    label="Footer logo alt text"
+                    placeholder="e.g. NSIB logo"
+                    {...form.getInputProps("footerLogoAlt")}
                   />
                   <TextInput
                     label="Footer tagline"
@@ -520,7 +628,7 @@ function AdminSettings() {
                 Reset
               </Button>
               <Button
-                className="bg-fun-green-800 hover:bg-fun-green-700"
+                className="bg-brand-800 hover:bg-brand-700"
                 disabled={!form.isDirty() || uploadingField !== null}
                 loading={updateTenant.isPending}
                 type="submit"

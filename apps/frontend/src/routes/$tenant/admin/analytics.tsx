@@ -99,7 +99,7 @@ function AnalyticsReports() {
         {/* Header */}
         <Group justify="space-between" mb="xl">
           <div>
-            <Title className="text-fun-green-800" order={1}>
+            <Title className="text-brand-800" order={1}>
               Analytics & Reports
             </Title>
             <Text c="dimmed" size="lg">
@@ -178,8 +178,8 @@ function AnalyticsReports() {
           <div data-aos="fade-up" data-aos-delay="200">
             <Card p="lg" radius="lg" withBorder>
               <Group gap="sm">
-                <div className="p-2 rounded-lg bg-fun-green-100">
-                  <IconBook className="text-fun-green-600" size={24} />
+                <div className="p-2 rounded-lg bg-brand-100">
+                  <IconBook className="text-brand-600" size={24} />
                 </div>
                 <div>
                   <Text c="dimmed" size="sm">
@@ -346,7 +346,7 @@ function AnalyticsReports() {
                         }
                         sections={[
                           {
-                            color: "fun-green",
+                            color: "brand",
                             tooltip: "Completion Rate",
                             value: overallCompletionRate,
                           },
@@ -391,7 +391,7 @@ function AnalyticsReports() {
                           </Text>
                         </Group>
                         <Progress
-                          color="fun-green"
+                          color="brand"
                           radius="xl"
                           size="sm"
                           value={
@@ -489,7 +489,7 @@ function AnalyticsReports() {
                         )}
 
                         <Alert
-                          color="fun-green"
+                          color="brand"
                           icon={<IconAward size={16} />}
                           variant="light"
                         >
@@ -631,7 +631,7 @@ function AnalyticsReports() {
                         </Text>
                       </Group>
                       <Progress
-                        color="fun-green"
+                        color="brand"
                         radius="xl"
                         size="lg"
                         value={overallCompletionRate}
@@ -691,8 +691,8 @@ function AnalyticsReports() {
                           </Text>
                         </Paper>
 
-                        <Paper bg="fun-green.0" p="md" radius="md">
-                          <Text c="fun-green" fw={700} size="lg">
+                        <Paper bg="brand.0" p="md" radius="md">
+                          <Text c="brand" fw={700} size="lg">
                             {dashboardMetrics.learningPatterns.mobileVsDesktop
                               .desktop || 0}
                             %
@@ -746,7 +746,7 @@ function AnalyticsReports() {
                             <Group justify="space-between" key={student.userId}>
                               <Text size="sm">{student.displayName}</Text>
                               <Badge
-                                color={index === 0 ? "fun-green" : "blue"}
+                                color={index === 0 ? "brand" : "blue"}
                                 variant="light"
                               >
                                 {student.averageScore}% avg

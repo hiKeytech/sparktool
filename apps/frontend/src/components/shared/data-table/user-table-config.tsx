@@ -119,7 +119,7 @@ export function createUserTableColumns({
         return (
           <Group gap="xs">
             <Progress
-              color="fun-green"
+              color="brand"
               size="sm"
               style={{ width: 60 }}
               value={progress}

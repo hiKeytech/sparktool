@@ -205,7 +205,7 @@ function StudentLiveSessionsPage() {
         <Group grow>
           {showJoinButton && canJoinSession(session) && (
             <Button
-              className="bg-fun-green-800 hover:bg-fun-green-700"
+              className="bg-brand-800 hover:bg-brand-700"
               fullWidth
               leftSection={<IconVideo size={16} />}
               loading={joinLiveSession.isPending}
@@ -289,7 +289,7 @@ function StudentLiveSessionsPage() {
         {/* Active Sessions */}
         {activeSessions.length > 0 && (
           <div>
-            <Title className="text-fun-green-800" mb="md" order={3}>
+            <Title className="text-brand-800" mb="md" order={3}>
               🔴 Active Sessions
             </Title>
             <SimpleGrid cols={{ base: 1, md: 2 }} spacing="lg">

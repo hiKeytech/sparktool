@@ -572,7 +572,7 @@ function CourseBuilder() {
                   Cancel
                 </Button>
                 <Button
-                  className="bg-fun-green-800 hover:bg-fun-green-700"
+                  className="bg-brand-800 hover:bg-brand-700"
                   loading={createSection.isPending || updateSection.isPending}
                   type="submit"
                 >
@@ -636,7 +636,7 @@ function CourseBuilder() {
                 <Button
                   loading={updateCourse.isPending}
                   type="submit"
-                  className="bg-fun-green-800 hover:bg-fun-green-700"
+                  className="bg-brand-800 hover:bg-brand-700"
                 >
                   Save Settings
                 </Button>
@@ -749,7 +749,7 @@ function CourseBuilder() {
                   Cancel
                 </Button>
                 <Button
-                  className="bg-fun-green-800 hover:bg-fun-green-700"
+                  className="bg-brand-800 hover:bg-brand-700"
                   loading={createLesson.isPending || updateLesson.isPending}
                   type="submit"
                 >
@@ -873,7 +873,7 @@ function SortableSection({
 
   return (
     <Card
-      className={`mb-4 border-2 ${isDragging ? "border-fun-green-300" : "border-(--app-border)"}`}
+      className={`mb-4 border-2 ${isDragging ? "border-brand-300" : "border-(--app-border)"}`}
       p="md"
       ref={setNodeRef}
       style={style}
@@ -911,7 +911,7 @@ function SortableSection({
               <Badge color="blue" variant="light">
                 {section.lessons.length} lessons
               </Badge>
-              <Badge color="green" variant="light">
+              <Badge color="brand" variant="light">
                 {Math.round(section.estimatedDurationInMinutes || 0)} min
               </Badge>
               {section.lessons.reduce(

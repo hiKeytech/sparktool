@@ -346,7 +346,7 @@ export function UniversalVideoPlayer({
         {state.isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
             <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 border-4 rounded-full border-fun-green-600 border-t-transparent animate-spin" />
+              <div className="w-16 h-16 mx-auto mb-4 border-4 rounded-full border-brand-600 border-t-transparent animate-spin" />
               <Text className="text-white" size="sm">
                 Loading video...
               </Text>
@@ -365,7 +365,7 @@ export function UniversalVideoPlayer({
                 {state.error}
               </Text>
               <Button
-                className="mt-4 bg-fun-green-600 hover:bg-fun-green-700"
+                className="mt-4 bg-brand-600 hover:bg-brand-700"
                 onClick={() => window.location.reload()}
               >
                 Retry
@@ -377,7 +377,7 @@ export function UniversalVideoPlayer({
         {/* Play Button Overlay */}
         {!state.isPlaying && !state.isLoading && !state.error && (
           <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30">
-            <div className="flex items-center justify-center w-20 h-20 transition-colors rounded-full bg-fun-green-600 hover:bg-fun-green-700">
+            <div className="flex items-center justify-center w-20 h-20 transition-colors rounded-full bg-brand-600 hover:bg-brand-700">
               <IconPlayerPlay className="ml-1 text-white" size={32} />
             </div>
           </div>
@@ -393,7 +393,7 @@ export function UniversalVideoPlayer({
               {/* Progress Bar */}
               <Progress
                 className="cursor-pointer"
-                color="fun-green"
+                color="brand"
                 onClick={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const clickX = e.clientX - rect.left;
@@ -410,7 +410,7 @@ export function UniversalVideoPlayer({
                 <Group gap="sm">
                   {/* Skip Back */}
                   <ActionIcon
-                    className="text-white hover:text-fun-green-400"
+                    className="text-white hover:text-brand-400"
                     onClick={() => skipTime(-10)}
                     variant="transparent"
                   >
@@ -419,7 +419,7 @@ export function UniversalVideoPlayer({
 
                   {/* Play/Pause */}
                   <ActionIcon
-                    className="text-white hover:text-fun-green-400"
+                    className="text-white hover:text-brand-400"
                     onClick={togglePlayPause}
                     variant="transparent"
                   >
@@ -432,7 +432,7 @@ export function UniversalVideoPlayer({
 
                   {/* Skip Forward */}
                   <ActionIcon
-                    className="text-white hover:text-fun-green-400"
+                    className="text-white hover:text-brand-400"
                     onClick={() => skipTime(10)}
                     variant="transparent"
                   >
@@ -442,7 +442,7 @@ export function UniversalVideoPlayer({
                   {/* Volume */}
                   <Group gap="xs">
                     <ActionIcon
-                      className="text-white hover:text-fun-green-400"
+                      className="text-white hover:text-brand-400"
                       onClick={toggleMute}
                       variant="transparent"
                     >
@@ -464,7 +464,7 @@ export function UniversalVideoPlayer({
                 <Group gap="sm">
                   {/* Settings */}
                   <ActionIcon
-                    className="text-white hover:text-fun-green-400"
+                    className="text-white hover:text-brand-400"
                     variant="transparent"
                   >
                     <IconSettings size={20} />
@@ -472,7 +472,7 @@ export function UniversalVideoPlayer({
 
                   {/* Fullscreen */}
                   <ActionIcon
-                    className="text-white hover:text-fun-green-400"
+                    className="text-white hover:text-brand-400"
                     onClick={() => {
                       if (containerRef.current) {
                         if (document.fullscreenElement) {

@@ -50,7 +50,7 @@ export function createProgressMonitoringTableColumns(): ColumnDef<CourseProgress
               {progressPercent}%
             </Text>
             <Progress
-              color="fun-green"
+              color="brand"
               radius="md"
               size="sm"
               value={progressPercent}
@@ -104,7 +104,7 @@ export function createProgressMonitoringTableColumns(): ColumnDef<CourseProgress
       cell: ({ row }) => {
         const hasCertificate = row.original.hasCertificate;
         return hasCertificate ? (
-          <Badge color="fun-green" size="sm" variant="light">
+          <Badge color="brand" size="sm" variant="light">
             <Group gap="xs">
               <IconCertificate size={12} />
               Issued
@@ -125,7 +125,7 @@ export function createProgressMonitoringTableColumns(): ColumnDef<CourseProgress
         return (
           <Tooltip label="View Course Details">
             <ActionIcon
-              className="text-stone-600 hover:text-fun-green-700"
+              className="text-stone-600 hover:text-brand-700"
               component={Link}
               size="sm"
               to={`/admin/courses/${courseId}`}

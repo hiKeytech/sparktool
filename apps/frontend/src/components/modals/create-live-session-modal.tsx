@@ -151,7 +151,7 @@ export function CreateLiveSessionModal({
           </Button>
 
           <Button
-            className="bg-fun-green-800 hover:bg-fun-green-700"
+            className="bg-brand-800 hover:bg-brand-700"
             loading={createLiveSession.isPending}
             type="submit"
           >

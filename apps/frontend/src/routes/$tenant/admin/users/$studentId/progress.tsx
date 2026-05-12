@@ -173,7 +173,7 @@ function StudentProgressMonitoring() {
       >
         <Flex align="center" gap="md" mb="lg">
           <ActionIcon
-            className="text-(--app-text-muted) hover:text-fun-green-700"
+            className="text-(--app-text-muted) hover:text-brand-700"
             onClick={() => {
               if (tenant.id) {
                 navigate({
@@ -210,7 +210,7 @@ function StudentProgressMonitoring() {
             <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
               <Stack gap="xs">
                 <Group gap="xs">
-                  <IconUser className="text-fun-green-700" size={20} />
+                  <IconUser className="text-brand-700" size={20} />
                   <Text className="text-(--app-text-muted)" fw={500} size="sm">
                     Student Profile
                   </Text>
@@ -235,7 +235,7 @@ function StudentProgressMonitoring() {
             <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
               <Stack gap="xs">
                 <Group gap="xs">
-                  <IconTrophy className="text-fun-green-700" size={20} />
+                  <IconTrophy className="text-brand-700" size={20} />
                   <Text className="text-(--app-text-muted)" fw={500} size="sm">
                     Overall Progress
                   </Text>
@@ -244,7 +244,7 @@ function StudentProgressMonitoring() {
                   {studentProgressData.totalProgress}%
                 </Text>
                 <Progress
-                  color="fun-green"
+                  color="brand"
                   radius="md"
                   size="sm"
                   value={studentProgressData.totalProgress}
@@ -263,7 +263,7 @@ function StudentProgressMonitoring() {
             <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
               <Stack gap="xs">
                 <Group gap="xs">
-                  <IconCertificate className="text-fun-green-700" size={20} />
+                  <IconCertificate className="text-brand-700" size={20} />
                   <Text className="text-(--app-text-muted)" fw={500} size="sm">
                     Certificates
                   </Text>
@@ -288,7 +288,7 @@ function StudentProgressMonitoring() {
             <Card className="border shadow-sm bg-(--app-surface) border-(--app-border)">
               <Stack gap="xs">
                 <Group gap="xs">
-                  <IconClock className="text-fun-green-700" size={20} />
+                  <IconClock className="text-brand-700" size={20} />
                   <Text className="text-(--app-text-muted)" fw={500} size="sm">
                     Study Time
                   </Text>

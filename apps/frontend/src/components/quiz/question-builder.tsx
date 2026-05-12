@@ -1,37 +1,37 @@
 import type { QuizQuestion } from "@/types";
 
 import {
-    DragDropContext,
-    Draggable,
-    Droppable,
-    type DropResult,
+  DragDropContext,
+  Draggable,
+  Droppable,
+  type DropResult,
 } from "@hello-pangea/dnd";
 import {
-    ActionIcon,
-    Alert,
-    Box,
-    Button,
-    Card,
-    Checkbox,
-    Group,
-    Modal,
-    NumberInput,
-    Select,
-    Stack,
-    Text,
-    Textarea,
-    TextInput,
+  ActionIcon,
+  Alert,
+  Box,
+  Button,
+  Card,
+  Checkbox,
+  Group,
+  Modal,
+  NumberInput,
+  Select,
+  Stack,
+  Text,
+  Textarea,
+  TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useDisclosure } from "@mantine/hooks";
 import {
-    IconAlertCircle,
-    IconCheck,
-    IconEdit,
-    IconGripVertical,
-    IconPlus,
-    IconTrash,
-    IconX,
+  IconAlertCircle,
+  IconCheck,
+  IconEdit,
+  IconGripVertical,
+  IconPlus,
+  IconTrash,
+  IconX,
 } from "@tabler/icons-react";
 import React, { useState } from "react";
 
@@ -179,7 +179,7 @@ export const QuestionBuilder: React.FC<QuestionBuilderProps> = ({
       } else if (Number(form.values.correctAnswer) > index) {
         form.setFieldValue(
           "correctAnswer",
-          (form.values.correctAnswer as number) - 1
+          (form.values.correctAnswer as number) - 1,
         );
       }
     }
@@ -278,7 +278,8 @@ export const QuestionBuilder: React.FC<QuestionBuilderProps> = ({
                                     <ActionIcon
                                       color="red"
                                       onClick={() =>
-                                        handleDeleteQuestion(index)}
+                                        handleDeleteQuestion(index)
+                                      }
                                       size="sm"
                                       variant="subtle"
                                     >
@@ -298,7 +299,10 @@ export const QuestionBuilder: React.FC<QuestionBuilderProps> = ({
                                   {question.options?.map((option, optIndex) => (
                                     <Group gap="xs" key={optIndex}>
                                       {question.correctAnswer === optIndex ? (
-                                        <IconCheck color="green" size={14} />
+                                        <IconCheck
+                                          color="var(--color-primary)"
+                                          size={14}
+                                        />
                                       ) : (
                                         <IconX color="gray" size={14} />
                                       )}
@@ -402,7 +406,8 @@ export const QuestionBuilder: React.FC<QuestionBuilderProps> = ({
                       checked={form.values.correctAnswer === index}
                       label="Correct"
                       onChange={() =>
-                        form.setFieldValue("correctAnswer", index)}
+                        form.setFieldValue("correctAnswer", index)
+                      }
                     />
                     {(form.values.options?.length || 0) > 2 && (
                       <ActionIcon
@@ -426,7 +431,8 @@ export const QuestionBuilder: React.FC<QuestionBuilderProps> = ({
                 ]}
                 label="Correct Answer"
                 onChange={(value) =>
-                  form.setFieldValue("correctAnswer", parseInt(value || "0"))}
+                  form.setFieldValue("correctAnswer", parseInt(value || "0"))
+                }
                 required
                 value={form.values.correctAnswer?.toString()}
               />

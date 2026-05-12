@@ -43,7 +43,7 @@ export function TenantLogo({
     <div
       aria-label={alt ?? `${fallbackLabel} logo`}
       className={clsx(
-        "flex items-center justify-center rounded-full bg-fun-green-800 text-white font-semibold tracking-wide",
+        "flex items-center justify-center rounded-full bg-brand-800 text-white font-semibold tracking-wide",
         className,
       )}
       role="img"

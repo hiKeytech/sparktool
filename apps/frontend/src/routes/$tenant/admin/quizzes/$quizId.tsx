@@ -46,7 +46,7 @@ export function QuizDetails() {
     return (
       <Container py="xl" size="xl">
         <Group justify="center" py="xl">
-          <Loader className="text-fun-green-600" size="lg" />
+          <Loader className="text-brand-600" size="lg" />
         </Group>
       </Container>
     );
@@ -99,7 +99,7 @@ export function QuizDetails() {
             >
               Back to Quiz Management
             </Button>
-            <Title className="text-fun-green-800" order={1}>
+            <Title className="text-brand-800" order={1}>
               {quiz.title}
             </Title>
             <Text c="dimmed">
@@ -202,7 +202,7 @@ export function QuizDetails() {
             )}
 
             <Group gap="sm">
-              <Badge color="green" variant="light">
+              <Badge color="brand" variant="light">
                 Max Attempts: {quiz.maxAttempts || "Unlimited"}
               </Badge>
               <Badge color="blue" variant="light">

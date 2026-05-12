@@ -223,7 +223,7 @@ export function ResourceManager({
           </Text>
           {!readonly && (
             <Button
-              color="fun-green"
+              color="brand"
               leftSection={<IconPlus size={16} />}
               onClick={() => handleOpenModal()}
               size="sm"
@@ -373,7 +373,7 @@ export function ResourceManager({
               Cancel
             </Button>
             <Button
-              color="fun-green"
+              color="brand"
               loading={
                 createResourceMutation.isPending ||
                 updateResourceMutation.isPending

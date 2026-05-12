@@ -55,7 +55,7 @@ export function createTrendsTableColumns(): ColumnDef<MonthlyTrendData>[] {
         }
         const growthRate = Math.round(10 + index * 5);
         return (
-          <Badge color="fun-green" size="sm" variant="light">
+          <Badge color="brand" size="sm" variant="light">
             +{growthRate}%
           </Badge>
         );

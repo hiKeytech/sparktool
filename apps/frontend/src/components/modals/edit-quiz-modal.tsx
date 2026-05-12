@@ -142,7 +142,7 @@ function EditQuizModal({ courses, quiz }: EditQuizModalProps) {
             Cancel
           </Button>
           <Button
-            className="bg-fun-green-600 hover:bg-fun-green-700"
+            className="bg-brand-600 hover:bg-brand-700"
             loading={updateQuiz.isPending}
             type="submit"
           >

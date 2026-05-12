@@ -211,7 +211,7 @@ export function StudentDetails() {
             <Grid.Col span={{ base: 12, md: 4 }}>
               <Stack align="center" gap="md">
                 <Avatar
-                  className="ring-4 ring-fun-green-100"
+                  className="ring-4 ring-brand-100"
                   radius="xl"
                   size={120}
                   src={studentData.photoURL}
@@ -315,7 +315,7 @@ export function StudentDetails() {
                   }
                   sections={[
                     {
-                      color: "fun-green.6",
+                      color: "brand.6",
                       value: Math.round(
                         progressData.reduce(
                           (acc, course) => acc + course.completionPercentage,
@@ -366,7 +366,7 @@ export function StudentDetails() {
               >
                 <ThemeIcon
                   className="mx-auto mb-2"
-                  color="green"
+                  color="brand"
                   size={60}
                   variant="light"
                 >
@@ -444,7 +444,7 @@ export function StudentDetails() {
                           </Text>
                         </Group>
                         <Progress
-                          color="fun-green.6"
+                          color="brand.6"
                           radius="xl"
                           size="sm"
                           value={courseProgress.completionPercentage}

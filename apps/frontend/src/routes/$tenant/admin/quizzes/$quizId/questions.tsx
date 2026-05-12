@@ -75,7 +75,7 @@ function QuizQuestionManagement() {
     return (
       <Container py="xl" size="xl">
         <Group justify="center" py="xl">
-          <Loader className="text-fun-green-600" size="lg" />
+          <Loader className="text-brand-600" size="lg" />
         </Group>
       </Container>
     );
@@ -114,7 +114,7 @@ function QuizQuestionManagement() {
             >
               Back to Quiz Details
             </Button>
-            <Title className="text-fun-green-800" order={1}>
+            <Title className="text-brand-800" order={1}>
               Manage Questions
             </Title>
             <Text c="dimmed">

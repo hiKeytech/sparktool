@@ -197,7 +197,7 @@ function UserProfile() {
               Cancel
             </Button>
             <Button
-              color="fun-green"
+              color="brand"
               loading={changePasswordMutation.isPending}
               type="submit"
             >
@@ -255,7 +255,7 @@ function UserProfile() {
             <Group gap="lg">
               <div className="relative">
                 <Avatar
-                  className="border-4 border-fun-green-200"
+                  className="border-4 border-brand-200"
                   radius="xl"
                   size={80}
                   src={user.photoURL}
@@ -270,7 +270,7 @@ function UserProfile() {
                     <ActionIcon
                       {...props}
                       className="absolute border-2 border-white -bottom-1 -right-1"
-                      color="fun-green"
+                      color="brand"
                       radius="xl"
                       size="sm"
                     >
@@ -281,14 +281,14 @@ function UserProfile() {
               </div>
 
               <div>
-                <Title className="text-fun-green-800" order={2}>
+                <Title className="text-brand-800" order={2}>
                   {user.displayName}
                 </Title>
                 <Text c="dimmed" size="lg">
                   {user.department}
                 </Text>
                 <Group gap="xs" mt="xs">
-                  <Badge color="fun-green" variant="light">
+                  <Badge color="brand" variant="light">
                     {user.role === "student" ? "Student" : "Administrator"}
                   </Badge>
                   {user.studentId && (
@@ -302,8 +302,8 @@ function UserProfile() {
 
             {/* Quick Stats */}
             <SimpleGrid className="text-center" cols={3} spacing="lg">
-              <Paper bg="fun-green.0" p="md" radius="md">
-                <Text c="fun-green" fw={700} size="xl">
+              <Paper bg="brand.0" p="md" radius="md">
+                <Text c="brand" fw={700} size="xl">
                   {completedCourses}
                 </Text>
                 <Text c="dimmed" size="sm">
@@ -422,7 +422,7 @@ function UserProfile() {
 
                 <Group justify="flex-end" mt="xl">
                   <Button
-                    color="fun-green"
+                    color="brand"
                     loading={updateUserMutation.isPending}
                     type="submit"
                   >
@@ -507,7 +507,7 @@ function UserProfile() {
 
                 <Group justify="flex-end" mt="xl">
                   <Button
-                    color="fun-green"
+                    color="brand"
                     loading={updateUserMutation.isPending}
                     type="submit"
                   >
@@ -546,7 +546,7 @@ function UserProfile() {
                       </Text>
                     </div>
                     <Button
-                      color="fun-green"
+                      color="brand"
                       onClick={openPasswordModal}
                       variant="outline"
                     >
@@ -614,21 +614,21 @@ function UserProfile() {
               <SimpleGrid cols={2} spacing="lg">
                 {/* Learning Progress */}
                 <Paper
-                  bg="fun-green.0"
+                  bg="brand.0"
                   data-aos="fade-up"
                   data-aos-delay="150"
                   p="lg"
                   radius="md"
                 >
                   <Group justify="space-between" mb="md">
-                    <IconBook className="text-fun-green-600" size={32} />
-                    <Badge color="fun-green">Learning</Badge>
+                    <IconBook className="text-brand-600" size={32} />
+                    <Badge color="brand">Learning</Badge>
                   </Group>
                   <Text fw={600} size="lg">
                     {completedCourses} Courses Completed
                   </Text>
                   <Progress
-                    color="fun-green"
+                    color="brand"
                     mt="xs"
                     value={
                       (completedCourses / Math.max(userProgress.length, 1)) *
@@ -679,20 +679,20 @@ function UserProfile() {
 
                 {/* Overall Progress */}
                 <Paper
-                  bg="fun-green.0"
+                  bg="brand.0"
                   data-aos="fade-up"
                   data-aos-delay="300"
                   p="lg"
                   radius="md"
                 >
                   <Group justify="space-between" mb="md">
-                    <IconTrophy className="text-fun-green-600" size={32} />
-                    <Badge color="fun-green">Achievement</Badge>
+                    <IconTrophy className="text-brand-600" size={32} />
+                    <Badge color="brand">Achievement</Badge>
                   </Group>
                   <Text fw={600} size="lg">
                     {Math.round(averageProgress)}% Average
                   </Text>
-                  <Progress color="fun-green" mt="xs" value={averageProgress} />
+                  <Progress color="brand" mt="xs" value={averageProgress} />
                 </Paper>
               </SimpleGrid>
 
@@ -703,7 +703,7 @@ function UserProfile() {
                 </Text>
                 <Group>
                   {completedCourses > 0 && (
-                    <Badge color="fun-green" size="lg" variant="light">
+                    <Badge color="brand" size="lg" variant="light">
                       First Course Complete
                     </Badge>
                   )}

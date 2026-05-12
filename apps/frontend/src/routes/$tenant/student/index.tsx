@@ -73,7 +73,7 @@ function StudentDashboard() {
         <Group justify="space-between" mb="xl">
           <div>
             <Group gap="sm" mb="xs">
-              <Avatar color="fun-green" size="md" src={user?.photoURL}>
+              <Avatar color="brand" size="md" src={user?.photoURL}>
                 {user?.displayName?.[0]}
               </Avatar>
               <div>
@@ -88,7 +88,7 @@ function StudentDashboard() {
           </div>
           <Group>
             <Button
-              color="fun-green"
+              color="brand"
               leftSection={<IconMessage size={16} />}
               onClick={openNotifications}
               variant="light"
@@ -96,8 +96,8 @@ function StudentDashboard() {
               Messages
             </Button>
             <Button
-              className="bg-fun-green-800 hover:bg-fun-green-700"
-              color="fun-green"
+              className="bg-brand-800 hover:bg-brand-700"
+              color="brand"
               leftSection={<IconSettings size={16} />}
               onClick={() =>
                 tenant.id &&
@@ -121,13 +121,13 @@ function StudentDashboard() {
             {/* Learning Overview Card */}
             <div data-aos="fade-up" data-aos-delay="100">
               <Card
-                className="text-white bg-linear-to-r from-fun-green-600 to-fun-green-700"
+                className="text-white bg-linear-to-r from-brand-600 to-brand-700"
                 p="xl"
                 radius="lg"
               >
                 <Group align="flex-start" justify="space-between">
                   <div className="flex-1">
-                    <Text className="mb-2 text-fun-green-100" size="sm">
+                    <Text className="mb-2 text-brand-100" size="sm">
                       My Learning Progress
                     </Text>
                     <Title className="mb-4 text-white" order={3}>
@@ -135,16 +135,16 @@ function StudentDashboard() {
                     </Title>
                     <Group gap="xs" mb="md">
                       <IconTrendingUp
-                        className="text-fun-green-200"
+                        className="text-brand-200"
                         size={16}
                       />
-                      <Text className="text-fun-green-100" size="sm">
+                      <Text className="text-brand-100" size="sm">
                         {overallProgress}% Complete
                       </Text>
                     </Group>
                     <Button
-                      className="text-fun-green-700"
-                      color="fun-green"
+                      className="text-brand-700"
+                      color="brand"
                       onClick={() =>
                         tenant.id &&
                         navigate({
@@ -204,7 +204,7 @@ function StudentDashboard() {
                           <Text
                             className={
                               progress.completionPercentage >= 50
-                                ? "text-fun-green-600"
+                                ? "text-brand-600"
                                 : "text-orange-500"
                             }
                             fw={600}
@@ -217,7 +217,7 @@ function StudentDashboard() {
                           className="mb-3"
                           color={
                             progress.completionPercentage >= 50
-                              ? "fun-green"
+                              ? "brand"
                               : "orange"
                           }
                           radius="xl"
@@ -239,7 +239,7 @@ function StudentDashboard() {
                 radius="lg"
                 withBorder
               >
-                <div className="flex items-center justify-center w-16 h-16 mx-auto mb-3 rounded-full bg-fun-green-100">
+                <div className="flex items-center justify-center w-16 h-16 mx-auto mb-3 rounded-full bg-brand-100">
                   <TenantLogo
                     alt={logoAlt}
                     fallbackLabel={portalName}
@@ -268,8 +268,8 @@ function StudentDashboard() {
                   Progress Summary
                 </Title>
                 <SimpleGrid cols={1} spacing="sm">
-                  <div className="p-3 text-center rounded-lg bg-fun-green-50">
-                    <Text className="text-fun-green-600" fw={700} size="xl">
+                  <div className="p-3 text-center rounded-lg bg-brand-50">
+                    <Text className="text-brand-600" fw={700} size="xl">
                       {completedCourses}
                     </Text>
                     <Text className="text-(--app-text-muted)" size="sm">

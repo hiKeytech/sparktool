@@ -175,7 +175,7 @@ function CourseView() {
               tenantId={tenant.id}
             />
             <Button
-              color="fun-green"
+              color="brand"
               leftSection={<IconSettings size={16} />}
               size="sm"
               variant="filled"
@@ -211,7 +211,7 @@ function CourseView() {
               <Stack gap="lg">
                 {/* Lesson Title */}
                 <div>
-                  <Text className="mb-1 text-sm font-medium text-fun-green-600">
+                  <Text className="mb-1 text-sm font-medium text-brand-600">
                     {currentSection?.title}
                   </Text>
                   <Title className="text-(--app-text)" order={1}>
@@ -235,7 +235,7 @@ function CourseView() {
                     <button
                       className={`pb-2 border-b-2 ${
                         activeTab === "description"
-                          ? "border-fun-green-600 text-fun-green-600"
+                          ? "border-brand-600 text-brand-600"
                           : "border-transparent text-(--app-text-muted)"
                       }`}
                       onClick={() => setActiveTab("description")}
@@ -246,7 +246,7 @@ function CourseView() {
                     <button
                       className={`pb-2 border-b-2 ${
                         activeTab === "resources"
-                          ? "border-fun-green-600 text-fun-green-600"
+                          ? "border-brand-600 text-brand-600"
                           : "border-transparent text-(--app-text-muted)"
                       }`}
                       onClick={() => setActiveTab("resources")}
@@ -257,7 +257,7 @@ function CourseView() {
                     <button
                       className={`pb-2 border-b-2 ${
                         activeTab === "discussion"
-                          ? "border-fun-green-600 text-fun-green-600"
+                          ? "border-brand-600 text-brand-600"
                           : "border-transparent text-(--app-text-muted)"
                       }`}
                       onClick={() => setActiveTab("discussion")}
@@ -363,7 +363,7 @@ function CourseView() {
                         currentSection?.id || "",
                       )
                         ? "bg-(--app-text-subtle) hover:opacity-90"
-                        : "bg-fun-green-600 hover:bg-fun-green-700"
+                        : "bg-brand-600 hover:bg-brand-700"
                     }`}
                     disabled={isLessonCompleted(
                       currentLesson.id,

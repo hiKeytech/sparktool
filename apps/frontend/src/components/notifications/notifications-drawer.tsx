@@ -154,7 +154,7 @@ function NotificationItem({ notification }: NotificationItemProps) {
       className={`border-l-4 ${
         notification.isRead
           ? "border-l-gray-200 bg-white"
-          : "border-l-fun-green-500 bg-fun-green-50"
+          : "border-l-brand-500 bg-brand-50"
       }`}
       padding="md"
       radius="sm"

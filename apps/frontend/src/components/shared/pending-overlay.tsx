@@ -15,12 +15,12 @@ export function PendingOverlay({
 }: LoadingOverlayProps) {
   return (
     <LoadingOverlay
-      color="fun-green"
+      color="brand"
       loaderProps={{
         children: (
           <Center>
             <Stack align="center" gap="md">
-              <Loader color="fun-green" size="lg" />
+              <Loader color="brand" size="lg" />
 
               {reason && (
                 <Text fw={500} size="lg">

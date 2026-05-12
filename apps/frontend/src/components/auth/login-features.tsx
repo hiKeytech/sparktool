@@ -47,7 +47,7 @@ export function LoginFeatures({
           className="group flex gap-5 items-start"
         >
           {/* Feature Icon Map */}
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors duration-500 group-hover:bg-white group-hover:text-fun-green-800">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition-colors duration-500 group-hover:bg-white group-hover:text-brand-800">
             <i className={`icon-${feature.icon} text-lg`} />
           </div>
 

@@ -106,7 +106,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
             </Text>
           </Group>
           <Progress
-            color="fun-green"
+            color="brand"
             radius="sm"
             size="sm"
             value={progressPercentage}
@@ -122,7 +122,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
             <Text fw={500} lineClamp={1} size="sm">
               {currentSection.title}
             </Text>
-            <Text c="fun-green" fw={600} lineClamp={1} size="sm">
+            <Text c="brand" fw={600} lineClamp={1} size="sm">
               {currentLesson.title}
             </Text>
           </div>
@@ -145,7 +145,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
 
           {nextLesson ? (
             <Button
-              color="fun-green"
+              color="brand"
               disabled={nextLesson.isLocked}
               onClick={() => handleNavigateToLesson(nextLesson.lesson)}
               rightSection={
@@ -162,7 +162,7 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
             </Button>
           ) : (
             <Button
-              color="fun-green"
+              color="brand"
               disabled
               rightSection={<IconCheck size={16} />}
               size="sm"
@@ -198,14 +198,14 @@ export const LessonNavigation: React.FC<LessonNavigationProps> = ({
           currentLesson &&
           completedLessons.has(currentLesson.id) && (
             <div style={{ textAlign: "center" }}>
-              <Text c="fun-green" fw={600} mb="xs" size="sm">
+              <Text c="brand" fw={600} mb="xs" size="sm">
                 🎉 Course Completed!
               </Text>
               <Text c="dimmed" size="xs">
                 You've finished all lessons in this course.
               </Text>
               <Button
-                color="fun-green"
+                color="brand"
                 mt="sm"
                 onClick={() =>
                   tenantId &&

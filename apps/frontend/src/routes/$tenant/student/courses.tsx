@@ -244,9 +244,9 @@ export function CourseCatalog() {
                 <Card className="h-full" p="lg" radius="lg" withBorder>
                   <Stack gap="md" h="100%">
                     {/* Course Thumbnail */}
-                    <div className="relative overflow-hidden rounded-lg aspect-video bg-linear-to-br from-fun-green-100 to-fun-green-200">
+                    <div className="relative overflow-hidden rounded-lg aspect-video bg-linear-to-br from-brand-100 to-brand-200">
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-fun-green-600">
+                        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-brand-600">
                           <IconPlayerPlay className="text-white" size={20} />
                         </div>
                       </div>
@@ -333,7 +333,7 @@ export function CourseCatalog() {
                                 Progress
                               </Text>
                               <Text
-                                className="text-fun-green-600"
+                                className="text-brand-600"
                                 fw={500}
                                 size="xs"
                               >
@@ -341,7 +341,7 @@ export function CourseCatalog() {
                               </Text>
                             </Group>
                             <Progress
-                              color="fun-green"
+                              color="brand"
                               size="sm"
                               value={getCourseProgress(course.id)}
                             />
@@ -353,7 +353,7 @@ export function CourseCatalog() {
                     <Button
                       className={
                         isEnrolled(course.id)
-                          ? "bg-fun-green-600 hover:bg-fun-green-700"
+                          ? "bg-brand-600 hover:bg-brand-700"
                           : "bg-(--app-text) hover:opacity-90"
                       }
                       fullWidth

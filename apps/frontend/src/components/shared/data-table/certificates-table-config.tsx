@@ -95,7 +95,7 @@ export function createCertificatesTableColumns(
             {certificate.status === "issued" && (
               <Tooltip label="Download Certificate">
                 <ActionIcon
-                  color="green"
+                  color="brand"
                   onClick={() => actions.onDownload(certificate.id)}
                   size="sm"
                   variant="light"

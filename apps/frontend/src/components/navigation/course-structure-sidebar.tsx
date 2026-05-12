@@ -168,7 +168,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
               </Text>
             </Group>
             <Progress
-              color="fun-green"
+              color="brand"
               radius="sm"
               size="sm"
               value={calculateCourseProgress()}
@@ -196,7 +196,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                     onClick={() => toggleSection(section.id)}
                     style={{
                       backgroundColor: isCurrentSection
-                        ? "var(--mantine-color-fun-green-0)"
+                        ? "var(--mantine-color-brand-0)"
                         : undefined,
                       borderRadius: "6px",
                       cursor: "pointer",
@@ -204,7 +204,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                     }}
                   >
                     <ActionIcon
-                      color={isCurrentSection ? "fun-green" : "gray"}
+                      color={isCurrentSection ? "brand" : "gray"}
                       size="sm"
                       variant="transparent"
                     >
@@ -218,7 +218,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                     <Box style={{ flex: 1 }}>
                       <Group align="flex-start" justify="space-between" mb={2}>
                         <Text
-                          c={isCurrentSection ? "fun-green" : undefined}
+                          c={isCurrentSection ? "brand" : undefined}
                           fw={600}
                           lineClamp={1}
                           size="sm"
@@ -227,7 +227,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                         </Text>
                         {sectionProgressValue === 100 && (
                           <IconCheck
-                            color="var(--mantine-color-fun-green-6)"
+                            color="var(--mantine-color-brand-6)"
                             size={14}
                           />
                         )}
@@ -245,7 +245,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                       </Group>
 
                       <Progress
-                        color="fun-green"
+                        color="brand"
                         radius="xs"
                         size="xs"
                         value={sectionProgressValue}
@@ -278,7 +278,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                             }
                             style={{
                               backgroundColor: isCurrentLesson
-                                ? "var(--mantine-color-fun-green-1)"
+                                ? "var(--mantine-color-brand-1)"
                                 : undefined,
                               borderRadius: "4px",
                               cursor: isLocked ? "not-allowed" : "pointer",
@@ -289,9 +289,9 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                             <ActionIcon
                               color={
                                 isCompleted
-                                  ? "fun-green"
+                                  ? "brand"
                                   : isCurrentLesson
-                                    ? "fun-green"
+                                    ? "brand"
                                     : "gray"
                               }
                               size="sm"
@@ -310,7 +310,7 @@ export const CourseStructureSidebar: React.FC<CourseStructureSidebarProps> = ({
                               <Text
                                 c={
                                   isCurrentLesson
-                                    ? "fun-green"
+                                    ? "brand"
                                     : isCompleted
                                       ? "dark"
                                       : "dimmed"

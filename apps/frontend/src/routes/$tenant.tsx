@@ -53,7 +53,7 @@ function TenantLookupError() {
         </p>
         <div className="mt-6 flex gap-3">
           <Link
-            className="inline-flex rounded-md bg-fun-green-800 px-4 py-2 font-sans text-sm font-medium text-white hover:bg-fun-green-700"
+            className="inline-flex rounded-md bg-brand-800 px-4 py-2 font-sans text-sm font-medium text-white hover:bg-brand-700"
             to="/"
           >
             Go to platform

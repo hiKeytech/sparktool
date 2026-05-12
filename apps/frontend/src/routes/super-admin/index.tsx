@@ -49,7 +49,7 @@ function SuperAdminDashboard() {
     return (
       <Container py="xl" size="xl">
         <Group justify="center" py="xl">
-          <Loader color="green" />
+          <Loader color="brand" />
         </Group>
       </Container>
     );
@@ -103,7 +103,7 @@ function SuperAdminDashboard() {
           <Group align="flex-start" justify="space-between">
             <div>
               <Group gap="sm" mb="xs">
-                <Badge color="green" variant="light">
+                <Badge color="brand" variant="light">
                   SparkTool Platform
                 </Badge>
                 <Text c="dimmed" size="sm">
@@ -159,7 +159,7 @@ function SuperAdminDashboard() {
               withBorder
             >
               <Group justify="space-between" mb="md">
-                <ThemeIcon color="green" radius="md" size="xl" variant="light">
+                <ThemeIcon color="brand" radius="md" size="xl" variant="light">
                   <Users size={20} />
                 </ThemeIcon>
                 <ArrowRight size={16} className="text-stone-400" />
@@ -223,7 +223,7 @@ function SuperAdminDashboard() {
           </Alert>
         ) : (
           <Alert
-            color="green"
+            color="brand"
             icon={<ShieldCheck size={16} />}
             title="Everything looks good"
           >
@@ -236,7 +236,7 @@ function SuperAdminDashboard() {
           <Paper p="lg" radius="lg" withBorder>
             <Group justify="space-between" mb="md">
               <Title order={3}>Organization snapshot</Title>
-              <Badge color="green" variant="light">
+              <Badge color="brand" variant="light">
                 {tenants.length} organizations
               </Badge>
             </Group>
@@ -370,12 +370,12 @@ function SuperAdminDashboard() {
         <Paper p="lg" radius="lg" withBorder>
           <Group justify="space-between" mb="md">
             <Group gap="sm">
-              <ThemeIcon color="green" radius="md" size="lg" variant="light">
+              <ThemeIcon color="brand" radius="md" size="lg" variant="light">
                 <History size={18} />
               </ThemeIcon>
               <Title order={3}>Recent Platform Activity</Title>
             </Group>
-            <Badge color="green" variant="light">
+            <Badge color="brand" variant="light">
               {activityLogs.length} events
             </Badge>
           </Group>

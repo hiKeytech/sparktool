@@ -198,7 +198,7 @@ export const createCourseColumns = (
 
       return (
         <Group gap="xs">
-          <Badge color="green" size="sm" variant="light">
+          <Badge color="brand" size="sm" variant="light">
             Hierarchical
           </Badge>
           <Text c="dimmed" size="xs">
@@ -227,7 +227,7 @@ export const createCourseColumns = (
       return (
         <Group gap="xs">
           <Progress
-            color="fun-green"
+            color="brand"
             size="sm"
             style={{ width: 60 }}
             value={rate}

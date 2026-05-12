@@ -62,7 +62,7 @@ export function LoginShell({
     : auth.domains;
 
   return (
-    <div className="flex min-h-screen font-sans bg-(--app-bg) selection:bg-fun-green-500/30">
+    <div className="flex min-h-screen font-sans bg-(--app-bg) selection:bg-brand-500/30">
       {/* 
         ========================================================================
         LEFT PANEL (COMMAND SUITE STYLE)
@@ -70,7 +70,7 @@ export function LoginShell({
       */}
       <div className="relative hidden w-[45%] flex-col justify-between overflow-hidden bg-[#070b09] p-12 text-white lg:flex lg:p-16 border-r border-white/10">
         {/* Deep Nigerian Green Gradient Background */}
-        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_32%),linear-gradient(135deg,var(--color-fun-green-700)_0%,var(--color-fun-green-900)_58%,#070b09_100%)]" />
+        <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.08),transparent_32%),linear-gradient(135deg,var(--color-brand-700)_0%,var(--color-brand-900)_58%,#070b09_100%)]" />
 
         {/* Grid pattern overlay */}
         <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
@@ -78,7 +78,7 @@ export function LoginShell({
         {/* Top Header / Portal Name */}
         <div className="relative z-10 flex items-center space-x-4">
           <div className="flex items-center justify-center w-12 h-12 p-2 border rounded-xl bg-white/5 border-white/10 backdrop-blur-md">
-            <ShieldCheck size={26} className="text-fun-green-400" />
+            <ShieldCheck size={26} className="text-brand-400" />
           </div>
           <div className="flex flex-col">
             <span className="font-sans text-xl font-bold tracking-wide">
@@ -96,13 +96,13 @@ export function LoginShell({
             transition={{ duration: 0.8, ease: [0.19, 1, 0.22, 1] }}
             className="mb-16"
           >
-            <p className="text-fun-green-400 text-xs font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-3">
+            <p className="text-brand-400 text-xs font-bold uppercase tracking-[0.3em] mb-4 flex items-center gap-3">
               <Activity size={14} />
               <span>Secure Access</span>
             </p>
             <h2 className="text-4xl xl:text-5xl font-semibold text-white tracking-tighter leading-[1.1]">
               {heroHeading.replace(".", "")}
-              <span className="text-fun-green-500">.</span>
+              <span className="text-brand-500">.</span>
             </h2>
             <p className="max-w-md mt-6 text-lg font-light leading-relaxed text-white/60">
               {heroSubheading}
@@ -126,7 +126,7 @@ export function LoginShell({
                     }}
                     className="flex items-start gap-5 group"
                   >
-                    <div className="flex items-center justify-center transition-colors duration-300 border h-11 w-11 shrink-0 rounded-xl border-white/10 bg-white/5 text-white/60 group-hover:bg-white/10 group-hover:text-fun-green-400 group-hover:border-white/20 backdrop-blur-sm">
+                    <div className="flex items-center justify-center transition-colors duration-300 border h-11 w-11 shrink-0 rounded-xl border-white/10 bg-white/5 text-white/60 group-hover:bg-white/10 group-hover:text-brand-400 group-hover:border-white/20 backdrop-blur-sm">
                       <Icon size={20} strokeWidth={1.5} />
                     </div>
                     <div className="flex flex-col pt-0.5">
@@ -150,7 +150,7 @@ export function LoginShell({
             © {new Date().getFullYear()} {portalName}.
           </span>
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-fun-green-500 animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
             SECURE CONNECTION
           </div>
         </div>
@@ -166,7 +166,7 @@ export function LoginShell({
         <div className="absolute top-0 flex w-full items-center px-6 py-5 bg-[#070b09] text-white lg:hidden border-b border-white/10">
           <div className="flex items-center space-x-3">
             <div className="flex items-center justify-center p-1.5 rounded-lg bg-white/5 border border-white/10">
-              <ShieldCheck size={20} className="text-fun-green-400" />
+              <ShieldCheck size={20} className="text-brand-400" />
             </div>
             <span className="font-sans text-sm font-semibold tracking-wide">
               {portalName}
@@ -182,7 +182,7 @@ export function LoginShell({
         >
           <Stack gap="xl">
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center justify-center w-12 h-12 mb-6 border lg:hidden rounded-xl bg-fun-green-50 border-fun-green-100 text-fun-green-700">
+              <div className="inline-flex items-center justify-center w-12 h-12 mb-6 border lg:hidden rounded-xl bg-brand-50 border-brand-100 text-brand-700">
                 <LockKeyhole size={24} strokeWidth={1.5} />
               </div>
               <h1 className="mb-3 font-sans text-3xl font-semibold tracking-tight text-(--app-text) sm:text-4xl text-balance">
@@ -213,7 +213,7 @@ export function LoginShell({
 
             <div className="mt-12 flex flex-col items-center gap-3 text-[10px] tracking-widest uppercase text-(--app-text-subtle) font-semibold lg:hidden">
               <div className="flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-fun-green-500 animate-pulse" />
+                <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
                 SECURE CONNECTION
               </div>
               <span>
