@@ -191,7 +191,7 @@ function CourseManagement() {
                       {courses.filter((c) => c.published).length}
                     </Text>
                   </div>
-                  <ThemeIcon color="green" size={40} variant="light">
+                  <ThemeIcon color="fun-green" size={40} variant="light">
                     <IconPlayerPlay size={20} />
                   </ThemeIcon>
                 </Group>

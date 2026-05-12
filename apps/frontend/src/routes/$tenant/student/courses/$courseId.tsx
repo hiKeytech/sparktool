@@ -685,7 +685,7 @@ export function CourseDetails() {
                 <Stack gap="md">
                   {hasAccess ? (
                     <>
-                      <Alert color="green" icon={<IconCheck size={16} />}>
+                      <Alert color="fun-green" icon={<IconCheck size={16} />}>
                         You have access to this course
                       </Alert>
                       <Button

@@ -31,7 +31,7 @@ function TelemetryOverview() {
     return (
       <Container py="xl" size="xl">
         <Group justify="center" py="xl">
-          <Loader color="green" />
+          <Loader color="fun-green" />
         </Group>
       </Container>
     );
@@ -60,7 +60,7 @@ function TelemetryOverview() {
     <Container className="py-8" size="xl">
       <Stack gap="xl">
         <div>
-          <Badge color="green" variant="light">
+          <Badge color="fun-green" variant="light">
             Platform activity
           </Badge>
           <Title mt="sm" order={1}>
@@ -102,13 +102,13 @@ function TelemetryOverview() {
           <Paper p="lg" radius="lg" withBorder>
             <Group justify="space-between" mb="md">
               <Title order={3}>Organization spread</Title>
-              <Badge color="green" variant="light">
+              <Badge color="fun-green" variant="light">
                 {tenants.length} organizations
               </Badge>
             </Group>
             <Stack gap="md">
               <DistributionRow
-                color="green"
+                color="fun-green"
                 count={
                   tenants.filter(
                     (tenant) => tenant.subscriptionStatus === "active",
@@ -157,7 +157,7 @@ function TelemetryOverview() {
                 total={users.length}
               />
               <DistributionRow
-                color="green"
+                color="fun-green"
                 count={users.filter((entry) => entry.role === "admin").length}
                 label="Tenant admins"
                 total={users.length}
@@ -271,7 +271,7 @@ function TelemetryOverview() {
           </Paper>
         ) : (
           <Alert
-            color="green"
+            color="fun-green"
             icon={<ShieldCheck size={16} />}
             title="Administrator activity"
           >

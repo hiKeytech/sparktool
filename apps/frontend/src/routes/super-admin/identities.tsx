@@ -83,7 +83,7 @@ function IdentitiesOverview() {
     return (
       <Container py="xl" size="xl">
         <Group justify="center" py="xl">
-          <Loader color="green" />
+          <Loader color="fun-green" />
         </Group>
       </Container>
     );
@@ -158,7 +158,7 @@ function IdentitiesOverview() {
       <Stack gap="xl">
         <Group align="flex-start" justify="space-between">
           <div>
-            <Badge color="green" variant="light">
+            <Badge color="fun-green" variant="light">
               Admin management
             </Badge>
             <Title mt="sm" order={1}>
@@ -280,7 +280,7 @@ function IdentitiesOverview() {
                       </Badge>
                     ) : (
                       <Badge
-                        color="green"
+                        color="fun-green"
                         variant="light"
                         className="font-medium tracking-wide"
                       >
@@ -423,7 +423,7 @@ function IdentitiesOverview() {
               Cancel
             </Button>
             <Button
-              color="green"
+              color="fun-green"
               loading={isUpdating}
               onClick={handleSaveAdministrator}
             >
@@ -528,7 +528,7 @@ function IdentitiesOverview() {
               Cancel
             </Button>
             <Button
-              color="green"
+              color="fun-green"
               loading={isCreating}
               disabled={
                 !addForm.displayName ||

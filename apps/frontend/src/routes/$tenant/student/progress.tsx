@@ -138,7 +138,7 @@ function StudentProgress() {
               withBorder
             >
               <Stack align="center" gap="xs">
-                <ThemeIcon color="green" size={60} variant="light">
+                <ThemeIcon color="fun-green" size={60} variant="light">
                   <IconBook size={30} />
                 </ThemeIcon>
                 <Text className="text-(--app-text-muted)" fw={500} size="sm">

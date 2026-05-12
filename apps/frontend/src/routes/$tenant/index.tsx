@@ -220,12 +220,18 @@ function TenantLandingPage() {
 
       <main className="flex-1">
         <section className="relative overflow-hidden border-b bg-(--app-surface) border-(--app-border)">
-          <div className="absolute inset-x-0 top-0 h-full bg-[radial-gradient(circle_at_top_left,rgba(27,115,57,0.12),transparent_40%)]" />
+          <div
+            className="absolute inset-x-0 top-0 h-full"
+            style={{
+              background:
+                "radial-gradient(circle at top left, color-mix(in srgb, var(--color-primary) 12%, transparent), transparent 40%)",
+            }}
+          />
           <div className="relative px-6 pt-16 pb-20 mx-auto max-w-7xl lg:px-8 lg:pt-24 lg:pb-24">
             <div className="grid items-center gap-16 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
               <div data-aos="fade-up">
                 <Badge
-                  color="green"
+                  color="var(--color-primary)"
                   variant="light"
                   size="sm"
                   className="mb-6 tracking-[0.2em] uppercase font-bold"

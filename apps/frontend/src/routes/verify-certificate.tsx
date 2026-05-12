@@ -213,7 +213,7 @@ function CertificateVerification(_props: CertificateVerificationProps) {
 
                     <Alert
                       icon={<IconShield size={16} />}
-                      color="green"
+                      color="fun-green"
                       mt="md"
                     >
                       <Text size="sm">

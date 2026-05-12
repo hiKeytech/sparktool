@@ -911,7 +911,7 @@ function SortableSection({
               <Badge color="blue" variant="light">
                 {section.lessons.length} lessons
               </Badge>
-              <Badge color="green" variant="light">
+              <Badge color="fun-green" variant="light">
                 {Math.round(section.estimatedDurationInMinutes || 0)} min
               </Badge>
               {section.lessons.reduce(

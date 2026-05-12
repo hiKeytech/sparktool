@@ -189,7 +189,7 @@ export function EmailPasswordStrategy({
       ) : null}
 
       {isInvitationMode && invitationPreview ? (
-        <Alert color="green" mb="md" variant="light">
+        <Alert color="fun-green" mb="md" variant="light">
           <Text fw={600} size="sm">
             Administrator invitation for {invitationPreview.email}
           </Text>

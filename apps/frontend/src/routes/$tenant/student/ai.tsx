@@ -458,7 +458,7 @@ function StudentAiAssistantPage() {
           <Card p="lg" radius="lg" withBorder>
             <Stack gap="xs">
               <Badge
-                color="green"
+                color="fun-green"
                 leftSection={<IconMessageCircle size={12} />}
                 variant="light"
               >

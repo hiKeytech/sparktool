@@ -321,7 +321,7 @@ function TenantsOverview() {
       <Stack gap="xl">
         <Group align="flex-start" justify="space-between">
           <div>
-            <Badge color="green" variant="light">
+            <Badge color="fun-green" variant="light">
               Organizations
             </Badge>
             <Title mt="sm" order={1}>
@@ -382,7 +382,7 @@ function TenantsOverview() {
 
           {isLoading ? (
             <div className="flex items-center justify-center p-12">
-              <Loader size="sm" color="green" />
+              <Loader size="sm" color="fun-green" />
             </div>
           ) : (
             <Table
@@ -478,7 +478,7 @@ function TenantsOverview() {
                         ) ? (
                           <Button
                             variant="subtle"
-                            color="green"
+                            color="fun-green"
                             size="xs"
                             className="text-[#006838] hover:bg-[#006838]/10"
                             loading={isReissuing}
@@ -685,7 +685,7 @@ function TenantsOverview() {
                 Cancel
               </Button>
               <Button
-                color="green"
+                color="fun-green"
                 loading={isCreating}
                 disabled={
                   !addForm.name ||
@@ -723,7 +723,7 @@ function TenantsOverview() {
             <Group grow>
               <CopyButton value={onboardingResult?.inviteLink ?? ""}>
                 {({ copied, copy }) => (
-                  <Button color="green" onClick={copy}>
+                  <Button color="fun-green" onClick={copy}>
                     {copied ? "Invite link copied" : "Copy invite link"}
                   </Button>
                 )}
@@ -875,7 +875,7 @@ function TenantsOverview() {
                 Cancel
               </Button>
               <Button
-                color="green"
+                color="fun-green"
                 loading={isUpdating}
                 onClick={handleEditSubmit}
               >

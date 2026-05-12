@@ -366,7 +366,7 @@ export function StudentDetails() {
               >
                 <ThemeIcon
                   className="mx-auto mb-2"
-                  color="green"
+                  color="fun-green"
                   size={60}
                   variant="light"
                 >

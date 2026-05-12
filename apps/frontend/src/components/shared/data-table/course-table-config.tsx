@@ -198,7 +198,7 @@ export const createCourseColumns = (
 
       return (
         <Group gap="xs">
-          <Badge color="green" size="sm" variant="light">
+          <Badge color="fun-green" size="sm" variant="light">
             Hierarchical
           </Badge>
           <Text c="dimmed" size="xs">

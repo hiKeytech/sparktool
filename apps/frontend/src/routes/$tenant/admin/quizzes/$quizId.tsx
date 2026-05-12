@@ -202,7 +202,7 @@ export function QuizDetails() {
             )}
 
             <Group gap="sm">
-              <Badge color="green" variant="light">
+              <Badge color="fun-green" variant="light">
                 Max Attempts: {quiz.maxAttempts || "Unlimited"}
               </Badge>
               <Badge color="blue" variant="light">
