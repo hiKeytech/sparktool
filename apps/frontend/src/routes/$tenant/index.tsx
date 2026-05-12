@@ -414,7 +414,7 @@ function TenantLandingPage() {
 
       <footer className="pt-16 pb-8 border-t bg-(--app-surface) border-(--app-border)">
         <div className="px-6 mx-auto max-w-7xl lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-8 pb-12 mb-8 border-b md:flex-row border-(--app-border)">
+          <div className="flex flex-col items-center justify-between gap-8 pb-2 mb-8 border-b md:flex-row border-(--app-border)">
             <Group
               gap="sm"
               className="transition-opacity opacity-80 hover:opacity-100"
