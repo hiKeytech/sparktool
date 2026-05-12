@@ -134,10 +134,7 @@ function StudentDashboard() {
                       Course Progress Overview
                     </Title>
                     <Group gap="xs" mb="md">
-                      <IconTrendingUp
-                        className="text-brand-200"
-                        size={16}
-                      />
+                      <IconTrendingUp className="text-brand-200" size={16} />
                       <Text className="text-brand-100" size="sm">
                         {overallProgress}% Complete
                       </Text>
@@ -268,16 +265,16 @@ function StudentDashboard() {
                   Progress Summary
                 </Title>
                 <SimpleGrid cols={1} spacing="sm">
-                  <div className="p-3 text-center rounded-lg bg-brand-50">
-                    <Text className="text-brand-600" fw={700} size="xl">
+                  <div className="p-3 text-center rounded-lg bg-(--app-surface-soft)">
+                    <Text fw={700} size="xl">
                       {completedCourses}
                     </Text>
                     <Text className="text-(--app-text-muted)" size="sm">
                       Completed Courses
                     </Text>
                   </div>
-                  <div className="p-3 text-center rounded-lg bg-blue-50">
-                    <Text className="text-blue-600" fw={700} size="xl">
+                  <div className="p-3 text-center rounded-lg bg-(--app-surface-soft)">
+                    <Text fw={700} size="xl">
                       {inProgressCourses}
                     </Text>
                     <Text className="text-(--app-text-muted)" size="sm">
