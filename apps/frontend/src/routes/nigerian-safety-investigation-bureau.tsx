@@ -1,6 +1,12 @@
-import { type ComponentType, useState } from "react";
+import {
+  type CSSProperties,
+  type ComponentType,
+  useEffect,
+  useState,
+} from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -30,56 +36,36 @@ import {
   IconHeart,
   IconLogin,
   IconMath,
-  IconMenu2,
   IconPalette,
   IconPlayerPlay,
   IconShieldCheck,
   IconUsers,
-  IconX,
 } from "@tabler/icons-react";
 
 import { getTenant } from "@/actions/tenant";
 import { useListCourses } from "@/services/hooks";
 import type { Tenant } from "@/schemas/tenant-contract";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ROUTE
-// ─────────────────────────────────────────────────────────────────────────────
-
-export const Route = createFileRoute("/nigerian-safety-investigation-bureau")({
-  loader: async () => {
-    try {
-      const tenant = await getTenant({ data: "nsib" });
-      return { tenant };
-    } catch {
-      return { tenant: null as Tenant | null };
-    }
-  },
-  component: NSIBLandingPage,
-});
-
-// ─────────────────────────────────────────────────────────────────────────────
-// CONSTANTS
-// ─────────────────────────────────────────────────────────────────────────────
-
 const QS = "'Quicksand', sans-serif";
+const FALLBACK_BADGE = "/sparktool-badge.svg";
+const FALLBACK_HERO = "/sparktool-learning-hero.svg";
 
 const FALLBACK_STATS = [
-  { label: "Active Students", value: "2,400+" },
-  { label: "Completed Courses", value: "8,900+" },
+  { label: "Active Students", value: "3,500+" },
+  { label: "Completed Courses", value: "12,000+" },
   { label: "Expert Instructors", value: "150+" },
-  { label: "Success Rate", value: "98%" },
+  { label: "Success Rate", value: "96%" },
 ];
 
 const FALLBACK_CATEGORIES = [
   { icon: "briefcase", name: "Aviation Safety" },
-  { icon: "atom", name: "Marine & Waterways" },
+  { icon: "atom", name: "Marine Safety" },
   { icon: "chart-line", name: "Road Transport Safety" },
   { icon: "cpu", name: "Accident Investigation" },
   { icon: "device-desktop", name: "Safety Management" },
   { icon: "brain", name: "Technical Analysis" },
   { icon: "globe", name: "International Standards" },
-  { icon: "heart", name: "Crisis & Emergency" },
+  { icon: "heart", name: "Emergency Response" },
   { icon: "users", name: "Report Writing" },
   { icon: "math", name: "Data & Evidence" },
   { icon: "palette", name: "Field Investigation" },
@@ -142,108 +128,171 @@ const ICON_MAP: Record<
   users: IconUsers,
 };
 
-// ─────────────────────────────────────────────────────────────────────────────
-// COMPONENT
-// ─────────────────────────────────────────────────────────────────────────────
+function getYouTubeThumbnail(url?: string | null) {
+  if (!url) {
+    return null;
+  }
+
+  const regExp =
+    /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+  const match = url.match(regExp);
+  const videoId = match && match[7].length === 11 ? match[7] : null;
+
+  return videoId
+    ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+    : null;
+}
+
+function ImageWithFallback({
+  alt,
+  fallbackSrc,
+  src,
+  style,
+}: {
+  alt: string;
+  fallbackSrc: string;
+  src?: null | string;
+  style?: CSSProperties;
+}) {
+  const [currentSrc, setCurrentSrc] = useState(src ?? fallbackSrc);
+
+  useEffect(() => {
+    setCurrentSrc(src ?? fallbackSrc);
+  }, [fallbackSrc, src]);
+
+  return (
+    <img
+      alt={alt}
+      onError={() => {
+        if (currentSrc !== fallbackSrc) {
+          setCurrentSrc(fallbackSrc);
+        }
+      }}
+      src={currentSrc}
+      style={style}
+    />
+  );
+}
+
+export const Route = createFileRoute("/nigerian-safety-investigation-bureau")({
+  loader: async () => {
+    for (const tenantId of ["nsib", "nigerian-safety-investigation-bureau"]) {
+      try {
+        const tenant = await getTenant({ data: tenantId });
+        return { tenant };
+      } catch {
+        // try the next candidate
+      }
+    }
+
+    return { tenant: null as Tenant | null };
+  },
+  component: NSIBLandingPage,
+});
 
 function NSIBLandingPage() {
   const navigate = useNavigate();
   const { tenant } = Route.useLoaderData() as { tenant: Tenant | null };
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   const site = tenant?.config.publicSite;
   const branding = tenant?.config.branding;
   const primaryColor = branding?.primaryColor ?? "#1b7339";
-  const darkColor = "#0d3319";
   const portalName = branding?.portalName ?? "NSIB Learn";
-
   const stats = site?.stats ?? FALLBACK_STATS;
   const categories = site?.categories ?? FALLBACK_CATEGORIES;
-
   const { data: courses = [], isLoading: coursesLoading } = useListCourses(
     tenant?.id,
     { published: true },
   );
   const featuredCourses = courses.slice(0, 8);
 
-  const handleLogin = () => navigate({ to: "/login" });
-
   const navLinks = [
-    { label: "About", href: "#about" },
-    { label: "Courses", href: "#courses" },
-    { label: "Contact", href: "#contact" },
-    { label: "Verify Certificate", href: "/verify-certificate" },
+    { href: "#guidelines", label: "Guidelines" },
+    { href: "#about", label: "About" },
+    { href: "#contact", label: "Contact" },
+    { href: "/verify-certificate", label: "Verify Certificate" },
   ];
 
+  const footerLinks = [
+    { href: "#about", label: "About NSIB" },
+    { href: "#courses", label: "Course Catalog" },
+    { href: "#guidelines", label: "Guidelines" },
+    { href: "#contact", label: "Contact" },
+  ];
+
+  const supportLinks = [
+    { href: "/login", label: "Help Center" },
+    { href: "/login", label: "Technical Support" },
+    { href: "/verify-certificate", label: "Certificate Verification" },
+    { href: "/login", label: "Privacy Policy" },
+  ];
+
+  const handleLogin = () => navigate({ to: "/login" });
+
   return (
-    <Box style={{ fontFamily: QS }}>
-      {/* ══════════════════════════════════════════════════════════════
-          NAV
-      ══════════════════════════════════════════════════════════════ */}
+    <Box style={{ fontFamily: QS, background: "#ffffff" }}>
       <Box
         component="header"
         style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 50,
           background: "white",
           borderBottom: "1px solid #e5e7eb",
+          position: "sticky",
+          top: 0,
+          zIndex: 20,
         }}
       >
-        <Container size="xl">
-          <Group justify="space-between" py="sm">
-            {/* Logo */}
-            <Group gap="sm">
-              {branding?.logoUrl ? (
-                <img
-                  src={branding.logoUrl}
+        <Container size="xl" py="md">
+          <Group justify="space-between" wrap="nowrap">
+            <Group gap="md" wrap="nowrap">
+              <Box
+                style={{
+                  width: 52,
+                  height: 52,
+                  borderRadius: "50%",
+                  overflow: "hidden",
+                  background: "#f3f4f6",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
+                }}
+              >
+                <ImageWithFallback
                   alt={portalName}
-                  style={{ height: 40, width: "auto" }}
+                  fallbackSrc={FALLBACK_BADGE}
+                  src={branding?.logoUrl ?? site?.footerLogoUrl}
+                  style={{ width: 44, height: 44, objectFit: "cover" }}
                 />
-              ) : (
-                <Box
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    background: primaryColor,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <IconShieldCheck size={22} color="white" />
-                </Box>
-              )}
+              </Box>
               <Stack gap={0}>
                 <Text
                   fw={700}
-                  size="sm"
-                  style={{ fontFamily: QS, color: "#111827", lineHeight: 1.2 }}
+                  style={{
+                    color: "#111827",
+                    fontFamily: QS,
+                    fontSize: "1rem",
+                    lineHeight: 1.2,
+                  }}
                 >
                   {portalName}
                 </Text>
-                <Text
-                  size="xs"
-                  style={{ color: "#6b7280", fontFamily: QS, lineHeight: 1.2 }}
-                >
+                <Text size="sm" c="gray.6" style={{ fontFamily: QS }}>
                   Nigerian Safety Investigation Bureau
                 </Text>
               </Stack>
             </Group>
 
-            {/* Desktop links */}
             <Group gap="xl" visibleFrom="md">
               {navLinks.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   style={{
-                    fontSize: "0.875rem",
-                    fontWeight: 600,
                     color: "#374151",
-                    textDecoration: "none",
                     fontFamily: QS,
+                    fontSize: "0.95rem",
+                    fontWeight: 500,
+                    textDecoration: "none",
                   }}
                 >
                   {link.label}
@@ -251,137 +300,83 @@ function NSIBLandingPage() {
               ))}
             </Group>
 
-            {/* Desktop login */}
-            <Group visibleFrom="md">
-              <Button
-                leftSection={<IconLogin size={16} />}
-                onClick={handleLogin}
-                fw={600}
-                style={{
-                  fontFamily: QS,
-                  background: primaryColor,
-                  borderRadius: 8,
-                }}
-              >
-                Login
-              </Button>
-            </Group>
-
-            {/* Mobile toggle */}
-            <Box hiddenFrom="md">
-              <Button
-                variant="subtle"
-                color="dark"
-                px="xs"
-                onClick={() => setMobileOpen(!mobileOpen)}
-              >
-                {mobileOpen ? <IconX size={22} /> : <IconMenu2 size={22} />}
-              </Button>
-            </Box>
+            <Button
+              color="green"
+              leftSection={<IconLogin size={16} />}
+              onClick={handleLogin}
+              radius="md"
+              style={{ background: primaryColor, fontFamily: QS }}
+            >
+              Login
+            </Button>
           </Group>
-
-          {mobileOpen && (
-            <Stack gap="lg" pb="xl" hiddenFrom="md">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: 700,
-                    color: "#111827",
-                    textDecoration: "none",
-                    fontFamily: QS,
-                  }}
-                >
-                  {link.label}
-                </a>
-              ))}
-              <Button
-                fullWidth
-                onClick={handleLogin}
-                style={{ fontFamily: QS, background: primaryColor }}
-              >
-                Login
-              </Button>
-            </Stack>
-          )}
         </Container>
       </Box>
 
-      {/* ══════════════════════════════════════════════════════════════
-          HERO  —  full-bleed photo + green overlay, bottom-left content
-      ══════════════════════════════════════════════════════════════ */}
       <Box
         style={{
+          minHeight: "calc(100vh - 85px)",
           position: "relative",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
           overflow: "hidden",
+          background: primaryColor,
         }}
       >
-        {/* Background photo */}
-        {site?.heroBackgroundImageUrl && (
-          <Box
-            style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage: `url('${site.heroBackgroundImageUrl}')`,
-              backgroundSize: "cover",
-              backgroundPosition: "center top",
-              zIndex: 0,
-            }}
-          />
-        )}
-
-        {/* Green overlay */}
+        <ImageWithFallback
+          alt={site?.heroLogoAlt ?? portalName}
+          fallbackSrc={FALLBACK_HERO}
+          src={site?.heroBackgroundImageUrl}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            opacity: 0.28,
+          }}
+        />
         <Box
           style={{
             position: "absolute",
             inset: 0,
-            background: site?.heroBackgroundImageUrl
-              ? "linear-gradient(to bottom right, rgba(13,51,25,0.80), rgba(27,115,57,0.68))"
-              : `linear-gradient(140deg, ${darkColor} 0%, ${primaryColor} 55%, #1d8a42 100%)`,
-            zIndex: 1,
+            background:
+              "linear-gradient(180deg, rgba(27,115,57,0.80) 0%, rgba(27,115,57,0.88) 100%)",
           }}
         />
 
-        {/* Content block (bottom-left) */}
         <Container
           size="xl"
           style={{
             position: "relative",
-            zIndex: 2,
-            paddingTop: 120,
-            paddingBottom: 0,
+            zIndex: 1,
+            minHeight: "calc(100vh - 85px)",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            paddingTop: 56,
+            paddingBottom: 132,
           }}
         >
-          <Box style={{ maxWidth: 680, paddingBottom: 40 }}>
-            <Group gap="lg" mb={20} data-aos="fade-up">
-              {site?.heroLogoUrl ? (
-                <img
-                  src={site.heroLogoUrl}
-                  alt={site.heroLogoAlt ?? "NSIB Logo"}
-                  style={{ height: 72, width: "auto" }}
-                />
-              ) : (
-                <img
-                  src="/nigerian-coat-of-arms.svg"
-                  alt="Nigerian Coat of Arms"
-                  style={{ height: 72, width: "auto" }}
-                />
-              )}
+          <Stack gap={28} style={{ maxWidth: 980 }}>
+            <Group gap="xl" align="center" wrap="nowrap">
+              <ImageWithFallback
+                alt={site?.heroLogoAlt ?? "Nigerian Coat of Arms"}
+                fallbackSrc={FALLBACK_BADGE}
+                src={site?.heroLogoUrl}
+                style={{
+                  width: 110,
+                  height: 110,
+                  objectFit: "contain",
+                  flexShrink: 0,
+                }}
+              />
               <Title
                 order={1}
-                c="white"
                 style={{
+                  color: "white",
                   fontFamily: QS,
-                  fontSize: "clamp(1.75rem, 4vw, 3.2rem)",
+                  fontSize: "clamp(2.75rem, 5vw, 4.25rem)",
                   fontWeight: 700,
-                  lineHeight: 1.2,
+                  lineHeight: 1.12,
                 }}
               >
                 {site?.heroTitle ?? "Nigerian Safety Investigation Bureau"}
@@ -389,371 +384,367 @@ function NSIBLandingPage() {
             </Group>
 
             <Text
-              mb={32}
+              size="xl"
               style={{
-                color: "rgba(255,255,255,0.88)",
-                lineHeight: 1.75,
-                maxWidth: 600,
+                color: "rgba(255,255,255,0.92)",
                 fontFamily: QS,
-                fontSize: "1.0625rem",
+                lineHeight: 1.75,
+                maxWidth: 1080,
               }}
-              data-aos="fade-up"
-              data-aos-delay="80"
             >
               {site?.heroDescription ??
                 "The NSIB e-learning platform equips investigators, regulators, and safety professionals with world-class training across aviation, marine, and road transport sectors."}
             </Text>
 
-            <Group gap="md" data-aos="fade-up" data-aos-delay="160">
+            <Group gap="md">
               <Button
-                size="lg"
-                variant="white"
                 onClick={handleLogin}
-                fw={700}
+                radius="sm"
+                size="xl"
                 style={{
-                  fontFamily: QS,
-                  borderRadius: 6,
-                  paddingLeft: 28,
-                  paddingRight: 28,
+                  background: "white",
                   color: primaryColor,
+                  fontFamily: QS,
+                  fontWeight: 700,
                 }}
               >
                 {site?.heroPrimaryCtaLabel ?? "Start Learning Today"}
               </Button>
               <Button
-                size="lg"
-                variant="outline"
-                color="white"
                 component="a"
                 href="#courses"
-                fw={600}
+                radius="sm"
+                size="xl"
+                variant="outline"
                 style={{
+                  borderColor: "rgba(255,255,255,0.7)",
+                  color: "white",
                   fontFamily: QS,
-                  borderRadius: 6,
-                  paddingLeft: 28,
-                  paddingRight: 28,
-                  borderColor: "rgba(255,255,255,0.5)",
+                  fontWeight: 700,
                 }}
               >
                 {site?.heroSecondaryCtaLabel ?? "Explore Courses"}
               </Button>
             </Group>
-          </Box>
+          </Stack>
         </Container>
 
-        {/* Stat panels anchored to bottom */}
-        <Box style={{ position: "relative", zIndex: 2, width: "100%" }}>
-          <SimpleGrid cols={{ base: 2, sm: 4 }}>
+        <Container
+          size="xl"
+          style={{
+            position: "absolute",
+            bottom: 28,
+            left: 0,
+            right: 0,
+            zIndex: 1,
+          }}
+        >
+          <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="md">
             {stats.map((stat) => (
-              <Box
+              <Paper
                 key={stat.label}
                 p="lg"
+                radius="sm"
                 style={{
-                  background: "rgba(0,0,0,0.25)",
-                  backdropFilter: "blur(8px)",
-                  borderTop: "1px solid rgba(255,255,255,0.12)",
-                  textAlign: "center",
+                  background: "rgba(255,255,255,0.14)",
+                  border: "1px solid rgba(255,255,255,0.16)",
+                  backdropFilter: "blur(3px)",
                 }}
               >
                 <Text
                   fw={800}
-                  size="xl"
-                  c="white"
-                  style={{ fontFamily: QS }}
+                  style={{
+                    color: "white",
+                    fontFamily: QS,
+                    fontSize: "2rem",
+                    lineHeight: 1.1,
+                  }}
                 >
                   {stat.value}
                 </Text>
                 <Text
-                  size="xs"
-                  style={{ color: "rgba(255,255,255,0.65)", fontFamily: QS }}
+                  size="md"
+                  style={{ color: "rgba(255,255,255,0.9)", fontFamily: QS }}
                 >
                   {stat.label}
                 </Text>
-              </Box>
+              </Paper>
             ))}
           </SimpleGrid>
-        </Box>
-      </Box>
-
-      {/* ══════════════════════════════════════════════════════════════
-          CATEGORY PILL TAGS
-      ══════════════════════════════════════════════════════════════ */}
-      <Box style={{ background: "white", borderBottom: "1px solid #e5e7eb" }}>
-        <Container size="xl" py="md">
-          <Box style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {categories.map((cat) => {
-              const Icon = ICON_MAP[cat.icon] ?? IconShieldCheck;
-              return (
-                <Group
-                  key={cat.name}
-                  gap={6}
-                  px={12}
-                  py={6}
-                  style={{
-                    border: `1.5px solid ${primaryColor}`,
-                    borderRadius: 999,
-                    cursor: "pointer",
-                    flexShrink: 0,
-                    transition: "all 0.15s ease",
-                  }}
-                  className="hover:bg-green-50"
-                  onClick={handleLogin}
-                >
-                  <Icon size={13} color={primaryColor} />
-                  <Text
-                    size="xs"
-                    fw={700}
-                    style={{
-                      color: primaryColor,
-                      letterSpacing: "0.06em",
-                      fontFamily: QS,
-                    }}
-                  >
-                    {cat.name.toUpperCase()}
-                  </Text>
-                </Group>
-              );
-            })}
-          </Box>
         </Container>
       </Box>
 
-      {/* ══════════════════════════════════════════════════════════════
-          FEATURED COURSES — green container
-      ══════════════════════════════════════════════════════════════ */}
-      <Box id="courses" py={24} px={{ base: 16, sm: 32, md: 60, lg: 80 }}>
-        <Box
-          p={{ base: 20, md: 32 }}
-          style={{ background: primaryColor, borderRadius: 16 }}
-        >
-          <Group justify="space-between" align="center" mb={24}>
-            <Text
-              fw={700}
-              size="xl"
-              c="white"
-              style={{ fontFamily: QS }}
-            >
-              {site?.featuredCoursesTitle ?? "Featured Courses"}
-            </Text>
-            <Button
-              variant="outline"
-              color="white"
-              size="sm"
-              rightSection={<IconArrowRight size={14} />}
-              onClick={handleLogin}
-              style={{
-                fontFamily: QS,
-                borderColor: "rgba(255,255,255,0.5)",
-                borderRadius: 8,
-              }}
-            >
-              {site?.featuredCoursesCtaLabel ?? "View All"}
-            </Button>
-          </Group>
-
-          {coursesLoading ? (
-            <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <Box
-                  key={i}
-                  style={{
-                    height: 200,
-                    borderRadius: 12,
-                    background: "rgba(255,255,255,0.12)",
-                  }}
-                />
-              ))}
-            </SimpleGrid>
-          ) : featuredCourses.length === 0 ? (
-            <Paper
-              p="xl"
-              radius="lg"
-              ta="center"
-              style={{
-                background: "rgba(255,255,255,0.1)",
-                border: "2px dashed rgba(255,255,255,0.3)",
-              }}
-            >
-              <IconBook size={36} color="rgba(255,255,255,0.5)" />
-              <Text
-                c="white"
-                mt="md"
-                fw={500}
-                style={{ fontFamily: QS, opacity: 0.7 }}
+      <Box id="guidelines" py={72} style={{ background: "white" }}>
+        <Container size="xl">
+          <Stack gap={36}>
+            <Stack align="center" gap={16} ta="center">
+              <Title
+                order={2}
+                style={{
+                  color: "#111827",
+                  fontFamily: QS,
+                  fontSize: "clamp(1.75rem, 3vw, 2.4rem)",
+                  fontWeight: 700,
+                }}
               >
-                Courses will appear here once published.
-              </Text>
-            </Paper>
-          ) : (
-            <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
-              {featuredCourses.map((course, i) => (
-                <Card
-                  key={course.id}
-                  radius="lg"
-                  padding={0}
-                  style={{
-                    overflow: "hidden",
-                    cursor: "pointer",
-                    background: "white",
-                    transition: "transform 0.2s ease",
-                  }}
-                  className="hover:-translate-y-1"
-                  onClick={handleLogin}
-                  data-aos="fade-up"
-                  data-aos-delay={i * 50}
-                >
-                  <Box
-                    style={{
-                      height: 150,
-                      background: course.thumbnailUrl
-                        ? `url(${course.thumbnailUrl}) center/cover no-repeat`
-                        : `linear-gradient(135deg, ${darkColor} 0%, ${primaryColor} 100%)`,
-                      position: "relative",
-                    }}
-                  >
-                    <Box
+                {site?.categorySectionTitle ??
+                  "Explore NSIB Professional Training Courses"}
+              </Title>
+
+              <Group gap="sm" justify="center">
+                {categories.map((category) => {
+                  const Icon = ICON_MAP[category.icon] ?? IconShieldCheck;
+
+                  return (
+                    <Group
+                      key={category.name}
+                      gap={8}
+                      px={14}
+                      py={8}
                       style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        background: "rgba(0,0,0,0.55)",
-                        borderRadius: "50%",
-                        width: 40,
-                        height: 40,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
+                        border: `1px solid ${primaryColor}`,
+                        borderRadius: 999,
+                        color: primaryColor,
                       }}
                     >
-                      <IconPlayerPlay size={18} color="white" />
-                    </Box>
-                  </Box>
-                  <Stack gap={4} p="sm">
-                    <Text
-                      fw={700}
-                      size="sm"
-                      lineClamp={2}
-                      style={{ fontFamily: QS, color: "#111827" }}
-                    >
-                      {course.title}
-                    </Text>
-                    {course.difficulty && (
+                      <Icon color={primaryColor} size={14} />
                       <Text
-                        size="xs"
-                        c="gray.5"
-                        style={{ fontFamily: QS }}
+                        style={{
+                          fontFamily: QS,
+                          fontSize: "0.9rem",
+                          fontWeight: 600,
+                        }}
                       >
-                        {course.difficulty.charAt(0).toUpperCase() +
-                          course.difficulty.slice(1)}
+                        {category.name}
                       </Text>
-                    )}
-                  </Stack>
-                </Card>
-              ))}
-            </SimpleGrid>
-          )}
-        </Box>
+                    </Group>
+                  );
+                })}
+              </Group>
+            </Stack>
+
+            <Box
+              p={{ base: 20, md: 28 }}
+              style={{
+                background: primaryColor,
+                borderRadius: 18,
+              }}
+            >
+              <Group justify="space-between" mb={20}>
+                <Title
+                  order={2}
+                  style={{
+                    color: "white",
+                    fontFamily: QS,
+                    fontSize: "1.65rem",
+                    fontWeight: 700,
+                  }}
+                >
+                  Hot new releases
+                </Title>
+                <Button
+                  onClick={handleLogin}
+                  rightSection={<IconArrowRight size={16} />}
+                  variant="subtle"
+                  style={{ color: "white", fontFamily: QS, fontWeight: 700 }}
+                >
+                  View All
+                </Button>
+              </Group>
+
+              {coursesLoading ? (
+                <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
+                  {Array.from({ length: 8 }).map((_, index) => (
+                    <Box
+                      key={index}
+                      style={{
+                        borderRadius: 16,
+                        background: "rgba(255,255,255,0.18)",
+                        height: 250,
+                      }}
+                    />
+                  ))}
+                </SimpleGrid>
+              ) : (
+                <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
+                  {featuredCourses.map((course) => {
+                    const thumbnailUrl =
+                      getYouTubeThumbnail(course.previewVideoUrl) ||
+                      course.thumbnailUrl ||
+                      FALLBACK_HERO;
+
+                    return (
+                      <Card
+                        key={course.id}
+                        onClick={handleLogin}
+                        padding={0}
+                        radius="lg"
+                        style={{
+                          background: "white",
+                          cursor: "pointer",
+                          overflow: "hidden",
+                        }}
+                      >
+                        <Box style={{ height: 160, position: "relative" }}>
+                          <ImageWithFallback
+                            alt={course.title ?? "Course thumbnail"}
+                            fallbackSrc={FALLBACK_HERO}
+                            src={thumbnailUrl}
+                            style={{
+                              width: "100%",
+                              height: "100%",
+                              objectFit: "cover",
+                            }}
+                          />
+                          <Box
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              background:
+                                "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.28) 100%)",
+                            }}
+                          />
+                          <Box
+                            style={{
+                              position: "absolute",
+                              top: "50%",
+                              left: "50%",
+                              transform: "translate(-50%, -50%)",
+                              width: 44,
+                              height: 44,
+                              borderRadius: "50%",
+                              background: "rgba(0,0,0,0.62)",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <IconPlayerPlay color="white" size={18} />
+                          </Box>
+                          {course.difficulty && (
+                            <Badge
+                              radius="md"
+                              size="sm"
+                              style={{
+                                position: "absolute",
+                                top: 12,
+                                left: 12,
+                                background: "rgba(0,0,0,0.6)",
+                                color: "white",
+                                fontFamily: QS,
+                              }}
+                            >
+                              {course.difficulty.charAt(0).toUpperCase() +
+                                course.difficulty.slice(1)}
+                            </Badge>
+                          )}
+                        </Box>
+
+                        <Stack gap={4} p="md">
+                          <Text
+                            fw={700}
+                            lineClamp={2}
+                            style={{
+                              color: "#111827",
+                              fontFamily: QS,
+                              minHeight: 44,
+                            }}
+                          >
+                            {course.title}
+                          </Text>
+                          <Text size="sm" c="gray.6" style={{ fontFamily: QS }}>
+                            NSIB Certified
+                          </Text>
+                        </Stack>
+                      </Card>
+                    );
+                  })}
+                </SimpleGrid>
+              )}
+            </Box>
+          </Stack>
+        </Container>
       </Box>
 
-      {/* ══════════════════════════════════════════════════════════════
-          MISSION / ABOUT
-      ══════════════════════════════════════════════════════════════ */}
-      <Box id="about" py={24} px={{ base: 16, sm: 32, md: 60, lg: 80 }}>
-        <Paper
-          radius="xl"
-          p={{ base: 24, md: 40 }}
-          style={{ border: "1px solid #e5e7eb" }}
-        >
-          <Grid gutter={48} align="center">
-            <Grid.Col span={{ base: 12, md: 5 }} data-aos="fade-right">
+      <Box id="about" py={80} style={{ background: "#f8faf9" }}>
+        <Container size="xl">
+          <Grid align="center" gutter={48}>
+            <Grid.Col span={{ base: 12, md: 5 }}>
               <Box
                 style={{
                   borderRadius: "24px 80px 24px 24px",
                   overflow: "hidden",
-                  boxShadow: "0 24px 64px rgba(27,115,57,0.18)",
-                  height: 400,
-                  background: `linear-gradient(135deg, ${darkColor}, ${primaryColor})`,
+                  boxShadow: `0 28px 80px ${primaryColor}33`,
                 }}
               >
-                {site?.missionImageUrl && (
-                  <img
-                    src={site.missionImageUrl}
-                    alt={site.missionImageAlt ?? "NSIB mission"}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "cover",
-                      display: "block",
-                    }}
-                  />
-                )}
+                <ImageWithFallback
+                  alt={site?.missionImageAlt ?? "NSIB mission"}
+                  fallbackSrc={FALLBACK_HERO}
+                  src={site?.missionImageUrl}
+                  style={{
+                    width: "100%",
+                    height: 420,
+                    objectFit: "cover",
+                    display: "block",
+                  }}
+                />
               </Box>
             </Grid.Col>
 
-            <Grid.Col span={{ base: 12, md: 7 }} data-aos="fade-left">
-              <Stack gap={20}>
+            <Grid.Col span={{ base: 12, md: 7 }}>
+              <Stack gap={24}>
                 <Title
                   order={2}
                   style={{
-                    fontFamily: QS,
-                    fontSize: "1.75rem",
-                    fontWeight: 700,
                     color: "#111827",
+                    fontFamily: QS,
+                    fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+                    fontWeight: 700,
                     lineHeight: 1.35,
                   }}
                 >
                   {site?.missionTitle ??
-                    "Building Nigeria's Transport Safety Expertise"}
+                    "Empowering Safety Excellence Through Technology"}
                 </Title>
                 <Text
-                  size="md"
-                  c="gray.7"
-                  style={{ lineHeight: 1.8, fontFamily: QS }}
+                  size="lg"
+                  style={{ color: "#4b5563", fontFamily: QS, lineHeight: 1.8 }}
                 >
                   {site?.missionDescription ??
-                    "The Nigerian Safety Investigation Bureau is mandated to investigate accidents and serious incidents in the aviation, maritime, and road transport sectors. Our e-learning platform ensures every investigator, regulator, and safety officer has access to the training they need to uphold the highest professional standards."}
+                    "Under the NSIB mandate, we support investigators and safety professionals with accessible, world-class digital training that strengthens transport safety across aviation, marine, and road sectors."}
                 </Text>
                 <Button
-                  size="md"
                   onClick={handleLogin}
-                  fw={700}
+                  radius="md"
+                  rightSection={<IconArrowRight size={16} />}
                   style={{
-                    fontFamily: QS,
                     background: primaryColor,
-                    borderRadius: 10,
+                    color: "white",
+                    fontFamily: QS,
+                    fontWeight: 700,
                     width: "fit-content",
                   }}
-                  rightSection={<IconArrowRight size={16} />}
                 >
                   {site?.missionCtaLabel ?? "Learn More About Our Mission"}
                 </Button>
               </Stack>
             </Grid.Col>
           </Grid>
-        </Paper>
+        </Container>
       </Box>
 
-      {/* ══════════════════════════════════════════════════════════════
-          YOUR PATH TO CERTIFICATION
-      ══════════════════════════════════════════════════════════════ */}
-      <Box py={80} style={{ background: "white" }}>
+      <Box id="certification" py={80} style={{ background: "white" }}>
         <Container size="xl">
-          <Stack gap={56}>
-            <Stack
-              gap={12}
-              align="center"
-              ta="center"
-              data-aos="fade-up"
-            >
+          <Stack gap={48}>
+            <Stack align="center" gap={12} ta="center">
               <Text
                 size="xs"
                 fw={700}
                 style={{
                   color: primaryColor,
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
                   fontFamily: QS,
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
                 }}
               >
                 Step by Step
@@ -761,45 +752,43 @@ function NSIBLandingPage() {
               <Title
                 order={2}
                 style={{
-                  fontFamily: QS,
-                  fontSize: "2rem",
-                  fontWeight: 700,
                   color: "#111827",
+                  fontFamily: QS,
+                  fontSize: "clamp(1.8rem, 3vw, 2.4rem)",
+                  fontWeight: 700,
                 }}
               >
                 Your Path to Certification
               </Title>
               <Text
                 size="md"
-                c="gray.6"
-                style={{ maxWidth: 520, fontFamily: QS, lineHeight: 1.7 }}
+                style={{
+                  color: "#6b7280",
+                  fontFamily: QS,
+                  lineHeight: 1.75,
+                  maxWidth: 620,
+                }}
               >
-                From enrolment to deployment — here is how NSIB professionals
+                From enrolment to deployment, here is how NSIB professionals
                 build and validate their expertise.
               </Text>
             </Stack>
 
             <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="xl">
-              {CERT_STEPS.map((step, i) => (
+              {CERT_STEPS.map((step) => (
                 <Paper
                   key={step.num}
                   p="xl"
                   radius="xl"
-                  style={{
-                    border: "2px solid #f3f4f6",
-                    transition: "all 0.25s ease",
-                  }}
-                  className="hover:border-green-300 hover:shadow-lg"
-                  data-aos="fade-up"
-                  data-aos-delay={i * 70}
+                  style={{ border: "2px solid #f3f4f6" }}
                 >
                   <Stack gap="md">
-                    <Group gap="md" align="center">
+                    <Group align="center" gap="md">
                       <Box
                         style={{
-                          width: 48,
-                          height: 48,
-                          borderRadius: 14,
+                          width: 50,
+                          height: 50,
+                          borderRadius: 16,
                           background: `linear-gradient(135deg, ${primaryColor}, #209949)`,
                           display: "flex",
                           alignItems: "center",
@@ -807,32 +796,29 @@ function NSIBLandingPage() {
                           flexShrink: 0,
                         }}
                       >
-                        <step.icon size={22} color="white" />
+                        <step.icon color="white" size={22} />
                       </Box>
                       <Text
                         style={{
+                          color: "#f3f4f6",
+                          fontFamily: QS,
                           fontSize: "2.8rem",
                           fontWeight: 800,
-                          color: "#f3f4f6",
                           lineHeight: 1,
-                          fontFamily: QS,
-                          userSelect: "none",
                         }}
                       >
                         {String(step.num).padStart(2, "0")}
                       </Text>
                     </Group>
-                    <Text
-                      fw={700}
-                      size="md"
-                      style={{ fontFamily: QS, color: "#111827" }}
-                    >
+                    <Text fw={700} style={{ color: "#111827", fontFamily: QS }}>
                       {step.title}
                     </Text>
                     <Text
-                      size="sm"
-                      c="gray.6"
-                      style={{ lineHeight: 1.75, fontFamily: QS }}
+                      style={{
+                        color: "#6b7280",
+                        fontFamily: QS,
+                        lineHeight: 1.75,
+                      }}
                     >
                       {step.desc}
                     </Text>
@@ -844,93 +830,120 @@ function NSIBLandingPage() {
         </Container>
       </Box>
 
-      {/* ══════════════════════════════════════════════════════════════
-          FOOTER
-      ══════════════════════════════════════════════════════════════ */}
       <Box
-        component="footer"
-        py={32}
-        style={{
-          background: darkColor,
-          borderTop: "1px solid rgba(255,255,255,0.08)",
-        }}
+        id="contact"
+        style={{ background: "white", borderTop: "1px solid #e5e7eb" }}
       >
-        <Container size="xl">
-          <Group justify="space-between" align="center" wrap="wrap" gap="lg">
-            <Group gap="sm">
-              {site?.footerLogoUrl ? (
-                <img
-                  src={site.footerLogoUrl}
-                  alt={site.footerLogoAlt ?? portalName}
-                  style={{
-                    height: 44,
-                    width: 44,
-                    borderRadius: "50%",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <Box
-                  style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: "50%",
-                    background: "rgba(255,255,255,0.1)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <IconShieldCheck size={22} color="rgba(255,255,255,0.7)" />
-                </Box>
-              )}
-              <Stack gap={2}>
-                <Text fw={700} size="sm" c="white" style={{ fontFamily: QS }}>
-                  {portalName}
-                </Text>
+        <Container size="xl" py={56}>
+          <Grid gutter={40}>
+            <Grid.Col span={{ base: 12, md: 4 }}>
+              <Stack gap={14}>
+                <Group gap="md" wrap="nowrap">
+                  <Box
+                    style={{
+                      width: 56,
+                      height: 56,
+                      borderRadius: "50%",
+                      overflow: "hidden",
+                      background: "#f3f4f6",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <ImageWithFallback
+                      alt={portalName}
+                      fallbackSrc={FALLBACK_BADGE}
+                      src={branding?.logoUrl ?? site?.footerLogoUrl}
+                      style={{ width: 48, height: 48, objectFit: "cover" }}
+                    />
+                  </Box>
+                  <Stack gap={0}>
+                    <Text fw={700} style={{ fontFamily: QS, color: "#111827" }}>
+                      {portalName}
+                    </Text>
+                    <Text size="sm" c="gray.6" style={{ fontFamily: QS }}>
+                      Nigerian Safety Investigation Bureau
+                    </Text>
+                  </Stack>
+                </Group>
                 <Text
-                  size="xs"
-                  style={{
-                    color: "rgba(255,255,255,0.5)",
-                    fontFamily: QS,
-                  }}
+                  style={{ color: "#4b5563", fontFamily: QS, lineHeight: 1.75 }}
                 >
-                  {site?.footerTagline ?? "Nigerian Safety Investigation Bureau"}
+                  Supporting investigators and safety professionals with
+                  trusted, government-grade digital learning across aviation,
+                  marine, and road transport disciplines.
                 </Text>
               </Stack>
-            </Group>
+            </Grid.Col>
 
-            <Group gap="lg" wrap="wrap">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  style={{
-                    fontSize: "0.8125rem",
-                    fontWeight: 600,
-                    color: "rgba(255,255,255,0.6)",
-                    textDecoration: "none",
-                    fontFamily: QS,
-                  }}
-                >
-                  {link.label}
-                </a>
-              ))}
-            </Group>
-          </Group>
+            <Grid.Col span={{ base: 6, md: 2 }}>
+              <Stack gap={12}>
+                <Text fw={700} style={{ color: "#111827", fontFamily: QS }}>
+                  Quick Links
+                </Text>
+                {footerLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    style={{
+                      color: "#4b5563",
+                      fontFamily: QS,
+                      textDecoration: "none",
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </Stack>
+            </Grid.Col>
 
-          <Divider
-            mt="xl"
-            mb="md"
-            style={{ borderColor: "rgba(255,255,255,0.1)" }}
-          />
-          <Text
-            size="xs"
-            ta="center"
-            style={{ color: "rgba(255,255,255,0.35)", fontFamily: QS }}
-          >
+            <Grid.Col span={{ base: 6, md: 3 }}>
+              <Stack gap={12}>
+                <Text fw={700} style={{ color: "#111827", fontFamily: QS }}>
+                  Support
+                </Text>
+                {supportLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    style={{
+                      color: "#4b5563",
+                      fontFamily: QS,
+                      textDecoration: "none",
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </Stack>
+            </Grid.Col>
+
+            <Grid.Col span={{ base: 12, md: 3 }}>
+              <Stack gap={12}>
+                <Text fw={700} style={{ color: "#111827", fontFamily: QS }}>
+                  Contact Information
+                </Text>
+                <Text style={{ color: "#4b5563", fontFamily: QS }}>
+                  Nigerian Safety Investigation Bureau
+                </Text>
+                <Text style={{ color: "#4b5563", fontFamily: QS }}>
+                  Abuja, Federal Capital Territory
+                </Text>
+                <Text style={{ color: "#4b5563", fontFamily: QS }}>
+                  support@nsib.gov.ng
+                </Text>
+              </Stack>
+            </Grid.Col>
+          </Grid>
+        </Container>
+
+        <Divider />
+
+        <Container py="lg" size="xl">
+          <Text ta="center" style={{ color: "#6b7280", fontFamily: QS }}>
             {site?.copyright ??
-              `© ${new Date().getFullYear()} Federal Republic of Nigeria. All rights reserved.`}
+              `© ${new Date().getFullYear()} Nigerian Safety Investigation Bureau. All rights reserved.`}
           </Text>
         </Container>
       </Box>
