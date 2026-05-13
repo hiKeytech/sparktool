@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyCertificateRouteImport } from './routes/verify-certificate'
 import { Route as SuperAdminRouteImport } from './routes/super-admin'
+import { Route as NigerianSafetyInvestigationBureauRouteImport } from './routes/nigerian-safety-investigation-bureau'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as TenantRouteImport } from './routes/$tenant'
 import { Route as IndexRouteImport } from './routes/index'
@@ -67,6 +68,12 @@ const SuperAdminRoute = SuperAdminRouteImport.update({
   path: '/super-admin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const NigerianSafetyInvestigationBureauRoute =
+  NigerianSafetyInvestigationBureauRouteImport.update({
+    id: '/nigerian-safety-investigation-bureau',
+    path: '/nigerian-safety-investigation-bureau',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -310,6 +317,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$tenant': typeof TenantRouteWithChildren
   '/login': typeof LoginRoute
+  '/nigerian-safety-investigation-bureau': typeof NigerianSafetyInvestigationBureauRoute
   '/super-admin': typeof SuperAdminRouteWithChildren
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/admin': typeof TenantAdminRouteWithChildren
@@ -358,6 +366,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/nigerian-safety-investigation-bureau': typeof NigerianSafetyInvestigationBureauRoute
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/login': typeof TenantLoginRoute
   '/super-admin/identities': typeof SuperAdminIdentitiesRoute
@@ -398,6 +407,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$tenant': typeof TenantRouteWithChildren
   '/login': typeof LoginRoute
+  '/nigerian-safety-investigation-bureau': typeof NigerianSafetyInvestigationBureauRoute
   '/super-admin': typeof SuperAdminRouteWithChildren
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/admin': typeof TenantAdminRouteWithChildren
@@ -449,6 +459,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$tenant'
     | '/login'
+    | '/nigerian-safety-investigation-bureau'
     | '/super-admin'
     | '/verify-certificate'
     | '/$tenant/admin'
@@ -497,6 +508,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/nigerian-safety-investigation-bureau'
     | '/verify-certificate'
     | '/$tenant/login'
     | '/super-admin/identities'
@@ -536,6 +548,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$tenant'
     | '/login'
+    | '/nigerian-safety-investigation-bureau'
     | '/super-admin'
     | '/verify-certificate'
     | '/$tenant/admin'
@@ -586,6 +599,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   TenantRoute: typeof TenantRouteWithChildren
   LoginRoute: typeof LoginRoute
+  NigerianSafetyInvestigationBureauRoute: typeof NigerianSafetyInvestigationBureauRoute
   SuperAdminRoute: typeof SuperAdminRouteWithChildren
   VerifyCertificateRoute: typeof VerifyCertificateRoute
 }
@@ -604,6 +618,13 @@ declare module '@tanstack/react-router' {
       path: '/super-admin'
       fullPath: '/super-admin'
       preLoaderRoute: typeof SuperAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/nigerian-safety-investigation-bureau': {
+      id: '/nigerian-safety-investigation-bureau'
+      path: '/nigerian-safety-investigation-bureau'
+      fullPath: '/nigerian-safety-investigation-bureau'
+      preLoaderRoute: typeof NigerianSafetyInvestigationBureauRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -1129,6 +1150,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   TenantRoute: TenantRouteWithChildren,
   LoginRoute: LoginRoute,
+  NigerianSafetyInvestigationBureauRoute:
+    NigerianSafetyInvestigationBureauRoute,
   SuperAdminRoute: SuperAdminRouteWithChildren,
   VerifyCertificateRoute: VerifyCertificateRoute,
 }
