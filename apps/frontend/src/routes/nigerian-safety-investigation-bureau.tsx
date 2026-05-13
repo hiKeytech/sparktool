@@ -4,7 +4,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import {
   Badge,
   Box,
@@ -12,6 +12,7 @@ import {
   Card,
   Container,
   Divider,
+  Flex,
   Grid,
   Group,
   Paper,
@@ -45,6 +46,7 @@ import {
 import { getTenant } from "@/actions/tenant";
 import { useListCourses } from "@/services/hooks";
 import type { Tenant } from "@/schemas/tenant-contract";
+import { buildTenantPath } from "@/utils/tenant-paths";
 
 const QS = "'Quicksand', sans-serif";
 const FALLBACK_BADGE = "/sparktool-badge.svg";
@@ -111,6 +113,22 @@ const CERT_STEPS = [
   },
 ];
 
+const FEATURED_VIDEOS = [
+  {
+    src: "https://www.youtube.com/embed/BCax9TcXWCg?list=TLPQMTMwNTIwMjZ1VgQRuJKxJg",
+    title:
+      "The Nigerian Air Force Capabilities In 2025 - The Rise of Nigeria's Air Power",
+  },
+  {
+    src: "https://www.youtube.com/embed/AqvJW_F2p2s",
+    title: "SIMULATION OF DANA AIR INCIDENCT WHICH OCCURED ON APRIL 23RD, 2024",
+  },
+  {
+    src: "https://www.youtube.com/embed/9-RgHHuSACA?list=TLPQMTMwNTIwMjZ1VgQRuJKxJg",
+    title: "Nigerian Air Force 2026 | Aircraft Fleet",
+  },
+];
+
 const ICON_MAP: Record<
   string,
   ComponentType<{ size?: number; color?: string; stroke?: number }>
@@ -138,9 +156,7 @@ function getYouTubeThumbnail(url?: string | null) {
   const match = url.match(regExp);
   const videoId = match && match[7].length === 11 ? match[7] : null;
 
-  return videoId
-    ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-    : null;
+  return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
 }
 
 function ImageWithFallback({
@@ -176,10 +192,10 @@ function ImageWithFallback({
 
 export const Route = createFileRoute("/nigerian-safety-investigation-bureau")({
   loader: async () => {
-    for (const tenantId of ["nsib", "nigerian-safety-investigation-bureau"]) {
+    for (const tenantId of ["nigerian-safety-investigation-bureau", "nsib"]) {
       try {
         const tenant = await getTenant({ data: tenantId });
-        return { tenant };
+        if (tenant) return { tenant };
       } catch {
         // try the next candidate
       }
@@ -191,13 +207,18 @@ export const Route = createFileRoute("/nigerian-safety-investigation-bureau")({
 });
 
 function NSIBLandingPage() {
-  const navigate = useNavigate();
   const { tenant } = Route.useLoaderData() as { tenant: Tenant | null };
 
   const site = tenant?.config.publicSite;
   const branding = tenant?.config.branding;
   const primaryColor = branding?.primaryColor ?? "#1b7339";
+  const secondaryColor = branding?.secondaryColor ?? "#14532d";
   const portalName = branding?.portalName ?? "NSIB Learn";
+  const loginPath = buildTenantPath(tenant?.id, "/login");
+  const verifyCertificatePath = buildTenantPath(
+    tenant?.id,
+    "/verify-certificate",
+  );
   const stats = site?.stats ?? FALLBACK_STATS;
   const categories = site?.categories ?? FALLBACK_CATEGORIES;
   const { data: courses = [], isLoading: coursesLoading } = useListCourses(
@@ -210,7 +231,7 @@ function NSIBLandingPage() {
     { href: "#guidelines", label: "Guidelines" },
     { href: "#about", label: "About" },
     { href: "#contact", label: "Contact" },
-    { href: "/verify-certificate", label: "Verify Certificate" },
+    { href: verifyCertificatePath, label: "Verify Certificate" },
   ];
 
   const footerLinks = [
@@ -221,13 +242,15 @@ function NSIBLandingPage() {
   ];
 
   const supportLinks = [
-    { href: "/login", label: "Help Center" },
-    { href: "/login", label: "Technical Support" },
-    { href: "/verify-certificate", label: "Certificate Verification" },
-    { href: "/login", label: "Privacy Policy" },
+    { href: loginPath, label: "Help Center" },
+    { href: loginPath, label: "Technical Support" },
+    { href: verifyCertificatePath, label: "Certificate Verification" },
+    { href: loginPath, label: "Privacy Policy" },
   ];
 
-  const handleLogin = () => navigate({ to: "/login" });
+  const handleLogin = () => {
+    window.location.assign(loginPath);
+  };
 
   return (
     <Box style={{ fontFamily: QS, background: "#ffffff" }}>
@@ -338,8 +361,8 @@ function NSIBLandingPage() {
           style={{
             position: "absolute",
             inset: 0,
-            background:
-              "linear-gradient(180deg, rgba(27,115,57,0.80) 0%, rgba(27,115,57,0.88) 100%)",
+            background: secondaryColor,
+            opacity: 0.78,
           }}
         />
 
@@ -356,45 +379,34 @@ function NSIBLandingPage() {
             paddingBottom: 132,
           }}
         >
-          <Stack gap={28} style={{ maxWidth: 980 }}>
-            <Group gap="xl" align="center" wrap="nowrap">
-              <ImageWithFallback
-                alt={site?.heroLogoAlt ?? "Nigerian Coat of Arms"}
-                fallbackSrc={FALLBACK_BADGE}
-                src={site?.heroLogoUrl}
+          <Stack gap="xl" style={{ maxWidth: 980 }}>
+            <Stack gap={0}>
+              <Flex direction="column" wrap="nowrap" align="start">
+                <ImageWithFallback
+                  alt={site?.heroLogoAlt ?? "Nigerian Coat of Arms"}
+                  fallbackSrc={FALLBACK_BADGE}
+                  src={site?.heroLogoUrl}
+                  style={{
+                    height: 156,
+                    objectFit: "contain",
+                    flexShrink: 0,
+                  }}
+                />
+              </Flex>
+
+              <Text
+                size="xl"
                 style={{
-                  width: 110,
-                  height: 110,
-                  objectFit: "contain",
-                  flexShrink: 0,
-                }}
-              />
-              <Title
-                order={1}
-                style={{
-                  color: "white",
+                  color: "rgba(255,255,255,0.92)",
                   fontFamily: QS,
-                  fontSize: "clamp(2.75rem, 5vw, 4.25rem)",
-                  fontWeight: 700,
-                  lineHeight: 1.12,
+                  lineHeight: 1.75,
+                  maxWidth: 1080,
                 }}
               >
-                {site?.heroTitle ?? "Nigerian Safety Investigation Bureau"}
-              </Title>
-            </Group>
-
-            <Text
-              size="xl"
-              style={{
-                color: "rgba(255,255,255,0.92)",
-                fontFamily: QS,
-                lineHeight: 1.75,
-                maxWidth: 1080,
-              }}
-            >
-              {site?.heroDescription ??
-                "The NSIB e-learning platform equips investigators, regulators, and safety professionals with world-class training across aviation, marine, and road transport sectors."}
-            </Text>
+                {site?.heroDescription ??
+                  "The NSIB e-learning platform equips investigators, regulators, and safety professionals with world-class training across aviation, marine, and road transport sectors."}
+              </Text>
+            </Stack>
 
             <Group gap="md">
               <Button
@@ -566,16 +578,11 @@ function NSIBLandingPage() {
                   ))}
                 </SimpleGrid>
               ) : (
-                <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
-                  {featuredCourses.map((course) => {
-                    const thumbnailUrl =
-                      getYouTubeThumbnail(course.previewVideoUrl) ||
-                      course.thumbnailUrl ||
-                      FALLBACK_HERO;
-
-                    return (
+                <Stack gap="md">
+                  <SimpleGrid cols={{ base: 1, md: 3 }} spacing="md">
+                    {FEATURED_VIDEOS.map((video) => (
                       <Card
-                        key={course.id}
+                        key={video.src}
                         onClick={handleLogin}
                         padding={0}
                         radius="lg"
@@ -587,9 +594,11 @@ function NSIBLandingPage() {
                       >
                         <Box style={{ height: 160, position: "relative" }}>
                           <ImageWithFallback
-                            alt={course.title ?? "Course thumbnail"}
+                            alt={video.title}
                             fallbackSrc={FALLBACK_HERO}
-                            src={thumbnailUrl}
+                            src={
+                              getYouTubeThumbnail(video.src) ?? FALLBACK_HERO
+                            }
                             style={{
                               width: "100%",
                               height: "100%",
@@ -600,8 +609,7 @@ function NSIBLandingPage() {
                             style={{
                               position: "absolute",
                               inset: 0,
-                              background:
-                                "linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.28) 100%)",
+                              background: "rgba(0,0,0,0.2)",
                             }}
                           />
                           <Box
@@ -621,23 +629,6 @@ function NSIBLandingPage() {
                           >
                             <IconPlayerPlay color="white" size={18} />
                           </Box>
-                          {course.difficulty && (
-                            <Badge
-                              radius="md"
-                              size="sm"
-                              style={{
-                                position: "absolute",
-                                top: 12,
-                                left: 12,
-                                background: "rgba(0,0,0,0.6)",
-                                color: "white",
-                                fontFamily: QS,
-                              }}
-                            >
-                              {course.difficulty.charAt(0).toUpperCase() +
-                                course.difficulty.slice(1)}
-                            </Badge>
-                          )}
                         </Box>
 
                         <Stack gap={4} p="md">
@@ -650,16 +641,116 @@ function NSIBLandingPage() {
                               minHeight: 44,
                             }}
                           >
-                            {course.title}
+                            {video.title}
                           </Text>
                           <Text size="sm" c="gray.6" style={{ fontFamily: QS }}>
-                            NSIB Certified
+                            Beginner
                           </Text>
                         </Stack>
                       </Card>
-                    );
-                  })}
-                </SimpleGrid>
+                    ))}
+                  </SimpleGrid>
+
+                  {featuredCourses.length > 0 ? (
+                    <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
+                      {featuredCourses.map((course) => {
+                        const thumbnailUrl =
+                          getYouTubeThumbnail(course.previewVideoUrl) ||
+                          course.thumbnailUrl ||
+                          FALLBACK_HERO;
+
+                        return (
+                          <Card
+                            key={course.id}
+                            onClick={handleLogin}
+                            padding={0}
+                            radius="lg"
+                            style={{
+                              background: "white",
+                              cursor: "pointer",
+                              overflow: "hidden",
+                            }}
+                          >
+                            <Box style={{ height: 160, position: "relative" }}>
+                              <ImageWithFallback
+                                alt={course.title ?? "Course thumbnail"}
+                                fallbackSrc={FALLBACK_HERO}
+                                src={thumbnailUrl}
+                                style={{
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "cover",
+                                }}
+                              />
+                              <Box
+                                style={{
+                                  position: "absolute",
+                                  inset: 0,
+                                  background: "rgba(0,0,0,0.2)",
+                                }}
+                              />
+                              <Box
+                                style={{
+                                  position: "absolute",
+                                  top: "50%",
+                                  left: "50%",
+                                  transform: "translate(-50%, -50%)",
+                                  width: 44,
+                                  height: 44,
+                                  borderRadius: "50%",
+                                  background: "rgba(0,0,0,0.62)",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <IconPlayerPlay color="white" size={18} />
+                              </Box>
+                              {course.difficulty && (
+                                <Badge
+                                  radius="md"
+                                  size="sm"
+                                  style={{
+                                    position: "absolute",
+                                    top: 12,
+                                    left: 12,
+                                    background: "rgba(0,0,0,0.6)",
+                                    color: "white",
+                                    fontFamily: QS,
+                                  }}
+                                >
+                                  {course.difficulty.charAt(0).toUpperCase() +
+                                    course.difficulty.slice(1)}
+                                </Badge>
+                              )}
+                            </Box>
+
+                            <Stack gap={4} p="md">
+                              <Text
+                                fw={700}
+                                lineClamp={2}
+                                style={{
+                                  color: "#111827",
+                                  fontFamily: QS,
+                                  minHeight: 44,
+                                }}
+                              >
+                                {course.title}
+                              </Text>
+                              <Text
+                                size="sm"
+                                c="gray.6"
+                                style={{ fontFamily: QS }}
+                              >
+                                NSIB Certified
+                              </Text>
+                            </Stack>
+                          </Card>
+                        );
+                      })}
+                    </SimpleGrid>
+                  ) : null}
+                </Stack>
               )}
             </Box>
           </Stack>
@@ -789,7 +880,7 @@ function NSIBLandingPage() {
                           width: 50,
                           height: 50,
                           borderRadius: 16,
-                          background: `linear-gradient(135deg, ${primaryColor}, #209949)`,
+                          background: secondaryColor,
                           display: "flex",
                           alignItems: "center",
                           justifyContent: "center",
@@ -832,7 +923,10 @@ function NSIBLandingPage() {
 
       <Box
         id="contact"
-        style={{ background: "white", borderTop: "1px solid #e5e7eb" }}
+        style={{
+          background: primaryColor,
+          borderTop: "1px solid rgba(255,255,255,0.16)",
+        }}
       >
         <Container size="xl" py={56}>
           <Grid gutter={40}>
@@ -845,7 +939,7 @@ function NSIBLandingPage() {
                       height: 56,
                       borderRadius: "50%",
                       overflow: "hidden",
-                      background: "#f3f4f6",
+                      background: "rgba(255,255,255,0.2)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -859,16 +953,26 @@ function NSIBLandingPage() {
                     />
                   </Box>
                   <Stack gap={0}>
-                    <Text fw={700} style={{ fontFamily: QS, color: "#111827" }}>
+                    <Text fw={700} style={{ fontFamily: QS, color: "#ffffff" }}>
                       {portalName}
                     </Text>
-                    <Text size="sm" c="gray.6" style={{ fontFamily: QS }}>
+                    <Text
+                      size="sm"
+                      style={{
+                        color: "rgba(255,255,255,0.85)",
+                        fontFamily: QS,
+                      }}
+                    >
                       Nigerian Safety Investigation Bureau
                     </Text>
                   </Stack>
                 </Group>
                 <Text
-                  style={{ color: "#4b5563", fontFamily: QS, lineHeight: 1.75 }}
+                  style={{
+                    color: "rgba(255,255,255,0.9)",
+                    fontFamily: QS,
+                    lineHeight: 1.75,
+                  }}
                 >
                   Supporting investigators and safety professionals with
                   trusted, government-grade digital learning across aviation,
@@ -879,7 +983,7 @@ function NSIBLandingPage() {
 
             <Grid.Col span={{ base: 6, md: 2 }}>
               <Stack gap={12}>
-                <Text fw={700} style={{ color: "#111827", fontFamily: QS }}>
+                <Text fw={700} style={{ color: "#ffffff", fontFamily: QS }}>
                   Quick Links
                 </Text>
                 {footerLinks.map((link) => (
@@ -887,7 +991,7 @@ function NSIBLandingPage() {
                     key={link.label}
                     href={link.href}
                     style={{
-                      color: "#4b5563",
+                      color: "rgba(255,255,255,0.9)",
                       fontFamily: QS,
                       textDecoration: "none",
                     }}
@@ -900,7 +1004,7 @@ function NSIBLandingPage() {
 
             <Grid.Col span={{ base: 6, md: 3 }}>
               <Stack gap={12}>
-                <Text fw={700} style={{ color: "#111827", fontFamily: QS }}>
+                <Text fw={700} style={{ color: "#ffffff", fontFamily: QS }}>
                   Support
                 </Text>
                 {supportLinks.map((link) => (
@@ -908,7 +1012,7 @@ function NSIBLandingPage() {
                     key={link.label}
                     href={link.href}
                     style={{
-                      color: "#4b5563",
+                      color: "rgba(255,255,255,0.9)",
                       fontFamily: QS,
                       textDecoration: "none",
                     }}
@@ -921,16 +1025,22 @@ function NSIBLandingPage() {
 
             <Grid.Col span={{ base: 12, md: 3 }}>
               <Stack gap={12}>
-                <Text fw={700} style={{ color: "#111827", fontFamily: QS }}>
+                <Text fw={700} style={{ color: "#ffffff", fontFamily: QS }}>
                   Contact Information
                 </Text>
-                <Text style={{ color: "#4b5563", fontFamily: QS }}>
+                <Text
+                  style={{ color: "rgba(255,255,255,0.9)", fontFamily: QS }}
+                >
                   Nigerian Safety Investigation Bureau
                 </Text>
-                <Text style={{ color: "#4b5563", fontFamily: QS }}>
+                <Text
+                  style={{ color: "rgba(255,255,255,0.9)", fontFamily: QS }}
+                >
                   Abuja, Federal Capital Territory
                 </Text>
-                <Text style={{ color: "#4b5563", fontFamily: QS }}>
+                <Text
+                  style={{ color: "rgba(255,255,255,0.9)", fontFamily: QS }}
+                >
                   support@nsib.gov.ng
                 </Text>
               </Stack>
@@ -938,10 +1048,13 @@ function NSIBLandingPage() {
           </Grid>
         </Container>
 
-        <Divider />
+        <Divider style={{ borderColor: "rgba(255,255,255,0.2)" }} />
 
         <Container py="lg" size="xl">
-          <Text ta="center" style={{ color: "#6b7280", fontFamily: QS }}>
+          <Text
+            ta="center"
+            style={{ color: "rgba(255,255,255,0.85)", fontFamily: QS }}
+          >
             {site?.copyright ??
               `© ${new Date().getFullYear()} Nigerian Safety Investigation Bureau. All rights reserved.`}
           </Text>
