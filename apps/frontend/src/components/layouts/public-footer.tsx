@@ -13,7 +13,7 @@ import {
   IconPhone,
 } from "@tabler/icons-react";
 
-import { TenantLogo } from "@/components/shared/tenant-logo";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 const platformName = "SparkTool";
 const platformTagline = "Flexible digital learning for every organization";
@@ -45,7 +45,7 @@ export function PublicFooter() {
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Stack gap="md">
               <Group gap="sm">
-                <TenantLogo fallbackLabel={platformName} size={44} />
+                <BrandLogo alt={platformName} size={44} />
                 <div>
                   <Text className="text-white" fw={700} size="lg">
                     {platformName}

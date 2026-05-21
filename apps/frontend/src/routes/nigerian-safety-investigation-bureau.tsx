@@ -245,7 +245,7 @@ function NSIBLandingPage() {
     { href: loginPath, label: "Help Center" },
     { href: loginPath, label: "Technical Support" },
     { href: verifyCertificatePath, label: "Certificate Verification" },
-    { href: loginPath, label: "Privacy Policy" },
+    { href: "/privacy", label: "Privacy Policy" },
   ];
 
   const handleLogin = () => {

@@ -1,5 +1,7 @@
 import { Container, Group, Text, Title } from "@mantine/core";
 
+import { BrandLogo } from "@/components/shared/brand-logo";
+
 interface LoginHeaderProps {
   branding: {
     logoUrl?: string;
@@ -14,9 +16,9 @@ export function LoginHeader({ branding }: LoginHeaderProps) {
       <Container size="xl">
         <Group justify="space-between">
           <Group>
-            <img
+            <BrandLogo
               alt="Logo"
-              className="w-10 h-10"
+              size={40}
               src={branding?.logoUrl || "/logo.png"}
             />
             <div>

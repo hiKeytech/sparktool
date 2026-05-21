@@ -13,7 +13,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconLogin } from "@tabler/icons-react";
 import { Outlet, useNavigate } from "@tanstack/react-router";
 
-import { TenantLogo } from "@/components/shared/tenant-logo";
+import { BrandLogo } from "@/components/shared/brand-logo";
 
 import { PublicFooter } from "./public-footer";
 
@@ -54,7 +54,7 @@ export function PublicLayout() {
               className="flex items-center gap-3 transition-opacity hover:opacity-80"
               onClick={handleHome}
             >
-              <TenantLogo fallbackLabel={platformName} size={44} />
+              <BrandLogo alt={platformName} size={44} />
               <div>
                 <Text
                   className="leading-tight text-(--app-text)"
@@ -114,7 +114,7 @@ export function PublicLayout() {
         size="sm"
         title={
           <Group gap="sm">
-            <TenantLogo fallbackLabel={platformName} size={44} />
+            <BrandLogo alt={platformName} size={44} />
             <div>
               <Text className="text-(--app-text)" fw={600} size="sm">
                 {platformName}
