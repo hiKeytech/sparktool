@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VerifyCertificateRouteImport } from './routes/verify-certificate'
 import { Route as SuperAdminRouteImport } from './routes/super-admin'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as NigerianSafetyInvestigationBureauRouteImport } from './routes/nigerian-safety-investigation-bureau'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as TenantRouteImport } from './routes/$tenant'
@@ -66,6 +67,11 @@ const VerifyCertificateRoute = VerifyCertificateRouteImport.update({
 const SuperAdminRoute = SuperAdminRouteImport.update({
   id: '/super-admin',
   path: '/super-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
 const NigerianSafetyInvestigationBureauRoute =
@@ -318,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/$tenant': typeof TenantRouteWithChildren
   '/login': typeof LoginRoute
   '/nigerian-safety-investigation-bureau': typeof NigerianSafetyInvestigationBureauRoute
+  '/privacy': typeof PrivacyRoute
   '/super-admin': typeof SuperAdminRouteWithChildren
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/admin': typeof TenantAdminRouteWithChildren
@@ -367,6 +374,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/nigerian-safety-investigation-bureau': typeof NigerianSafetyInvestigationBureauRoute
+  '/privacy': typeof PrivacyRoute
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/login': typeof TenantLoginRoute
   '/super-admin/identities': typeof SuperAdminIdentitiesRoute
@@ -408,6 +416,7 @@ export interface FileRoutesById {
   '/$tenant': typeof TenantRouteWithChildren
   '/login': typeof LoginRoute
   '/nigerian-safety-investigation-bureau': typeof NigerianSafetyInvestigationBureauRoute
+  '/privacy': typeof PrivacyRoute
   '/super-admin': typeof SuperAdminRouteWithChildren
   '/verify-certificate': typeof VerifyCertificateRoute
   '/$tenant/admin': typeof TenantAdminRouteWithChildren
@@ -460,6 +469,7 @@ export interface FileRouteTypes {
     | '/$tenant'
     | '/login'
     | '/nigerian-safety-investigation-bureau'
+    | '/privacy'
     | '/super-admin'
     | '/verify-certificate'
     | '/$tenant/admin'
@@ -509,6 +519,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/nigerian-safety-investigation-bureau'
+    | '/privacy'
     | '/verify-certificate'
     | '/$tenant/login'
     | '/super-admin/identities'
@@ -549,6 +560,7 @@ export interface FileRouteTypes {
     | '/$tenant'
     | '/login'
     | '/nigerian-safety-investigation-bureau'
+    | '/privacy'
     | '/super-admin'
     | '/verify-certificate'
     | '/$tenant/admin'
@@ -600,6 +612,7 @@ export interface RootRouteChildren {
   TenantRoute: typeof TenantRouteWithChildren
   LoginRoute: typeof LoginRoute
   NigerianSafetyInvestigationBureauRoute: typeof NigerianSafetyInvestigationBureauRoute
+  PrivacyRoute: typeof PrivacyRoute
   SuperAdminRoute: typeof SuperAdminRouteWithChildren
   VerifyCertificateRoute: typeof VerifyCertificateRoute
 }
@@ -618,6 +631,13 @@ declare module '@tanstack/react-router' {
       path: '/super-admin'
       fullPath: '/super-admin'
       preLoaderRoute: typeof SuperAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/nigerian-safety-investigation-bureau': {
@@ -1152,6 +1172,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   NigerianSafetyInvestigationBureauRoute:
     NigerianSafetyInvestigationBureauRoute,
+  PrivacyRoute: PrivacyRoute,
   SuperAdminRoute: SuperAdminRouteWithChildren,
   VerifyCertificateRoute: VerifyCertificateRoute,
 }

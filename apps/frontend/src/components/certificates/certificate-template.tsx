@@ -3,7 +3,7 @@ import type { CertificateData } from "@/schemas/certificates";
 import { Box, Center, Group, Stack, Text, Title } from "@mantine/core";
 import { IconCertificate } from "@tabler/icons-react";
 
-import { TenantLogo } from "@/components/shared/tenant-logo";
+import { BrandLogo } from "@/components/shared/brand-logo";
 import { formatDate } from "@/utils/date-utils";
 
 interface CertificateTemplateProps {
@@ -56,14 +56,9 @@ export const CertificateTemplate = ({
             />
           </Group>
 
-          {/* Tenant Logo */}
+          {/* Brand Logo */}
           <Center>
-            <TenantLogo
-              alt={logoAlt}
-              fallbackLabel={institutionName}
-              size={60}
-              src={logoUrl}
-            />
+            <BrandLogo alt={logoAlt} size={60} src={logoUrl} />
           </Center>
 
           <Title

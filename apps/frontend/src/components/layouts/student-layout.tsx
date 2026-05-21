@@ -31,7 +31,7 @@ import {
 } from "@tanstack/react-router";
 
 import { NotificationBell } from "@/components/notifications";
-import { TenantLogo } from "@/components/shared/tenant-logo";
+import { BrandLogo } from "@/components/shared/brand-logo";
 import { AuthScope, type ResolvedAuthState } from "@/providers/auth-provider";
 import { useSignOut } from "@/services/hooks";
 import { buildTenantPath } from "@/utils/tenant-paths";
@@ -188,12 +188,7 @@ export function StudentLayout({ auth }: StudentLayoutProps) {
                   size="sm"
                 />
                 <Group gap="sm">
-                  <TenantLogo
-                    alt={logoAlt}
-                    fallbackLabel={portalName}
-                    size={44}
-                    src={logoUrl}
-                  />
+                  <BrandLogo alt={logoAlt} size={44} src={logoUrl} />
                   <Text
                     className="hidden text-white sm:block"
                     fw={700}

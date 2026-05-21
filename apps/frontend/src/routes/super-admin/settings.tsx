@@ -140,8 +140,8 @@ function SettingsOverview() {
         </div>
 
         <Alert color="blue" title="What this changes">
-          These changes affect the shared SparkTool experience. Tenant branding
-          and tenant sign-in pages stay separate.
+          These changes affect the shared SparkTool experience. Organization
+          branding and organization sign-in pages stay separate.
         </Alert>
 
         <SimpleGrid cols={{ base: 1, xl: 3 }} spacing="md">

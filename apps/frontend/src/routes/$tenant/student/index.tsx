@@ -21,7 +21,7 @@ import {
   IconTrendingUp,
 } from "@tabler/icons-react";
 import { NotificationsDrawer } from "@/components/notifications";
-import { TenantLogo } from "@/components/shared/tenant-logo";
+import { BrandLogo } from "@/components/shared/brand-logo";
 import { PendingOverlay } from "@/components/shared/pending-overlay";
 import { useListCourses, useUserProgress } from "@/services/hooks";
 import type { Tenant } from "@/schemas/tenant-contract";
@@ -228,7 +228,7 @@ function StudentDashboard() {
               </div>
             )}
 
-            {/* Tenant Branding Card */}
+            {/* Portal Branding Card */}
             <div data-aos="fade-up" data-aos-delay="300">
               <Card
                 className="text-center bg-(--app-surface-soft)"
@@ -237,12 +237,7 @@ function StudentDashboard() {
                 withBorder
               >
                 <div className="flex items-center justify-center w-16 h-16 mx-auto mb-3 rounded-full bg-brand-100">
-                  <TenantLogo
-                    alt={logoAlt}
-                    fallbackLabel={portalName}
-                    size={44}
-                    src={logoUrl}
-                  />
+                  <BrandLogo alt={logoAlt} size={44} src={logoUrl} />
                 </div>
                 <Title className="mb-1 text-(--app-text)" order={4}>
                   {portalName}

@@ -19,7 +19,7 @@ import { motion } from "framer-motion";
 import { CertificatePreview } from "@/components/certificates/certificate-preview";
 import { useAuthContext } from "@/providers/auth-provider";
 
-import { TenantLogo } from "../shared/tenant-logo";
+import { BrandLogo } from "../shared/brand-logo";
 import { PendingOverlay } from "../shared/pending-overlay";
 
 interface StudentCertificatesProps {
@@ -99,12 +99,7 @@ export function StudentCertificates({
               <Group align="flex-start" justify="space-between" mb="md">
                 <div className="flex-1">
                   <Group gap="md" mb="md">
-                    <TenantLogo
-                      alt={logoAlt}
-                      fallbackLabel={portalName}
-                      size={44}
-                      src={logoUrl}
-                    />
+                    <BrandLogo alt={logoAlt} size={44} src={logoUrl} />
                     <div>
                       <Title className="mb-1" order={4}>
                         {certificate.courseName}
