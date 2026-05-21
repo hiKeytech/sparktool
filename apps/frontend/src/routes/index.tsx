@@ -903,6 +903,12 @@ function PlatformLandingPage() {
               >
                 Book a Demo
               </a>
+              <a
+                href="/privacy"
+                className="text-sm font-bold tracking-widest uppercase hover:text-[#B3F2C7] transition-colors"
+              >
+                Privacy Policy
+              </a>
             </div>
           </div>
         </div>
